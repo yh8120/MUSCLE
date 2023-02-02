@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{parts/common :: html_head()}"></head>
+<body id="loginPage">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col col-md-6 mt-4">
+                <div class="panel panel-default text-center">
+                    <h1 class="h3">ログイン</h1>
+                    <div class="panel-body">
+
+                        <div class="alert alert-success" th:if="${message}">[[${message}]]</div>
+
+                        <div class="alert alert-danger" th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></div>
+
+                        <form th:action="@{/login}" method="post" th:object="${login}" class="form-login">
+                            <div class="mb-3">
+                                <input type="text" placeholder="メールアドレス" class="form-control" th:field="*{email}">
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" placeholder="パスワード" class="form-control" th:field="*{loginPass}">
+                            </div>
+                            <div class="mb-3">
+                                <input type="submit" class="btn btn-primary w-100" value="ログイン">
+                            </div>
+                        </form>
+                    </div>
+                    <p>
+                        <a th:href="@{/accounts}">アカウントを作成</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+</body>
+</html>

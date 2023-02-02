@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.dao.TrainingSetDao">
+
+	<insert id="insert"
+		parameterType="com.example.app.domain.TrainingSet">
+		INSERT INTO training_sets (training_log_id, weight, rep,
+		set_order, one_rep_max)
+		VALUES (#{trainingLogId}, #{weight}, #{rep},
+		#{order}, #{oneRepMax})
+	</insert>
+	<update id="update"
+		parameterType="com.example.app.domain.TrainingSet">
+		UPDATE training_sets
+		SET
+		weight=#{weight},rep=${rep},set_order=#{order},one_rep_max=#{oneRepMax}
+		WHERE id=${id}
+	</update>
+	<delete id="deleteAll"
+		parameterType="int">
+		DELETE FROM training_sets
+		WHERE training_log_id=#{Id}
+	</delete>
+
+</mapper>

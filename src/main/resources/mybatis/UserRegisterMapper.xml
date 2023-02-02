@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.dao.UserRegisterDao">
+
+	<select id="findByRegistrationCode" parameterType="string"
+		resultType="com.example.app.domain.UserRegister">
+		SELECT * FROM user_register
+		WHERE uuid =
+		#{uuid}
+	</select>
+	<insert id="insert"
+		parameterType="com.example.app.domain.UserRegister">
+		INSERT INTO user_register (email, uuid,
+		registered)
+		VALUES (#{email}, #{uuid}, NOW())
+	</insert>
+	<delete id="deleteByEmail" parameterType="string">
+		DELETE FROM user_register WHERE email = #{email}
+	</delete>
+	<delete id="deleteOldRecode">
+		DELETE FROM user_register 
+		WHERE regestered &lt; SUBTIME(NOW(), '00:30:00')
+	</delete>
+
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.dao.TrainingDao">
+
+	<resultMap id="trainingPart"
+		type="com.example.app.domain.TrainingPart">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<collection property="trainingList"
+			ofType="com.example.app.domain.Training">
+			<id property="id" column="training_id" />
+			<result property="name" column="training_name" />
+			<result property="lastTrainingDay" column="last_training_day" />
+			<association property="priority"
+				javaType="com.example.app.domain.Priority">
+				<id property="id" column="priority_id" />
+			</association>
+		</collection>
+	</resultMap>
+
+	<resultMap id="weekday" type="com.example.app.domain.Weekday">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<collection property="trainingList"
+			ofType="com.example.app.domain.Training">
+			<id property="id" column="training_id" />
+			<result property="name" column="training_name" />
+			<result property="lastTrainingDay" column="last_training_day" />
+			<association property="priority"
+				javaType="com.example.app.domain.Priority">
+				<id property="id" column="priority_id" />
+			</association>
+		</collection>
+	</resultMap>
+	<resultMap id="training"
+		type="com.example.app.domain.Training">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="userId" column="user_id" />
+		<collection property="trainingLogList"
+			ofType="com.example.app.domain.TrainingLog">
+			<id property="id" column="training_log_id" />
+			<result property="registered" column="registered" />
+			<result property="totalWeight" column="total_weight" />
+			<result property="oneRepMax" column="one_rep_max" />
+			<result property="maxWeight" column="max_weight" />
+		</collection>
+	</resultMap>
+
+	<select id="findAllOrderByPart" parameterType="int"
+		resultMap="trainingPart">
+		SELECT
+		training_parts.id, training_parts.name,
+		master_trainings.id AS training_id,
+		master_trainings.name AS
+		training_name,
+		master_trainings.last_training_day,
+		master_trainings.priority_id,
+		master_trainings.last_training_day
+		FROM
+		training_parts
+		JOIN master_trainings
+		ON training_parts.id = master_trainings.part_id
+		WHERE user_id=#{id}
+		AND
+		master_trainings.status="ACT"
+		ORDER BY training_parts.id
+	</select>
+	<select id="findAllOrderByWeekday" parameterType="int"
+		resultMap="weekday">
+		SELECT
+		weekdays.id, weekdays.name,
+		master_trainings.id AS
+		training_id,
+		master_trainings.name AS training_name,
+		master_trainings.last_training_day,
+		master_trainings.priority_id,
+		master_trainings.last_training_day
+		FROM weekdays
+		JOIN master_trainings
+		ON weekdays.id = master_trainings.weekday_id
+		WHERE user_id=#{id}
+		AND
+		master_trainings.status="ACT"
+		ORDER BY weekdays.id
+	</select>
+	<select id="findbyTrainingId" parameterType="int"
+		resultMap="training">
+		SELECT
+		master_trainings.id,
+		master_trainings.name,
+		master_trainings.user_id,
+		training_logs.id AS training_log_id,
+		training_logs.registered,
+		training_logs.total_weight,
+		training_logs.one_rep_max,
+		training_logs.max_weight
+		FROM
+		master_trainings
+		LEFT OUTER JOIN 
+        (SELECT * 
+        FROM training_logs
+        WHERE training_logs.status="ACT"
+        )AS training_logs
+		ON master_trainings.id =
+		training_logs.training_id
+		WHERE master_trainings.id=${id}
+		ORDER BY training_logs.registered DESC
+	</select>
+	<update id="updateLastTrainingDay" parameterType="int">
+		UPDATE
+		master_trainings AS p1,
+		(
+		SELECT MAX(registered) AS max
+		FROM training_logs
+		WHERE training_id=#{id}
+		) AS p2
+		SET p1.last_training_day = p2.max
+		WHERE p1.id=#{id}
+	</update>
+
+</mapper>

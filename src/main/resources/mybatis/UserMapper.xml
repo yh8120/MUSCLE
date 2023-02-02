@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.dao.UserDao">
+
+	<resultMap id="user" type="com.example.app.domain.MUser">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="loginPass" column="login_pass" />
+		<result property="birthday" column="birthday" />
+		<result property="iconPath" column="icon_path" />
+		<result property="numberProtein" column="number_protein" />
+		<result property="myGymLatitude" column="myGymLatitude" />
+		<result property="myGymLogitude" column="myGymLogitude" />
+		<result property="registered" column="registered" />
+		<result property="role" column="role" />
+		<association property="sex"
+			javaType="com.example.app.domain.Sex">
+			<id property="id" column="sex_id" />
+			<result property="name" column="sex_name" />
+		</association>
+	</resultMap>
+
+	<select id="selectByEmail" parameterType="string"
+		resultMap="user">
+		SELECT
+		master_users.id, master_users.name, master_users.email,
+		master_users.login_pass, master_users.birthday, master_users.icon_path,
+		master_users.number_protein, master_users.my_gym_latitude,
+		master_users.my_gym_logitude, master_users.registered,
+		master_users.role,
+		sexes.id AS sex_id, sexes.name AS sex_name
+		FROM master_users
+		JOIN sexes ON
+		master_users.sex_id = sexes.id
+		WHERE email = #{email}
+	</select>
+	<insert id="insert" parameterType="com.example.app.domain.MUser">
+		INSERT INTO master_users (name,email,login_pass,birthday,sex_id,registered)
+		VALUES (#{name},#{email},#{loginPass},#{birthday},#{sex.id},NOW())
+	</insert>
+
+</mapper>

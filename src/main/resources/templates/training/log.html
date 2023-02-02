@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{parts/common :: html_head()}"></head>
+
+<body>
+    <div class="bg-dark bg-gradient text-light vh-100">
+
+        <header th:replace="~{parts/common :: header()}"></header>
+
+
+        <div class="container" style="max-width: 960px; min-width: 375px;">
+
+            <div class="row mt-4">
+                <div class="d-flex align-items-center">
+                    <div class="col-auto me-3 display-6">[[${training.name}]]</div>
+                    <a class="col" th:href="@{/training/log/add/{id}(id=${training.id})}">
+                        <img style="width: 50px;" th:src="@{/images/icon/add.png}" alt="トレーニングする" />
+                    </a>
+
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <div class="table-frame">
+                        <table class="table table-dark table-striped text-center text-nowrap table-hover align-bottom">
+                            <thead class="sticky-top bg-light">
+                                <tr>
+                                    <th>合計挙上重量</th>
+                                    <th>1RM(MAX)</th>
+                                    <th>最大重量(kg)</th>
+                                    <th>トレーニング日</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="log:${training.trainingLogList}" 
+                                th:with="url=@{/training/log/edit/__${log.id}__}"
+                                th:attr="onClick='location.href=\''+${url}+'\''">
+                                    <td>[[${log.totalWeight}]]</td>
+                                    <td>[[${log.oneRepMax}]]</td>
+                                    <td>[[${log.maxWeight}]]</td>
+                                    <td>[[${#dates.format(log.registered,"yyyy-MM-dd")}]]</td>
+                                    <td><img th:src="@{/images/icon/setting.png}" alt="編集" style="width: 18px;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+        </div>
+    </div>
+</body>
+
+</html>
