@@ -30,16 +30,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		// クライアントから接続する際のエンドポイントを"/endpoint"に設定する。
 		// ハンドシェイク(接続が確立する際の)ハンドラとしてcustomHandshakeHandlerを設定する。
 		// customHandshakeHandlerは独自で実装しているクラスで、
-		// コネクションに対してユーザーの定義を行っている。（後述）
+		// コネクションに対してユーザーの定義を行っている。
 		registry.addEndpoint("/endpoint")
 				.setHandshakeHandler(customHandshakeHandler)
 				.withSockJS();
 	}
-
-//	@Override
-//	public void configureClientInboundChannel(ChannelRegistration registration) {
-//		// クライアントからメッセージを受信した際のインターセプタ(割り込み処理)としてuserInterceptorを設定する。
-//		// こちらも独自で実装しているクラスで、セッションとユーザー情報の紐づけを行っている。（後述）
-//		registration.interceptors(userInterceptor);
-//	}
 }

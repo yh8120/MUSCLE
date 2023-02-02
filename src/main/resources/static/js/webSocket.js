@@ -1,9 +1,5 @@
 var stompClient = null;
-let userId = $("#userId").val();
-
-
-console.log("userid:" + userId); ////////////////////////
-
+let ounId = $("#userId").val();
 
 function setConnected(connected) {
 	$("#connect").prop("disabled", connected);
@@ -27,49 +23,49 @@ function connect() {
 		});
 	});
 }
-function addProtein(trainingLogId) {
+function addProtein(trainingLogId,userId) {
 	const data = {
 		tid: trainingLogId,
-		uid: uid = userId
+		uid: userId
 	}
-
 	$.ajax({
-		url: "http://localhost:8080/rest/addProtein", // 通信先のURL
-		type: "PUT", // 使用するHTTPメソッド
+		url: "http://localhost:8080/rest/add", // 通信先のURL
+		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
+		contentType: 'application/json',
 		// dataType:"json", // 応答のデータの種類
 		dataType: "text", // 応答のデータの種類(xml/html/script/json/jsonp/text)
 	}).done(function(res) {
 		console.log(res);
 		$(`.trl${trainingLogId}`).off();
-		$(`.trl${trainingLogId}`).on("click", delProtein(payload.trainingLogId));
-		$(`.trl${trainingLogId}`).attr("src", "/images/icon/protein.png");
-		alert("プロテインを送りました♪")
-	}).fail(alert("プロテインは送れませんでした…"))
+		$(`.trl${trainingLogId}`).on("click", function() { delProtein(trainingLogId,userId) });
+		$(`.trl${trainingLogId}`).attr("src", "/images/icon/proteinAdded.png");
+		console.log($(`.trl${trainingLogId}`))
+	}).fail(console.log("fail"))
 }
 
-function delProtein(trainingLogId) {
+function delProtein(trainingLogId,userId) {
 	const data = {
 		tid: trainingLogId,
-		uid: uid = userId
+		uid: userId
 	}
 	$.ajax({
-		url: "http://localhost:8080/rest/delProtein", // 通信先のURL
-		type: "PUT", // 使用するHTTPメソッド
+		url: "http://localhost:8080/rest/del", // 通信先のURL
+		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
+		contentType: 'application/json',
 		// dataType:"json", // 応答のデータの種類
 		dataType: "text", // 応答のデータの種類(xml/html/script/json/jsonp/text)
 	}).done(function(res) {
-		console.log(res);
+		console.log(res)
 		$(`.trl${trainingLogId}`).off();
-		$(`.trl${trainingLogId}`).on("click", addProtein(payload.trainingLogId));
-		$(`.trl${trainingLogId}`).attr("src", "/images/icon/proteinAdded.png");
-		alert("プロテインを返してもらいました")
-	}).fail(alert("プロテインを返してもらえませんでした…"))
+		$(`.trl${trainingLogId}`).on("click", function() { addProtein(trainingLogId,userId) });
+		$(`.trl${trainingLogId}`).attr("src", "/images/icon/protein.png");
+	}).fail(console.log("fail"))
 }
 
 function showGreeting(payload) {
-	if (payload.userId == userId) {
+	if (payload.userId != ounId) {
 		const cloneRow = $($('#noticeRow').html());
 
 		//make .notice icon
@@ -90,20 +86,17 @@ function showGreeting(payload) {
 		cloneRow.find(".noticeMessage").text(message);
 		//make .noticeButton
 		cloneRow.find(".noticeButton").addClass("trl" + payload.trainingLogId);
-		if (payload.contributorList.includes(userId)) {
-			cloneRow.find(".noticeButton").on("click", function(){				
-			delProtein(payload.trainingLogId)
+		if (payload.contributorList.includes(ounId)) {
+			cloneRow.find(".noticeButton").on("click", function() {
+				delProtein(payload.trainingLogId,payload.userId)
 			});
 			cloneRow.find(".noticeButton").attr("src", "/images/icon/proteinAdded.png");
 		} else {
-			cloneRow.find(".noticeButton").on("click", function(){
-				
-			addProtein(payload.trainingLogId)
+			cloneRow.find(".noticeButton").on("click", function() {
+				addProtein(payload.trainingLogId,payload.userId)
 			});
 			cloneRow.find(".noticeButton").attr("src", "/images/icon/protein.png");
 		}
-
-		console.log(cloneRow.find(".noticeButton"))///////////////////////////////////////
 
 		$("#noticeTable")
 			.prepend(cloneRow)
@@ -112,4 +105,4 @@ function showGreeting(payload) {
 	}
 }
 
-setTimeout("connect()", 1500);
+setTimeout("connect()", 500);

@@ -36,7 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/app")
 				.antMatchers("/css/**")
 				.antMatchers("/js/**")
-				.antMatchers("/images/**");
+				.antMatchers("/images/**")
+				.antMatchers("/rest/**");
 	}
 
 	/** セキュリティの各種設定 */
@@ -67,8 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutUrl("/logout")//PostReqest時の遷移先
 				.logoutSuccessUrl("/login?logout");
 
-		// CSRF対策を無効に設定（一時的）
-//		http.csrf().disable();
+//		 CSRF対策を無効に設定（一時的）
+				http.csrf().disable();
 	}
 
 	/** 認証の設定 */

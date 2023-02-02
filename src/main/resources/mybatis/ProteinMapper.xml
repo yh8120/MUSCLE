@@ -4,7 +4,7 @@
 	
 	<insert id="insert" parameterType="com.example.app.domain.RestProtein">
 		INSERT INTO proteins
-		(user_id, training_log_id,regestred)
+		(user_id, training_log_id,registered)
 		VALUES (#{uid},#{tid},NOW())
 	</insert>
 	<delete id="delete" parameterType="com.example.app.domain.RestProtein">

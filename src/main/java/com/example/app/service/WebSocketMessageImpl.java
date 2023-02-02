@@ -19,7 +19,7 @@ public class WebSocketMessageImpl implements WebSocketMessage {
 
 	@Override
 	public void send(Integer trainingLogId) throws Exception {
-		MessagePayload payload = dao.findLogAsMessagePayloadById(trainingLogId);
+		MessagePayload payload = dao.findLogAsMessagePayloadById(95);
 
 		template.convertAndSend("/topic/greetings", payload);
 	}
