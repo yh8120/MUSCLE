@@ -1,5 +1,5 @@
 var stompClient = null;
-let ounId = $("#userId").val();
+let ounId = parseInt($("#userId").val());
 
 function setConnected(connected) {
 	$("#connect").prop("disabled", connected);
@@ -21,12 +21,15 @@ function connect() {
 		stompClient.subscribe('/topic/greetings', function(payload) {
 			showGreeting(JSON.parse(payload.body));
 		});
+		stompClient.subscribe(`/user/${ounId}/private`, function(payload) {
+			showGreeting(JSON.parse(payload.body));
+		});
 	});
 }
-function addProtein(trainingLogId,userId) {
+function addProtein(trainingLogId) {
 	const data = {
 		tid: trainingLogId,
-		uid: userId
+		uid: ounId
 	}
 	$.ajax({
 		url: "http://localhost:8080/rest/add", // 通信先のURL
@@ -34,20 +37,20 @@ function addProtein(trainingLogId,userId) {
 		data: JSON.stringify(data),
 		contentType: 'application/json',
 		// dataType:"json", // 応答のデータの種類
-		dataType: "text", // 応答のデータの種類(xml/html/script/json/jsonp/text)
-	}).done(function(res) {
-		console.log(res);
-		$(`.trl${trainingLogId}`).off();
-		$(`.trl${trainingLogId}`).on("click", function() { delProtein(trainingLogId,userId) });
-		$(`.trl${trainingLogId}`).attr("src", "/images/icon/proteinAdded.png");
-		console.log($(`.trl${trainingLogId}`))
-	}).fail(console.log("fail"))
+		dataType: "json"
+	}).done(function(status) {
+		if (status.status == "succses") {
+			$(`.trl${trainingLogId}`).off();
+			$(`.trl${trainingLogId}`).on("click", function() { delProtein(trainingLogId) });
+			$(`.trl${trainingLogId}`).attr("src", "/images/icon/proteinAdded.png");
+		}
+	}).fail(function() { console.log("fail") });
 }
 
-function delProtein(trainingLogId,userId) {
+function delProtein(trainingLogId) {
 	const data = {
 		tid: trainingLogId,
-		uid: userId
+		uid: ounId
 	}
 	$.ajax({
 		url: "http://localhost:8080/rest/del", // 通信先のURL
@@ -55,13 +58,14 @@ function delProtein(trainingLogId,userId) {
 		data: JSON.stringify(data),
 		contentType: 'application/json',
 		// dataType:"json", // 応答のデータの種類
-		dataType: "text", // 応答のデータの種類(xml/html/script/json/jsonp/text)
-	}).done(function(res) {
-		console.log(res)
-		$(`.trl${trainingLogId}`).off();
-		$(`.trl${trainingLogId}`).on("click", function() { addProtein(trainingLogId,userId) });
-		$(`.trl${trainingLogId}`).attr("src", "/images/icon/protein.png");
-	}).fail(console.log("fail"))
+		dataType: "json" // 応答のデータの種類(xml/html/script/json/jsonp/text)
+	}).done(function(status) {
+		if (status.status == "succses") {
+			$(`.trl${trainingLogId}`).off();
+			$(`.trl${trainingLogId}`).on("click", function() { addProtein(trainingLogId) });
+			$(`.trl${trainingLogId}`).attr("src", "/images/icon/protein.png");
+		}
+	}).fail(function() { console.log("fail") })
 }
 
 function showGreeting(payload) {
@@ -86,14 +90,15 @@ function showGreeting(payload) {
 		cloneRow.find(".noticeMessage").text(message);
 		//make .noticeButton
 		cloneRow.find(".noticeButton").addClass("trl" + payload.trainingLogId);
-		if (payload.contributorList.includes(ounId)) {
+		let conlist = payload.contributorList;
+		if (conlist.includes(ounId)) {
 			cloneRow.find(".noticeButton").on("click", function() {
-				delProtein(payload.trainingLogId,payload.userId)
+				delProtein(payload.trainingLogId)
 			});
 			cloneRow.find(".noticeButton").attr("src", "/images/icon/proteinAdded.png");
 		} else {
 			cloneRow.find(".noticeButton").on("click", function() {
-				addProtein(payload.trainingLogId,payload.userId)
+				addProtein(payload.trainingLogId)
 			});
 			cloneRow.find(".noticeButton").attr("src", "/images/icon/protein.png");
 		}
@@ -105,4 +110,4 @@ function showGreeting(payload) {
 	}
 }
 
-setTimeout("connect()", 500);
+setTimeout("connect()", 300);

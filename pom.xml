@@ -35,7 +35,6 @@
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
-			//2.3.0or3.0.0
 			<version>3.0.0</version>
 		</dependency>
 

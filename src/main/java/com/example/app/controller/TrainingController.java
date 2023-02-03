@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app.domain.MUser;
-import com.example.app.domain.MessagePayload;
 import com.example.app.domain.Training;
 import com.example.app.domain.TrainingLog;
 import com.example.app.domain.TrainingPart;
@@ -45,9 +44,8 @@ public class TrainingController {
 		MUser user = userService.getUserbyLogin(loginUser.getUsername());
 		session.setAttribute("user",user);
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(user.getId());
-		List<MessagePayload> payloadList = trainingService.getTrainingLogByMessagePayloads();
 		model.addAttribute("trainingList", trainingPartList);
-		model.addAttribute("payloadList", payloadList);
+		webSocketMessage.sendToUser(user.getId());
 		return "training/list";
 	}
 
@@ -108,7 +106,6 @@ public class TrainingController {
 		trainingLog.setTraining(training);
 		
 		Integer trainingLogId=trainingService.addTrainingLog(trainingLog);
-		webSocketMessage.sendToUser(principal,trainingLogId);
 		webSocketMessage.send(trainingLogId);
 		
 		return "redirect:/training/log/" + trainingId;

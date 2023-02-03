@@ -92,7 +92,7 @@
 		ON training_logs.user_id=master_users.id
         LEFT OUTER JOIN proteins
 		ON training_logs.id=proteins.training_log_id
-        ORDER BY training_logs.registered DESC
+        ORDER BY training_logs.registered
 	</select>
 	<select id="findLogAsMessagePayloadById" parameterType="int" resultMap="messagePayload">
 		SELECT

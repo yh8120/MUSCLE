@@ -1,9 +1,10 @@
 package com.example.app.service;
 
-import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.example.app.dao.TrainingLogDao;
@@ -19,16 +20,20 @@ public class WebSocketMessageImpl implements WebSocketMessage {
 
 	@Override
 	public void send(Integer trainingLogId) throws Exception {
-		MessagePayload payload = dao.findLogAsMessagePayloadById(95);
+		MessagePayload payload = dao.findLogAsMessagePayloadById(trainingLogId);
 
 		template.convertAndSend("/topic/greetings", payload);
 	}
 
 	@Override
-	public void sendToUser(Principal principal, Integer trainingLogId) throws Exception {
-		MessagePayload payload = new MessagePayload();
+	@Async
+	public void sendToUser(Integer userId) throws Exception {
+		Thread.sleep(3000);
+		List <MessagePayload> payloadList = dao.findLogListAsMessagePayloadNewer();
 
-		String toUser = principal.getName();
-		template.convertAndSendToUser(toUser,"/topic/greetings", payload);
+		for(MessagePayload payload:payloadList) {
+			
+			template.convertAndSendToUser(String.valueOf(userId),"/private", payload);
+		}
 	}
 }
