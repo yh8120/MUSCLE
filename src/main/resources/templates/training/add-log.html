@@ -27,7 +27,6 @@
 
                 <div class="row">
                     <div class="col">
-                        <form th:action="@{/training/addProtein/{id}(id=${session.user.id})}" method="post">
                             <div class="table-frame">
                                 <table class="table table-dark table-striped text-center text-nowrap table-hover">
                                     <thead class="sticky-top bg-light">
@@ -45,7 +44,6 @@
                                 <a class="btn btn-warning" th:href="@{/training/log/{id}(id=${training.id})}">キャンセル</a>
 
                             </div>
-                        </form>
                     </div>
                 </div>
             </form>

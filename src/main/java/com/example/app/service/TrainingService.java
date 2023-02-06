@@ -21,6 +21,8 @@ public interface TrainingService {
 	
 	TrainingLog getTrainingLog(Integer trainingLogId)throws Exception;
 	
+	void addTraining(Training training)throws Exception;
+	
 	void editTrainingLog(TrainingLog trainingLog)throws Exception;
 	
 	void deleteTrainingLog(TrainingLog trainingLog)throws Exception;

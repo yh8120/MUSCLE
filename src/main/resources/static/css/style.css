@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 body {
-	font-size: 1rem;
+	font-size: 0.8rem;
   font-family: "メイリオ", sans-serif;
 }
 
@@ -11,6 +11,14 @@ body {
 
 .title-logo{
 	font-family: serif,sans-serif;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+
+    color: #fff;
+
+    background-color: #ff4242;
+
 }
 
 ::-webkit-scrollbar {

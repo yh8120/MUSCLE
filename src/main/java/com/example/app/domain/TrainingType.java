@@ -6,5 +6,5 @@ import lombok.Data;
 public class TrainingType {
 
 	private Integer id;
-	private String Name;
+	private String name;
 }

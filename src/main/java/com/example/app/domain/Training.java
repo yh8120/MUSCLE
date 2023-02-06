@@ -16,7 +16,7 @@ public class Training {
 	@NotBlank
 	@Size(max=45)
 	private String name;
-	private TrainingPart trainingpart;
+	private TrainingPart trainingPart;
 	private TrainingType trainingType;
 	private Priority priority;
 	private Weekday weekday;

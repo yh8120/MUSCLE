@@ -3,90 +3,68 @@
 
 <head th:replace="~{parts/common :: html_head()}"></head>
 
-<body class="bg-dark bg-gradient text-light vh-100">
-    <div>
-        <header th:replace="~{parts/common :: header()}"></header>
+<body class="bg-dark text-light vh-100">
+    <header th:replace="~{parts/common :: header()}"></header>
 
 
-        <div class="container">
-            <div class="row mt-2">
-                <div class="col">
-                    <form th:action="@{/training/addProtein}" method="post">
-                        <input type="hidden" th:name="${userId}" th:value="${session.user.id}">
-                        <div class="table-responsive" style="max-height: 200px;">
-                            <table id="conversation" class="table table-dark table-sm table-striped text-center table-hover">
-                                <thead>
+    <div class="container">
+        <div class="row mt-2">
+            <div class="col">
+                <form th:action="@{/training/addProtein}" method="post">
+                    <input type="hidden" th:name="${userId}" th:value="${session.user.id}">
+                    <div class="table-responsive" style="height: 200px;">
+                        <table id="conversation" class="table table-dark table-sm table-striped table-hover">
+                            <thead>
+                                <tr class="text-center ">
+                                    <th class="sticky-top" colspan="2">通知</th>
+                                </tr>
+                            </thead>
+                            <tbody id="noticeTable">
+
+
+                                <template id="noticeRow">
                                     <tr>
-                                        <th class="sticky-top">通知</th>
+                                        <td>
+                                            <img class="noticeIcon me-2" style="width: 20px;"> <span class="noticeMessage">${message}</span>
+                                        </td>
+                                        <td>
+                                            <img class="noticeButton ms-1" style="width: 20px;">
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody id="noticeTable">
-
-
-                                    <template id="noticeRow">
-                                        <tr>
-                                            <td class="text-center">
-                                                <img class="noticeIcon me-2" style="width: 20px;"> <span class="noticeMessage">${message}</span> <img class="noticeButton ms-1"
-                                                    style="width: 20px;">
-
-                                            </td>
-                                        </tr>
-                                    </template>
-                                </tbody>
-                            </table>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row justify-content-center mt-2">
-
-                <div class="col-lg-4 order-md-2">
-
-
-                    <div class="accordion accordion-flush mb-2" id="accordionFlushExample">
-                        <div th:each="training : ${trainingList}" class="accordion-item">
-
-                            <h2 class="accordion-header" th:id="|flush-heading${training.id}|">
-                                <button class="accordion-button collapsed bg-secondary bg-gradient text-light" type="button" data-bs-toggle="collapse"
-                                    th:data-bs-target="|#flush-collapse${training.id}|" aria-expanded="false" th:aria-controls="|flush-collapse${training.id}|">[[${training.name}]]</button>
-                            </h2>
-
-                            <div th:id="|flush-collapse${training.id}|" class="accordion-collapse collapse bg-dark" th:aria-labelledby="|flush-heading${training.id}|"
-                                data-bs-parent="#accordionFlushExample">
-                                <div class="accordion-body">
-                                    <div class="row">
-
-                                        <a th:each="item:${training.trainingList}" th:href="@{/training/log/{id}(id=${item.id})}" class="col-6 col-md-4 col-lg-6 mb-2 text-decoration-none">
-
-                                            <div class="card shadow">
-                                                <ul class="list-group list-group-flush text-center">
-                                                    <li class="list-group-item bg-secondary bg-gradient ">
-                                                        <div class="d-flex flex-row justify-content-center">
-                                                            <img style="width: 23px;" th:each="i:${#numbers.sequence(1,item.priority.id)}" th:src="@{/images/icon/skull.png}" alt="★" />
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item text-truncate bg-secondary bg-gradient text-light">[[${item.name}]]</li>
-                                                    <li class="list-group-item bg-secondary bg-gradient text-light ">[[${#dates.format(item.lastTrainingDay,"yyyy-MM-dd")}]]</li>
-                                                </ul>
-                                            </div>
-
-                                        </a>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                </template>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="col-lg-8 order-md-1">
-                    <div class="row">
-                        <div class="col-md-6 vh-50">
-                            <canvas id="myChart1" width="400" height="400"></canvas>
+                </form>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-2">
+
+            <div class="col">
+
+                <ul class="nav  nav-pills nav-fill red">
+                    <li th:each="training,status : ${trainingList}" class="nav-item"><a th:href="@{#tabItem__${training.id}__}" th:classappend="${status.first}?'active'" class="nav-link link-light" data-bs-toggle="tab">[[${training.name}]]</a></li>
+                    <li class="nav-item"><a class="nav-link link-light" th:href="@{/training/add}">トレーニングを追加</a></li>
+                </ul>
+
+                <div th:each="training,status : ${trainingList}" class="tab-content">
+                    <div th:id="tabItem__${training.id}__" th:classappend="${status.first}?'active'" class="tab-pane container">
+                        <div class="row">
+                            <a th:each="item:${training.trainingList}" th:href="@{/training/log/{id}(id=${item.id})}" class="col-4 col-md-3 mt-2 text-decoration-none">
+                                <div class="card shadow">
+                                    <ul class="list-group list-group-flush text-center">
+                                        <li class="list-group-item bg-dark bg-gradient ">
+                                            <div class="d-flex flex-row justify-content-center">
+                                                <img style="width: 23px;" th:each="i:${#numbers.sequence(1,item.priority.id)}" th:src="@{/images/icon/skull.png}" alt="★" />
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item text-truncate bg-dark bg-gradient text-light">[[${item.name}]]</li>
+                                        <li class="list-group-item bg-dark bg-gradient text-light ">[[${#dates.format(item.lastTrainingDay,"yyyy-MM-dd")}]]</li>
+                                    </ul>
+                                </div>
+                            </a>
                         </div>
-                        <div class="col-md-6 vh-50">
-                            <canvas id="myChart2" width="400" height="400"></canvas>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -96,68 +74,6 @@
     <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
     <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
     <script th:src="@{/js/webSocket.js}"></script>
-    <script th:src="@{/webjars/chartjs/4.1.2/dist/chart.umd.js}"></script>
-    <script>
-					var ctx = document.getElementById("myChart1").getContext(
-							'2d');
-					var myChart = new Chart(ctx, {
-						type : 'bar',
-						data : {
-							labels : [ "Red", "Blue", "Yellow", "Green",
-									"Purple", "Orange" ],
-							datasets : [ {
-								label : '# of Votes',
-								data : [ 12, 19, 3, 5, 2, 3 ],
-								backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
-										'rgba(54, 162, 235, 0.2)',
-										'rgba(255, 206, 86, 0.2)',
-										'rgba(75, 192, 192, 0.2)',
-										'rgba(153, 102, 255, 0.2)',
-										'rgba(255, 159, 64, 0.2)' ],
-								borderColor : [ 'rgba(255,99,132,1)',
-										'rgba(54, 162, 235, 1)',
-										'rgba(255, 206, 86, 1)',
-										'rgba(75, 192, 192, 1)',
-										'rgba(153, 102, 255, 1)',
-										'rgba(255, 159, 64, 1)' ],
-								borderWidth : 1
-							} ]
-						},
-						options : {
-							scales : {
-								yAxes : [ {
-									ticks : {
-										beginAtZero : true
-									}
-								} ]
-							}
-						}
-					});
-				</script>
-    <script>
-					var ctx = document.getElementById('myChart2').getContext(
-							'2d');
-					var chart = new Chart(ctx, {
-						// 作成したいチャートタイプ
-						type : 'line',
-
-						// データセットの情報
-						data : {
-							labels : [ "January", "February", "March", "April",
-									"May", "June", "July" ],
-							datasets : [ {
-								label : "My First dataset",
-								backgroundColor : 'rgb(255, 99, 132)',
-								borderColor : 'rgb(255, 99, 132)',
-								data : [ 0, 10, 5, 2, 20, 30, 45 ],
-							} ]
-						},
-
-						// 設定オプションはここに
-						options : {}
-					});
-				</script>
-
 </body>
 
 </html>

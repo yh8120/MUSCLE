@@ -112,5 +112,11 @@ public class TrainingServiceImpl implements TrainingService {
 		dao.updateLastTrainingDay((trainingLog.getTraining()).getId());
 	}
 
+	@Override
+	public void addTraining(Training training) throws Exception {
+		dao.insert(training);
+		
+	}
+
 
 }

@@ -1,6 +1,5 @@
 package com.example.app.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -23,9 +22,13 @@ import com.example.app.domain.MUser;
 import com.example.app.domain.Training;
 import com.example.app.domain.TrainingLog;
 import com.example.app.domain.TrainingPart;
+import com.example.app.service.PriorityService;
+import com.example.app.service.TrainingPartService;
 import com.example.app.service.TrainingService;
+import com.example.app.service.TrainingTypeService;
 import com.example.app.service.UserService;
 import com.example.app.service.WebSocketMessage;
+import com.example.app.service.WeekdayService;
 
 @Controller
 @RequestMapping("/training")
@@ -36,17 +39,58 @@ public class TrainingController {
 	@Autowired
 	TrainingService trainingService;
 	@Autowired
+	PriorityService priorityService;
+	@Autowired
+	TrainingPartService trainingPartService;
+	@Autowired
+	TrainingTypeService trainingTypeService;
+	@Autowired
+	WeekdayService weekdayService;
+	@Autowired
 	WebSocketMessage webSocketMessage;
 
 	@GetMapping
 	public String getTraining(HttpSession session,
-			@AuthenticationPrincipal UserDetails loginUser,Model model) throws Exception {
+			@AuthenticationPrincipal UserDetails loginUser, Model model) throws Exception {
 		MUser user = userService.getUserbyLogin(loginUser.getUsername());
-		session.setAttribute("user",user);
+		session.setAttribute("user", user);
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(user.getId());
 		model.addAttribute("trainingList", trainingPartList);
 		webSocketMessage.sendToUser(user.getId());
 		return "training/list";
+	}
+
+	@GetMapping("/add")
+	public String getAddTraining(Model model) throws Exception {
+
+		model.addAttribute("trainingPartList", trainingPartService.getTrainingPartList());
+		model.addAttribute("trainingTypeList", trainingTypeService.getTrainingTypeList());
+		model.addAttribute("priorityList", priorityService.getPriorityList());
+		model.addAttribute("weekdayList", weekdayService.getWeekdayList());
+		model.addAttribute("training", new Training());
+		return "training/add-training";
+	}
+
+	@PostMapping("/add")
+	public String postAddTraining(HttpSession session,
+			@Valid Training training,
+			Errors errors,
+			Model model) throws Exception {
+		if (errors.hasErrors()) {
+			model.addAttribute("trainingPartList", trainingPartService.getTrainingPartList());
+			model.addAttribute("trainingTypeList", trainingTypeService.getTrainingTypeList());
+			model.addAttribute("priorityList", priorityService.getPriorityList());
+			model.addAttribute("weekdayList", weekdayService.getWeekdayList());
+			model.addAttribute("training", new Training());
+			return "training/add-training";
+		}
+		
+		MUser user = (MUser)session.getAttribute("user");
+		training.setUserId(user.getId());
+		
+		trainingService.addTraining(training);
+		
+		return "redirect:/training";
 	}
 
 	@GetMapping("/log/{id}")
@@ -88,7 +132,6 @@ public class TrainingController {
 	@PostMapping("/log/add/{trainingId}")
 	public String postAddLog(
 			HttpSession session,
-			Principal principal,
 			@PathVariable("trainingId") Integer trainingId,
 			@Valid TrainingLog trainingLog,
 			Errors errors,
@@ -104,10 +147,10 @@ public class TrainingController {
 
 		trainingLog.setUser(user);
 		trainingLog.setTraining(training);
-		
-		Integer trainingLogId=trainingService.addTrainingLog(trainingLog);
+
+		Integer trainingLogId = trainingService.addTrainingLog(trainingLog);
 		webSocketMessage.send(trainingLogId);
-		
+
 		return "redirect:/training/log/" + trainingId;
 	}
 
@@ -133,33 +176,33 @@ public class TrainingController {
 	public String postEditLog(
 			HttpSession session,
 			RedirectAttributes redirectAttributes,
-			@PathVariable("id")Integer id,
+			@PathVariable("id") Integer id,
 			@Valid TrainingLog trainingLog,
-			Errors errors)throws Exception{
-		TrainingLog sessionTrainingLog =(TrainingLog)session.getAttribute("trainingLog");
+			Errors errors) throws Exception {
+		TrainingLog sessionTrainingLog = (TrainingLog) session.getAttribute("trainingLog");
 		TrainingLog checkLog = trainingService.getTrainingLog(id);
-		
+
 		MUser user = sessionTrainingLog.getUser();
 		MUser checkUser = checkLog.getUser();
-		
+
 		if (user.getId() != checkUser.getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");
 			return "redirect:/training";
 		}
-		if(errors.hasErrors()) {
-			return "training/edit-log/"+id ;
+		if (errors.hasErrors()) {
+			return "training/edit-log/" + id;
 		}
 		trainingLog.setUser(user);
 		trainingLog.setTraining(sessionTrainingLog.getTraining());
-		
+
 		trainingService.editTrainingLog(trainingLog);
-		
-		Integer trainingId= (sessionTrainingLog.getTraining()).getId();
+
+		Integer trainingId = (sessionTrainingLog.getTraining()).getId();
 		session.removeAttribute("trainingLog");
-		
-		return "redirect:/training/log/"+trainingId ;
+
+		return "redirect:/training/log/" + trainingId;
 	}
-	
+
 	@GetMapping("/log/delete")
 	public String getDeleteLog(
 			@RequestParam("id") Integer trainingId,
@@ -177,7 +220,7 @@ public class TrainingController {
 
 		trainingService.deleteTrainingLog(trainingLog);
 		session.removeAttribute("trainingLog");
-		return "redirect:/training/log/"+trainingId;
+		return "redirect:/training/log/" + trainingId;
 	}
 
 }

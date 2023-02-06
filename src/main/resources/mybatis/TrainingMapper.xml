@@ -60,29 +60,12 @@
 		FROM
 		training_parts
 		JOIN master_trainings
-		ON training_parts.id = master_trainings.part_id
+		ON training_parts.id =
+		master_trainings.part_id
 		WHERE user_id=#{id}
 		AND
 		master_trainings.status="ACT"
 		ORDER BY training_parts.id
-	</select>
-	<select id="findAllOrderByWeekday" parameterType="int"
-		resultMap="weekday">
-		SELECT
-		weekdays.id, weekdays.name,
-		master_trainings.id AS
-		training_id,
-		master_trainings.name AS training_name,
-		master_trainings.last_training_day,
-		master_trainings.priority_id,
-		master_trainings.last_training_day
-		FROM weekdays
-		JOIN master_trainings
-		ON weekdays.id = master_trainings.weekday_id
-		WHERE user_id=#{id}
-		AND
-		master_trainings.status="ACT"
-		ORDER BY weekdays.id
 	</select>
 	<select id="findbyTrainingId" parameterType="int"
 		resultMap="training">
@@ -97,25 +80,36 @@
 		training_logs.max_weight
 		FROM
 		master_trainings
-		LEFT OUTER JOIN 
-        (SELECT * 
-        FROM training_logs
-        WHERE training_logs.status="ACT"
-        )AS training_logs
+		LEFT OUTER JOIN
+		(SELECT *
+		FROM training_logs
+		WHERE training_logs.status="ACT"
+		)AS training_logs
 		ON master_trainings.id =
 		training_logs.training_id
-		WHERE master_trainings.id=${id}
+		WHERE
+		master_trainings.id=${id}
 		ORDER BY training_logs.registered DESC
 	</select>
+	<insert id="insert" parameterType="com.example.app.domain.Training">
+		INSERT INTO master_trainings
+		(user_id, name,part_id, type_id,
+		priority_id,weekday_id,registered,status)
+		VALUES (#{userId},#{name},#{trainingPart.id}, #{trainingType.id},
+		 #{priority.id},#{weekday.id},NOW(),"ACT")
+	</insert>
+
 	<update id="updateLastTrainingDay" parameterType="int">
 		UPDATE
 		master_trainings AS p1,
 		(
 		SELECT MAX(registered) AS max
-		FROM training_logs
+		FROM
+		training_logs
 		WHERE training_id=#{id}
 		) AS p2
-		SET p1.last_training_day = p2.max
+		SET p1.last_training_day =
+		p2.max
 		WHERE p1.id=#{id}
 	</update>
 

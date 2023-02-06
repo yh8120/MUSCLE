@@ -17,6 +17,8 @@ public interface TrainingDao {
 	
 	Training findbyTrainingId(Integer trainingId)throws Exception;
 	
+	void insert(Training training)throws Exception;
+	
 	void updateLastTrainingDay(Integer trainingId)throws Exception;
 
 }
