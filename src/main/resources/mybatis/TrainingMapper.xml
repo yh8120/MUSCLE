@@ -17,7 +17,6 @@
 			</association>
 		</collection>
 	</resultMap>
-
 	<resultMap id="weekday" type="com.example.app.domain.Weekday">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
@@ -35,16 +34,24 @@
 	<resultMap id="training"
 		type="com.example.app.domain.Training">
 		<id property="id" column="id" />
-		<result property="name" column="name" />
 		<result property="userId" column="user_id" />
-		<collection property="trainingLogList"
-			ofType="com.example.app.domain.TrainingLog">
-			<id property="id" column="training_log_id" />
-			<result property="registered" column="registered" />
-			<result property="totalWeight" column="total_weight" />
-			<result property="oneRepMax" column="one_rep_max" />
-			<result property="maxWeight" column="max_weight" />
-		</collection>
+		<result property="name" column="name" />
+		<association property="priority"
+			javaType="com.example.app.domain.Priority">
+			<id property="id" column="priority_id" />
+		</association>
+		<association property="trainingType"
+			javaType="com.example.app.domain.TrainingType">
+			<id property="id" column="type_id" />
+		</association>
+		<association property="trainingPart"
+			javaType="com.example.app.domain.TrainingPart">
+			<id property="id" column="part_id" />
+		</association>
+		<association property="weekday"
+			javaType="com.example.app.domain.Weekday">
+			<id property="id" column="weekday_id" />
+		</association>
 	</resultMap>
 
 	<select id="findAllOrderByPart" parameterType="int"
@@ -69,34 +76,19 @@
 	</select>
 	<select id="findbyTrainingId" parameterType="int"
 		resultMap="training">
-		SELECT
-		master_trainings.id,
-		master_trainings.name,
-		master_trainings.user_id,
-		training_logs.id AS training_log_id,
-		training_logs.registered,
-		training_logs.total_weight,
-		training_logs.one_rep_max,
-		training_logs.max_weight
-		FROM
-		master_trainings
-		LEFT OUTER JOIN
-		(SELECT *
-		FROM training_logs
-		WHERE training_logs.status="ACT"
-		)AS training_logs
-		ON master_trainings.id =
-		training_logs.training_id
-		WHERE
-		master_trainings.id=${id}
-		ORDER BY training_logs.registered DESC
+		SELECT * FROM master_trainings
+		WHERE master_trainings.id=${id}
+		AND status = "ACT"
 	</select>
-	<insert id="insert" parameterType="com.example.app.domain.Training">
+	<insert id="insert"
+		parameterType="com.example.app.domain.Training">
 		INSERT INTO master_trainings
-		(user_id, name,part_id, type_id,
+		(user_id, name,part_id,
+		type_id,
 		priority_id,weekday_id,registered,status)
-		VALUES (#{userId},#{name},#{trainingPart.id}, #{trainingType.id},
-		 #{priority.id},#{weekday.id},NOW(),"ACT")
+		VALUES
+		(#{userId},#{name},#{trainingPart.id}, #{trainingType.id},
+		#{priority.id},#{weekday.id},NOW(),"ACT")
 	</insert>
 
 	<update id="updateLastTrainingDay" parameterType="int">

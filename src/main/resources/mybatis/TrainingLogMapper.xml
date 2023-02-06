@@ -39,20 +39,59 @@
 			<result property="weight" column="weight" />
 			<result property="rep" column="rep" />
 		</collection>
-		<collection property="contributorList"
-			ofType="int">
+		<collection property="contributorList" ofType="int">
 			<result property="contributor" column="protein_user_id" />
 		</collection>
 	</resultMap>
-	
+	<resultMap id="training"
+		type="com.example.app.domain.Training">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="userId" column="user_id" />
+		<collection property="trainingLogList"
+			ofType="com.example.app.domain.TrainingLog">
+			<id property="id" column="training_log_id" />
+			<result property="registered" column="registered" />
+			<result property="totalWeight" column="total_weight" />
+			<result property="oneRepMax" column="one_rep_max" />
+			<result property="maxWeight" column="max_weight" />
+		</collection>
+	</resultMap>
 
+	<select id="findAllbyTrainingId" parameterType="int"
+		resultMap="training">
+		SELECT
+		master_trainings.id,
+		master_trainings.name,
+		master_trainings.user_id,
+		training_logs.id AS training_log_id,
+		training_logs.registered,
+		training_logs.total_weight,
+		training_logs.one_rep_max,
+		training_logs.max_weight
+		FROM
+		master_trainings
+		LEFT OUTER JOIN
+		(SELECT *
+		FROM training_logs
+		WHERE
+		training_logs.status="ACT"
+		)AS training_logs
+		ON master_trainings.id =
+		training_logs.training_id
+		WHERE
+		master_trainings.id=${id}
+		ORDER BY
+		training_logs.registered DESC
+	</select>
 	<select id="findById" parameterType="int"
 		resultMap="trainingLog">
 		SELECT
 		training_logs.id,training_logs.registered,
 		training_logs.user_id,training_logs.training_id,
 		training_logs.latitude,training_logs.logitude,
-		master_trainings.name AS training_name,
+		master_trainings.name AS
+		training_name,
 		training_sets.id AS training_set_id,
 		training_sets.weight,
 		training_sets.rep,
@@ -61,61 +100,72 @@
 		FROM
 		training_logs
 		JOIN training_sets
-		ON training_logs.id =training_sets.training_log_id
+		ON
+		training_logs.id =training_sets.training_log_id
 		JOIN master_trainings
 		ON training_id=master_trainings.id
 		WHERE training_logs.id=#{id}
-		AND training_logs.status="ACT"
+		AND
+		training_logs.status="ACT"
 		ORDER BY
 		training_sets.set_order
 	</select>
-	<select id="findLogListAsMessagePayloadNewer" resultMap="messagePayload">
+	<select id="findLogListAsMessagePayloadNewer"
+		resultMap="messagePayload">
 		SELECT
 		training_logs.id AS training_log_id,
-		master_users.id AS user_id,
+		master_users.id AS
+		user_id,
 		master_users.icon_path,
 		master_trainings.name AS training_name,
 		training_sets.id AS training_set_id,
 		training_sets.weight,
 		training_sets.rep,
-        proteins.user_id AS protein_user_id
+		proteins.user_id AS protein_user_id
 		FROM
 		(SELECT * FROM training_logs
-        WHERE training_logs.status="ACT"
-        ORDER BY registered DESC
-        LIMIT 100)AS training_logs
+		WHERE training_logs.status="ACT"
+		ORDER BY registered DESC
+		LIMIT 100)AS training_logs
 		JOIN training_sets
-		ON training_logs.id = training_sets.training_log_id
+		ON training_logs.id =
+		training_sets.training_log_id
 		JOIN master_trainings
-		ON training_logs.training_id=master_trainings.id
+		ON
+		training_logs.training_id=master_trainings.id
 		JOIN master_users
-		ON training_logs.user_id=master_users.id
-        LEFT OUTER JOIN proteins
+		ON
+		training_logs.user_id=master_users.id
+		LEFT OUTER JOIN proteins
 		ON training_logs.id=proteins.training_log_id
-        ORDER BY training_logs.registered
+		ORDER BY training_logs.registered
 	</select>
-	<select id="findLogAsMessagePayloadById" parameterType="int" resultMap="messagePayload">
+	<select id="findLogAsMessagePayloadById" parameterType="int"
+		resultMap="messagePayload">
 		SELECT
 		training_logs.id AS training_log_id,
-		master_users.id AS user_id,
+		master_users.id AS
+		user_id,
 		master_users.icon_path,
 		master_trainings.name AS training_name,
 		training_sets.weight,
 		training_sets.rep,
-        proteins.user_id AS protein_user_id
+		proteins.user_id AS protein_user_id
 		FROM
 		training_logs
 		JOIN training_sets
-		ON training_logs.id = training_sets.training_log_id
+		ON
+		training_logs.id = training_sets.training_log_id
 		JOIN master_trainings
 		ON training_logs.training_id=master_trainings.id
 		JOIN master_users
-		ON training_logs.user_id=master_users.id
-        LEFT OUTER JOIN proteins
+		ON
+		training_logs.user_id=master_users.id
+		LEFT OUTER JOIN proteins
 		ON training_logs.id=proteins.training_log_id
-        WHERE training_logs.id=#{id}
+		WHERE training_logs.id=#{id}
 	</select>
-	
+
 
 	<insert id="insert"
 		parameterType="com.example.app.domain.TrainingLog"
@@ -127,14 +177,17 @@
 		#{training.id}, #{totalWeight}, #{oneRepMax},
 		#{maxWeight},#{latitude},#{logitude},NOW())
 	</insert>
-	<update id="update" parameterType="com.example.app.domain.TrainingLog">
+	<update id="update"
+		parameterType="com.example.app.domain.TrainingLog">
 		UPDATE training_logs
-		SET total_weight=#{totalWeight},one_rep_max=#{oneRepMax},max_weight=#{maxWeight},registered=#{registered}
+		SET
+		total_weight=#{totalWeight},one_rep_max=#{oneRepMax},max_weight=#{maxWeight},registered=#{registered}
 		WHERE id=${id}
 	</update>
 	<update id="delete" parameterType="int">
 		UPDATE training_logs
-		SET training_logs.status="DEL"
+		SET
+		training_logs.status="DEL"
 		WHERE training_logs.id=${id}
 	</update>
 

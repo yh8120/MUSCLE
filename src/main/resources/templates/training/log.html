@@ -3,8 +3,8 @@
 
 <head th:replace="~{parts/common :: html_head()}"></head>
 
-<body>
-    <div class="bg-dark bg-gradient text-light vh-100">
+<body class="bg-dark text-light vh-100">
+    
 
         <header th:replace="~{parts/common :: header()}"></header>
 
@@ -14,8 +14,11 @@
             <div class="row mt-4">
                 <div class="d-flex align-items-center">
                     <div class="col-auto me-3 display-6">[[${training.name}]]</div>
-                    <a class="col" th:href="@{/training/log/add/{id}(id=${training.id})}">
+                    <a class="col-auto me-2" th:href="@{/training/log/add/{id}(id=${training.id})}">
                         <img style="width: 50px;" th:src="@{/images/icon/add.png}" alt="トレーニングする" />
+                    </a>
+                    <a class="col me-2" th:href="@{/training/edit/{id}(id=${training.id})}">
+                        <img style="width: 40px;" th:src="@{/images/icon/setting.png}" alt="編集" />
                     </a>
 
                 </div>
@@ -53,7 +56,7 @@
 
             <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
         </div>
-    </div>
+   
 </body>
 
 </html>

@@ -15,7 +15,6 @@ import com.example.app.domain.Training;
 import com.example.app.domain.TrainingLog;
 import com.example.app.domain.TrainingPart;
 import com.example.app.domain.TrainingSet;
-import com.example.app.domain.Weekday;
 
 @Service
 @Transactional
@@ -40,13 +39,8 @@ public class TrainingServiceImpl implements TrainingService {
 	}
 
 	@Override
-	public List<Weekday> getTrainingListOrderByWeekday(Integer userId) throws Exception {
-		return dao.findAllOrderByWeekday(userId);
-	}
-
-	@Override
-	public Training getTraining(Integer trainingId) throws Exception {
-		return dao.findbyTrainingId(trainingId);
+	public Training getAllTrainingLog(Integer trainingId) throws Exception {
+		return logDao.findAllbyTrainingId(trainingId);
 	}
 
 	@Override
@@ -116,6 +110,11 @@ public class TrainingServiceImpl implements TrainingService {
 	public void addTraining(Training training) throws Exception {
 		dao.insert(training);
 		
+	}
+
+	@Override
+	public Training getTraining(Integer trainingId) throws Exception {
+		return dao.findbyTrainingId(trainingId);
 	}
 
 

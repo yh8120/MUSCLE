@@ -92,6 +92,20 @@ public class TrainingController {
 		
 		return "redirect:/training";
 	}
+	
+	@GetMapping("/edit/{trainingId}")
+	public String getEditTraining(HttpSession session,Model model,@PathVariable("trainingId")Integer trainingId) throws Exception {
+		
+		Training training =trainingService.getTraining(trainingId);
+		
+		model.addAttribute("training",training);
+		model.addAttribute("trainingPartList", trainingPartService.getTrainingPartList());
+		model.addAttribute("trainingTypeList", trainingTypeService.getTrainingTypeList());
+		model.addAttribute("priorityList", priorityService.getPriorityList());
+		model.addAttribute("weekdayList", weekdayService.getWeekdayList());
+		model.addAttribute("training", new Training());
+		return "training/edit-training";
+	}
 
 	@GetMapping("/log/{id}")
 	public String getLog(HttpSession session,
@@ -99,7 +113,7 @@ public class TrainingController {
 			@PathVariable("id") Integer trainingId,
 			Model model) throws Exception {
 
-		Training training = trainingService.getTraining(trainingId);
+		Training training = trainingService.getAllTrainingLog(trainingId);
 		MUser user = (MUser) session.getAttribute("user");
 		if (training.getUserId() != user.getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");

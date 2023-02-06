@@ -9,7 +9,8 @@
 
 
         <div class="container mt-4" style="max-width: 960px; min-width: 375px;">
-            <form th:action="@{/training/add}" class="form" action="" method="post" th:object="${training}">
+            <form th:action="@{/training/edit}" class="form" action="" method="post" th:object="${training}">
+            <input type="hidden" th:field="*{id}">
                 <div class="row mb-3">
                     <label for="name" class="col-md-2 col-form-label">トレーニング名</label>
                     <div class="col-md-10">
@@ -29,7 +30,7 @@
                     <label for="trainingPart.id" class="col-md-2 col-form-label">部位</label>
                     <div class="col-md-10">
                         <select th:field="*{trainingPart.id}" class="form-control">
-                            <option th:each="part : ${trainingPartList}" th:value="${part.id}">[[${part.name}]]</option>
+                            <option th:each="part : ${trainingPartList}" th:value="${part.id}" th:celected="${part.id}==*{trainingPart.id}">[[${part.name}]]</option>
                         </select>
                     </div>
                 </div>
@@ -51,7 +52,7 @@
                 </div>
 
                 <input class="btn btn-danger" type="submit" value="保存する">
-                <a th:href="@{/training}" class="btn btn-warning">キャンセル</a>
+                <a th:href="@{/training/__${training.id}__}" class="btn btn-warning">キャンセル</a>
             </form>
             <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
         </div>
