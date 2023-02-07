@@ -3,86 +3,100 @@
 
 <head th:replace="~{parts/common :: html_head()}"></head>
 
-<body class="bg-dark text-light vh-100">
+<body class="bg-dark text-light" style="padding-bottom: 60px;">
 
-        <header th:replace="~{parts/common :: header()}"></header>
+    <header th:replace="~{parts/common :: header()}"></header>
 
 
-        <div class="container" style="max-width: 960px; min-width: 375px;">
-            <form th:action="@{/training/log/edit/{id}(id=${id})}" method="post">
-            <input class="trainingLogLatitude" type="hidden" name="latitude" th:value="${session.trainingLog.latitude}" >
-            <input class="trainingLogLogitude" type="hidden" name="logitude" th:value="${session.trainingLog.logitude}" >
+    <div class="container" style="max-width: 960px; min-width: 375px;">
+        <form th:action="@{/training/log/edit/{id}(id=${id})}" method="post">
+            <input class="trainingLogLatitude" type="hidden" name="latitude" th:value="${session.trainingLog.latitude}">
+            <input class="trainingLogLogitude" type="hidden" name="logitude" th:value="${session.trainingLog.logitude}">
 
-                <div class="row mt-4 align-items-center">
-                    <div class="col-auto display-6 mb-2">[[${session.trainingLog.training.name}]]</div>
-
-                    <div class="col-auto mb-2">
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button id="addTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">＋</button>
-                            <button id="removeTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">ー</button>
-                        </div>
-                        
-                    </div>
-                    <div class="col-auto mb-2">
-                        <a class="btn btn-dark delete" th:href="@{/training/log/delete(id=${session.trainingLog.training.id},log=${session.trainingLog.id})}">削除</a>
-                    </div>
-                    <div class="col mb-2">
-                        <input class="form-control bg-secondary bg-gradient text-light" type="datetime-local" name="registered" th:value="${#dates.format(session.trainingLog.registered,'yyyy-MM-dd HH:mm')}">
-                    </div>
-
+            <div class="row mt-4 align-items-center">
+                <div class="col fs-4 mb-2 title-logo text-truncate">[[${session.trainingLog.training.name}]]
                 </div>
-
-                <div class="row">
-                    <div class="col">
-                        <div class="table-frame">
-                            <table class="table table-dark table-striped text-center text-nowrap table-hover">
-                                <thead class="sticky-top bg-light">
-                                    <tr>
-                                        <th>セット</th>
-                                        <th>重量</th>
-                                        <th>回数</th>
-                                        <th>1RM</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="trainingSetListBody">
-                                    <tr th:each="set,status:${session.trainingLog.trainingSetList}">
-                                        <td class="h3 align-bottom">
-                                            <span class="trainingSetOrder">[[${set.order}]]</span>
-                                            <input class="trainingSetOrderForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].order'" th:value="${set.order}">
-                                            <input class="trainingSetIdForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].id'" th:value="${set.id}">
-                                        </td>
-                                        <td>
-                                            <div class="input-group">
-                                                <input class="trainingSetWeight form-control bg-secondary bg-gradient text-light" type="number" th:name="'trainingSetList['+${status.index}+'].weight'"
-                                                    step="0.1" min="0" max="1000" th:value="${set.weight}" required>
-                                                <span class="input-group-text bg-dark bg-gradient text-light">KG</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group">
-                                                <input class=" trainingSetRep form-control bg-secondary bg-gradient text-light" type="number" th:name="'trainingSetList['+${status.index}+'].rep'"
-                                                    step="1" min=0 max="1000" th:value="${set.rep}" required>
-                                                <span class="input-group-text bg-dark bg-gradient text-light">回</span>
-                                            </div>
-                                        </td>
-                                        <td class="h3 align-bottom">
-                                            <span class="trainingSetOneRepMax">[[${set.oneRepMax}]]</span>
-                                            <input class="trainingSetOneRepMaxForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].oneRepMax'" th:value=${set.oneRepMax}>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <input class="btn btn-danger" type="submit" value="保存">
-                            
-                            <a class="btn btn-warning" th:href="@{/training/log/{id}(id=${session.trainingLog.training.id})}">キャンセル</a>
-
-                        </div>
+                <div class="col mb-2">
+                    <input class="form-control bg-dark bg-gradient text-light  border-0" type="datetime-local" name="registered"
+                        th:value="${#dates.format(session.trainingLog.registered,'yyyy-MM-dd HH:mm')}">
+                </div>
+                <div class="col-auto mb-2">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button id="addTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">＋</button>
+                        <button id="removeTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">ー</button>
                     </div>
                 </div>
-            </form>
+                <div class="col-auto mb-2">
+                        <img class="delete cursor-hand" style="width: 40px;" th:src="@{/images/icon/delete.png}" alt="削除" />
+                </div>
 
-            <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
-        </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="table-frame">
+                        <table class="table table-dark table-striped text-center text-nowrap table-hover">
+                            <thead class="sticky-top bg-light">
+                                <tr>
+                                    <th class="bg-dark bg-gradient">セット</th>
+                                    <th class="bg-dark bg-gradient">重量</th>
+                                    <th class="bg-dark bg-gradient">回数</th>
+                                    <th class="bg-dark bg-gradient">1RM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trainingSetListBody">
+                                <tr th:each="set,status:${session.trainingLog.trainingSetList}">
+                                    <td class="h3 align-bottom">
+                                        <span class="trainingSetOrder">[[${set.order}]]</span>
+                                        <input class="trainingSetOrderForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].order'" th:value="${set.order}">
+                                        <input class="trainingSetIdForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].id'" th:value="${set.id}">
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input class="trainingSetWeight form-control bg-dark bg-gradient text-light  border-0" type="number" th:name="'trainingSetList['+${status.index}+'].weight'"
+                                                step="0.1" min="0" max="1000" th:value="${set.weight}" required>
+                                            <span class="input-group-text bg-dark bg-gradient text-light  border-0">KG</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input class=" trainingSetRep form-control bg-dark bg-gradient text-light  border-0" type="number" th:name="'trainingSetList['+${status.index}+'].rep'"
+                                                step="1" min=0 max="1000" th:value="${set.rep}" required>
+                                            <span class="input-group-text bg-dark bg-gradient text-light  border-0">回</span>
+                                        </div>
+                                    </td>
+                                    <td class="h3 align-bottom">
+                                        <span class="trainingSetOneRepMax">[[${set.oneRepMax}]]</span>
+                                        <input class="trainingSetOneRepMaxForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].oneRepMax'" th:value=${set.oneRepMax}>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <input class="btn btn-danger" type="submit" value="保存">
+
+                        <a class="btn btn-secondary" th:href="@{/training/log/{id}(id=${session.trainingLog.training.id})}">キャンセル</a>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form id="form-delete" th:action="@{/training/log/delete/{id}(id=${session.trainingLog.id})}" method="post"></form>
+    </div>
+    <footer th:replace="~{parts/common :: footer()}"></footer>
+    <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+    <script th:src="@{/js/make-training-set.js}"></script>
+    <script>
+					$(document).ready(function() {
+						$(".delete").on("click", function(e) {
+							e.preventDefault();
+							if (confirm('本当に削除してよろしいですか？')) {
+								$("#form-delete").submit();
+							}
+						})
+
+					});
+				</script>
 </body>
 <template id="trainingSetTemplate">
     <tr>
@@ -92,14 +106,14 @@
         </td>
         <td>
             <div class="input-group">
-                <input class="trainingSetWeight form-control bg-secondary bg-gradient text-light" type="number" step="0.1" min="0" max="1000" required="required">
-                <span class="input-group-text bg-dark bg-gradient text-light">KG</span>
+                <input class="trainingSetWeight form-control bg-dark bg-gradient text-light border-0" type="number" step="0.1" min="0" max="1000" required="required">
+                <span class="input-group-text bg-dark bg-gradient text-light border-0">KG</span>
             </div>
         </td>
         <td>
             <div class="input-group">
-                <input class=" trainingSetRep form-control bg-secondary bg-gradient text-light" type="number" step="1" min=0 max="1000" required="required">
-                <span class="input-group-text bg-dark bg-gradient text-light">回</span>
+                <input class=" trainingSetRep form-control bg-dark bg-gradient text-light border-0" type="number" step="1" min=0 max="1000" required="required">
+                <span class="input-group-text bg-dark bg-gradient text-light border-0">回</span>
             </div>
         </td>
         <td class="h3 align-bottom">
@@ -108,5 +122,4 @@
         </td>
     </tr>
 </template>
-<script th:src="@{/js/make-training-set.js}"></script>
 </html>

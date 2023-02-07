@@ -11,11 +11,15 @@ import com.example.app.domain.TrainingPart;
 public interface TrainingDao {
 
 	List<TrainingPart> findAllOrderByPart(Integer userId) throws Exception;
-	
-	Training findbyTrainingId(Integer trainingId)throws Exception;
-	
-	void insert(Training training)throws Exception;
-	
-	void updateLastTrainingDay(Integer trainingId)throws Exception;
+
+	Training findbyTrainingId(Integer trainingId) throws Exception;
+
+	void insert(Training training) throws Exception;
+
+	void update(Training training) throws Exception;
+
+	void delete(Integer trainingId) throws Exception;
+
+	void updateLastTrainingDay(Integer trainingId) throws Exception;
 
 }

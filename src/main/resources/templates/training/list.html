@@ -3,7 +3,7 @@
 
 <head th:replace="~{parts/common :: html_head()}"></head>
 
-<body class="bg-dark text-light vh-100">
+<body class="bg-dark text-light" style="padding-bottom: 60px;">
     <header th:replace="~{parts/common :: header()}"></header>
 
 
@@ -15,8 +15,8 @@
                     <div class="table-responsive" style="height: 200px;">
                         <table id="conversation" class="table table-dark table-sm table-striped table-hover">
                             <thead>
-                                <tr class="text-center ">
-                                    <th class="sticky-top" colspan="2">通知</th>
+                                <tr class="sticky-top text-center ">
+                                    <th class="bg-dark bg-gradient" colspan="2">通知</th>
                                 </tr>
                             </thead>
                             <tbody id="noticeTable">
@@ -25,10 +25,10 @@
                                 <template id="noticeRow">
                                     <tr>
                                         <td>
-                                            <img class="noticeIcon me-2" style="width: 20px;"> <span class="noticeMessage">${message}</span>
+                                            <img class="noticeIcon me-2" style="width: 20px;"> <span class="noticeMessage"></span>
                                         </td>
                                         <td>
-                                            <img class="noticeButton ms-1" style="width: 20px;">
+                                            <img class="noticeButton ms-1 cursor-hand" style="width: 20px;">
                                         </td>
                                     </tr>
                                 </template>
@@ -38,22 +38,33 @@
                 </form>
             </div>
         </div>
-        <div class="row justify-content-center mt-2">
+        <div class="row justify-content-center mt-4">
 
             <div class="col">
 
-                <ul class="nav  nav-pills nav-fill">
-                    <li th:each="training,status : ${trainingList}" class="nav-item"><a th:href="@{#tabItem__${training.id}__}" th:classappend="${status.first}?'active'" class="nav-link link-light" data-bs-toggle="tab">[[${training.name}]]</a></li>
-                    <li class="nav-item"><a class="nav-link link-light" th:href="@{/training/add}">トレーニングを追加</a></li>
+                <ul class="nav  nav-tabs nav-fill border-bottom border-secondary border-2">
+                    <li th:each="training,status : ${trainingList}" class="nav-item">
+                        <a th:href="@{#tabItem__${training.id}__}" 
+                        class="nav-link link-light" 
+                        th:classappend="${status.first}?'active'" 
+                        data-bs-toggle="tab">[[${training.name}]]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-light" th:href="@{/training/add}">
+                        <img style="width: 30px;" th:src="@{/images/icon/add.png}" alt="追加" /></a>
+                    </li>
                 </ul>
 
                 <div th:each="training,status : ${trainingList}" class="tab-content">
                     <div th:id="tabItem__${training.id}__" th:classappend="${status.first}?'active'" class="tab-pane container">
                         <div class="row bg-dark-subtle p-2">
-                            <a th:each="item:${training.trainingList}" th:href="@{/training/log/{id}(id=${item.id})}" class="col-4 col-md-3 mt-2 text-decoration-none">
-                                <div class="card shadow">
+                           
+                            <a th:each="item:${training.trainingList}"
+                            th:href="@{/training/log/{id}(id=${item.id})}"
+                            class="col-4 col-md-3 col-xl-2 mt-2 text-decoration-none">
+                                <div class="card shadow border-secondary">
                                     <ul class="list-group list-group-flush text-center">
-                                        <li class="list-group-item bg-dark bg-gradient ">
+                                        <li class="list-group-item bg-dark bg-gradient">
                                             <div class="d-flex flex-row justify-content-center">
                                                 <img style="width: 23px;" th:each="i:${#numbers.sequence(1,item.priority.id)}" th:src="@{/images/icon/skull.png}" alt="★" />
                                             </div>
@@ -63,6 +74,7 @@
                                     </ul>
                                 </div>
                             </a>
+                            
                         </div>
 
                     </div>
@@ -70,6 +82,7 @@
             </div>
         </div>
     </div>
+    <footer th:replace="~{parts/common :: footer()}"></footer>
     <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
     <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
     <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>

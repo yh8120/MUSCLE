@@ -3,53 +3,54 @@
 
 <head th:replace="~{parts/common :: html_head()}"></head>
 
-<body class="bg-dark text-light vh-100">
+<body class="bg-dark text-light" style="padding-bottom: 60px;">
 
-        <header th:replace="~{parts/common :: header()}"></header>
+    <header th:replace="~{parts/common :: header()}"></header>
 
 
-        <div class="container" style="max-width: 960px; min-width: 375px;">
-            <form th:action="@{/training/log/add/__${training.id}__}" method="post">
-            <input class="trainingLogLatitude" type="hidden" name="latitude" >
-            <input class="trainingLogLogitude" type="hidden" name="logitude" >
+    <div class="container" style="max-width: 960px; min-width: 375px;">
+        <form th:action="@{/training/log/add/__${training.id}__}" method="post">
+            <input class="trainingLogLatitude" type="hidden" name="latitude">
+            <input class="trainingLogLogitude" type="hidden" name="logitude">
 
-                <div class="row mt-4 align-items-center">
-                    <div class="col-auto display-6 mb-2">[[${training.name}]]</div>
-                    <div class="col-auto mb-2">
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button id="addTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">＋</button>
-                            <button id="removeTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">ー</button>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                            <div class="table-frame">
-                                <table class="table table-dark table-striped text-center text-nowrap table-hover">
-                                    <thead class="sticky-top bg-light">
-                                        <tr>
-                                            <th>セット</th>
-                                            <th>重量</th>
-                                            <th>回数</th>
-                                            <th>1RM</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="trainingSetListBody">
-                                    </tbody>
-                                </table>
-                                <input class="btn btn-danger" type="submit" value="保存">
-                                <a class="btn btn-warning" th:href="@{/training/log/{id}(id=${training.id})}">キャンセル</a>
-
-                            </div>
+            <div class="row mt-4 align-items-center">
+                <div class="col fs-4 mb-2  title-logo">[[${training.name}]]</div>
+                <div class="col-auto mb-2">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button id="addTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">＋</button>
+                        <button id="removeTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">ー</button>
                     </div>
                 </div>
-            </form>
 
-            <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
-        </div>
-    
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="table-frame">
+                        <table class="table table-dark table-striped text-center text-nowrap table-hover">
+                            <thead class="sticky-top">
+                                <tr>
+                                    <th class="bg-dark bg-gradient">セット</th>
+                                    <th class="bg-dark bg-gradient">重量</th>
+                                    <th class="bg-dark bg-gradient">回数</th>
+                                    <th class="bg-dark bg-gradient">1RM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trainingSetListBody">
+                            </tbody>
+                        </table>
+                        <input class="btn btn-danger" type="submit" value="保存">
+                        <a class="btn btn-secondary" th:href="@{/training/log/{id}(id=${training.id})}">キャンセル</a>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <footer th:replace="~{parts/common :: footer()}"></footer>
+    <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+    <script th:src="@{/js/make-training-set.js}"></script>
+<script th:src="@{/js/location.js}"></script>
 </body>
 <template id="trainingSetTemplate">
     <tr>
@@ -59,14 +60,14 @@
         </td>
         <td>
             <div class="input-group">
-                <input class="trainingSetWeight form-control bg-secondary bg-gradient text-light" type="number" step="0.1" min="0" max="1000" required="required">
-                <span class="input-group-text bg-dark bg-gradient text-light">KG</span>
+                <input class="trainingSetWeight form-control bg-dark bg-gradient text-light border-0" type="number" step="0.1" min="0" max="1000" required="required">
+                <span class="input-group-text bg-dark bg-gradient text-light border-0">KG</span>
             </div>
         </td>
         <td>
             <div class="input-group">
-                <input class=" trainingSetRep form-control bg-secondary bg-gradient text-light" type="number" step="1" min=0 max="1000" required="required">
-                <span class="input-group-text bg-dark bg-gradient text-light">回</span>
+                <input class=" trainingSetRep form-control bg-dark bg-gradient text-light border-0" type="number" step="1" min=0 max="1000" required="required">
+                <span class="input-group-text bg-dark bg-gradient text-light border-0">回</span>
             </div>
         </td>
         <td class="h3 align-bottom">
@@ -75,6 +76,4 @@
         </td>
     </tr>
 </template>
-<script th:src="@{/js/make-training-set.js}"></script>
-<script th:src="@{/js/location.js}"></script>
 </html>

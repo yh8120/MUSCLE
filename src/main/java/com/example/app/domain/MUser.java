@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
@@ -24,6 +25,7 @@ public class MUser {
 	@NotBlank
 	private String loginPass;
 	@Past
+	@NotNull
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date birthday;
 	private String role;

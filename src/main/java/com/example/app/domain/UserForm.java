@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
@@ -23,9 +24,11 @@ public class UserForm {
 	private String loginPass;
 	private String loginPassCopy;
 	@Past
+	@NotNull
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date birthday;
 	private Sex sex;
+	private String iconPath;
 	@AssertTrue
 	private Boolean agreement;
 }

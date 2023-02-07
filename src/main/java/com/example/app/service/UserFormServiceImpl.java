@@ -29,6 +29,7 @@ public class UserFormServiceImpl implements UserFormService {
 		user.setLoginPass(encoder.encode(userform.getLoginPass()));
 		user.setBirthday(userform.getBirthday());
 		user.setSex(userform.getSex());
+		user.setIconPath(userform.getIconPath());
 		userDao.insert(user);
 		userRegisterDao.deleteByEmail(userform.getEmail());
 	}

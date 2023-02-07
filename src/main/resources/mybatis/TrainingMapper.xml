@@ -77,7 +77,8 @@
 	<select id="findbyTrainingId" parameterType="int"
 		resultMap="training">
 		SELECT * FROM master_trainings
-		WHERE master_trainings.id=${id}
+		WHERE
+		master_trainings.id=${id}
 		AND status = "ACT"
 	</select>
 	<insert id="insert"
@@ -90,7 +91,23 @@
 		(#{userId},#{name},#{trainingPart.id}, #{trainingType.id},
 		#{priority.id},#{weekday.id},NOW(),"ACT")
 	</insert>
-
+	<update id="update"
+		parameterType="com.example.app.domain.Training">
+		UPDATE
+		master_trainings
+		SET name=#{name},
+		part_id=#{trainingPart.id},
+		part_id=#{trainingPart.id},
+		priority_id=#{priority.id},
+		weekday_id=#{weekday.id}
+		WHERE id=#{id}
+	</update>
+	<update id="delete" parameterType="int">
+		UPDATE master_trainings
+		SET status = "DEL"
+		WHERE id=#{id}
+		LIMIT 1
+	</update>
 	<update id="updateLastTrainingDay" parameterType="int">
 		UPDATE
 		master_trainings AS p1,

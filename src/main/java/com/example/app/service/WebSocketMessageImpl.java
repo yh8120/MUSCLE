@@ -28,7 +28,7 @@ public class WebSocketMessageImpl implements WebSocketMessage {
 	@Override
 	@Async
 	public void sendToUser(Integer userId) throws Exception {
-		Thread.sleep(3000);
+		Thread.sleep(1500);
 		List <MessagePayload> payloadList = dao.findLogListAsMessagePayloadNewer();
 
 		for(MessagePayload payload:payloadList) {

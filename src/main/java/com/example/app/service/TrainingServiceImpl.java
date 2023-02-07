@@ -117,5 +117,17 @@ public class TrainingServiceImpl implements TrainingService {
 		return dao.findbyTrainingId(trainingId);
 	}
 
+	@Override
+	public void editTraining(Training training) throws Exception {
+		dao.update(training);
+		
+	}
+
+	@Override
+	public void deleteTraining(Integer trainingId) throws Exception {
+		dao.delete(trainingId);
+		
+	}
+
 
 }

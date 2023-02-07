@@ -69,7 +69,7 @@ public class CreateAccountController {
 		sendMessageService.sendMessage(userRegister.getEmail(), subject, message);
 
 		redirectAttributes.addFlashAttribute("message", "送信されたメールリンクから30分以内にアカウント登録を行ってください。");
-		return "redirect:/accounts/mailsended";
+		return "redirect:/login";
 	}
 
 	@GetMapping("/mailsended")

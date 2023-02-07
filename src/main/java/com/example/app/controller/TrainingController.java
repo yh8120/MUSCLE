@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app.domain.MUser;
@@ -103,8 +102,51 @@ public class TrainingController {
 		model.addAttribute("trainingTypeList", trainingTypeService.getTrainingTypeList());
 		model.addAttribute("priorityList", priorityService.getPriorityList());
 		model.addAttribute("weekdayList", weekdayService.getWeekdayList());
-		model.addAttribute("training", new Training());
 		return "training/edit-training";
+	}
+	
+	@PostMapping("/edit")
+	public String postEditTraining(HttpSession session,
+			RedirectAttributes redirectAttributes,
+			Model model,
+			@Valid Training training,
+			Errors errors) throws Exception {
+		
+		Training oldTraining =trainingService.getTraining(training.getId());
+		MUser user = (MUser)session.getAttribute("user");
+		if (oldTraining.getUserId() != user.getId()) {
+			redirectAttributes.addFlashAttribute("message", "不正な参照です");
+			return "redirect:/training";
+		}
+		if(errors.hasErrors()) {
+			model.addAttribute("training",training);
+			model.addAttribute("trainingPartList", trainingPartService.getTrainingPartList());
+			model.addAttribute("trainingTypeList", trainingTypeService.getTrainingTypeList());
+			model.addAttribute("priorityList", priorityService.getPriorityList());
+			model.addAttribute("weekdayList", weekdayService.getWeekdayList());
+		}
+		
+		trainingService.editTraining(training);
+		
+		return "redirect:/training/log/"+training.getId();
+	}
+	
+	@PostMapping("/delete/{trainingId}")
+	public String postDeleteTraining(HttpSession session,
+			RedirectAttributes redirectAttributes,
+			@PathVariable("trainingId")Integer trainingId
+			) throws Exception {
+		
+		Training training =trainingService.getTraining(trainingId);
+		MUser user = (MUser)session.getAttribute("user");
+		if (training.getUserId() != user.getId()) {
+			redirectAttributes.addFlashAttribute("message", "不正な参照です");
+			return "redirect:/training";
+		}
+		
+		trainingService.deleteTraining(trainingId);
+		
+		return "redirect:/training";
 	}
 
 	@GetMapping("/log/{id}")
@@ -217,10 +259,9 @@ public class TrainingController {
 		return "redirect:/training/log/" + trainingId;
 	}
 
-	@GetMapping("/log/delete")
-	public String getDeleteLog(
-			@RequestParam("id") Integer trainingId,
-			@RequestParam("log") Integer trainingLogId,
+	@PostMapping("/log/delete/{trainingLogId}")
+	public String postDeleteLog(
+			@PathVariable("trainingLogId")Integer trainingLogId,
 			HttpSession session,
 			RedirectAttributes redirectAttributes,
 			Model model) throws Exception {
@@ -234,7 +275,7 @@ public class TrainingController {
 
 		trainingService.deleteTrainingLog(trainingLog);
 		session.removeAttribute("trainingLog");
-		return "redirect:/training/log/" + trainingId;
+		return "redirect:/training/log/" + trainingLog.getTraining().getId();
 	}
 
 }

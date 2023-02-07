@@ -2,35 +2,41 @@
 
 body {
 	font-size: 0.8rem;
-  font-family: "メイリオ", sans-serif;
+	font-family: "メイリオ", sans-serif;
 }
 
 .error-message {
-  color: #f00;
+	color: #f00;
 }
 
-.title-logo{
-	font-family: serif,sans-serif;
+.title-logo {
+	font-family: serif, sans-serif;
+	font-weight: bold;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.nav-tabs .nav-link.active, .nav-pills .show>.nav-link {
+	color: #fff;
+	background-color: rgb(128, 30, 30);
+	border: none;
+}
 
-    color: #fff;
-
-    background-color: #ff4242;
-
+.cursor-hand {
+	cursor: pointer;
+	cursor: hand;
 }
 
 ::-webkit-scrollbar {
-width: 16px;
-height: 20px;
+	width: 16px;
+	height: 20px;
 }
+
 ::-webkit-scrollbar-track {
-background-color: rgba(165, 73, 77,0.3);
-border-radius: 100px;
+	background-color: rgba(165, 73, 77, 0.3);
+	border-radius: 100px;
 }
+
 ::-webkit-scrollbar-thumb {
-background: rgb(165, 73, 77);
-border-radius: 100px;
-width: 130px;
+	background: rgb(165, 73, 77);
+	border-radius: 100px;
+	width: 130px;
 }
