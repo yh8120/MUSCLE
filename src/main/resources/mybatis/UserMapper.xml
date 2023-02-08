@@ -36,5 +36,16 @@
 		INSERT INTO master_users (name,email,login_pass,birthday,sex_id,icon_path,registered)
 		VALUES (#{name},#{email},#{loginPass},#{birthday},#{sex.id},#{iconPath},NOW())
 	</insert>
+	<update id="update" parameterType="com.example.app.domain.MUser">
+		UPDATE master_users
+		SET name=#{name},
+		email=#{email},
+		login_pass=#{loginPass},
+		birthday=#{birthday},
+		sex_id=#{sex.id},
+		icon_path=#{iconPath}
+		WHERE id=#{id}
+		LIMIT 1
+	</update>
 
 </mapper>

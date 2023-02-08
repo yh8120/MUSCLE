@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.app.dao.UserDao;
 import com.example.app.dao.UserRegisterDao;
+import com.example.app.domain.MUser;
 import com.example.app.domain.UserRegister;
 
 @Service
@@ -13,7 +15,9 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 
 	@Autowired
 	UserRegisterDao dao;
-
+	@Autowired
+	UserDao userDao;
+	
 	@Override
 	public UserRegister findByRegistrationCode(String registrationCode) throws Exception {
 		return dao.findByRegistrationCode(registrationCode);
@@ -33,6 +37,12 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 	@Override
 	public void deleteOldRecode() throws Exception {
 		dao.deleteOldRecode();
+	}
+
+	@Override
+	public MUser checkUserbyEmail(String email) throws Exception {
+		MUser user =userDao.selectByEmail(email);
+		return user;
 	}
 
 }

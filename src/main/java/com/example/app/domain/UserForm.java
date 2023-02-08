@@ -12,8 +12,11 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 @Data
+@NoArgsConstructor
 public class UserForm {
+	private Integer id;
 	@NotBlank
 	@Size(max=20)
 	private String name;
@@ -31,4 +34,14 @@ public class UserForm {
 	private String iconPath;
 	@AssertTrue
 	private Boolean agreement;
+	
+	public UserForm(MUser user) {
+		this.id=user.getId();
+		this.name=user.getName();
+		this.email=user.getEmail();
+		this.birthday=user.getBirthday();
+		this.iconPath=user.getIconPath();
+		Sex sex = user.getSex();
+		this.sex=sex;
+	}
 }

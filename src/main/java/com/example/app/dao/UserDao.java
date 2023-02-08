@@ -10,4 +10,6 @@ public interface UserDao {
 	MUser selectByEmail(String email)throws Exception;
 	
 	void insert(MUser user)throws Exception;
+	
+	void update(MUser user)throws Exception;
 }

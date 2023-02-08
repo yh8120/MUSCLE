@@ -34,5 +34,21 @@ public class UserFormServiceImpl implements UserFormService {
 		userRegisterDao.deleteByEmail(userform.getEmail());
 	}
 
+	@Override
+	public void updateAccount(UserForm userform) throws Exception {
+		MUser user = new MUser();
+		user.setId(userform.getId());
+		user.setName(userform.getName());
+		user.setEmail(userform.getEmail());
+		user.setLoginPass(encoder.encode(userform.getLoginPass()));
+		user.setBirthday(userform.getBirthday());
+		user.setSex(userform.getSex());
+		user.setIconPath(userform.getIconPath());
+		userDao.update(user);
+		
+	}
+	
+	
+
 	
 }

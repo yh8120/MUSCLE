@@ -4,5 +4,7 @@ import com.example.app.domain.UserForm;
 
 public interface UserFormService {
 
-	public void createAccount(UserForm userform)throws Exception;
+	void createAccount(UserForm userform)throws Exception;
+	
+	void updateAccount(UserForm userform)throws Exception;
 }

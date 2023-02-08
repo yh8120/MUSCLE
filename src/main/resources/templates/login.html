@@ -3,11 +3,13 @@
 <head th:replace="~{parts/common :: html_head()}"></head>
 <body id="loginPage" class="bg-dark text-light" style="padding-bottom: 60px;">
     <div class="container">
-
+        <div class="row justify-content-center mt-5">
+            <img class="col-auto" src="/images/logo.svg" alt="" width="200px" height="200px">
+        </div>
         <div class="row justify-content-center">
             <div class="col col-md-6 mt-4">
                 <div class="panel panel-default text-center">
-                    <h1 class="h3  title-logo mb-4">Please sign in</h1>
+                    <h1 class="h3  title-logo mb-4">Please log in</h1>
                     <div class="panel-body">
 
                         <div class="alert alert-success" th:if="${message}">[[${message}]]</div>

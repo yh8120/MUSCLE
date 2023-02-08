@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.app.dao.ProteinDao">
 	
-	<insert id="insert" parameterType="com.example.app.domain.RestProtein">
+	<insert id="insert" parameterType="com.example.app.domain.Protein">
 		INSERT INTO proteins
 		(user_id, training_log_id,registered)
 		VALUES (#{uid},#{tid},NOW())
 	</insert>
-	<delete id="delete" parameterType="com.example.app.domain.RestProtein">
+	<delete id="delete" parameterType="com.example.app.domain.Protein">
 	DELETE FROM proteins
 		WHERE user_id=#{uid} 
 		AND training_log_id=#{tid}

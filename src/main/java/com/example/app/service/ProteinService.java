@@ -1,11 +1,11 @@
 package com.example.app.service;
 
-import com.example.app.domain.RestProtein;
+import com.example.app.domain.Protein;
 
 public interface ProteinService {
 
-	void addProtein(RestProtein restProtein) throws Exception;
+	void addProtein(Protein restProtein) throws Exception;
 
-	void delProtein(RestProtein restProtein) throws Exception;
+	void delProtein(Protein restProtein) throws Exception;
 
 }

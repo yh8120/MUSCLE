@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.app.dao.ProteinDao;
-import com.example.app.domain.RestProtein;
+import com.example.app.domain.Protein;
 
 @Service
 @Transactional
@@ -16,13 +16,13 @@ public class ProteinServiceImpl implements ProteinService {
 	ProteinDao dao;
 	
 	@Override
-	public void addProtein(RestProtein restProtein) throws Exception {
-		dao.insert(restProtein);
+	public void addProtein(Protein protein) throws Exception {
+		dao.insert(protein);
 	}
 
 	@Override
-	public void delProtein(RestProtein restProtein) throws Exception {
-		dao.delete(restProtein);
+	public void delProtein(Protein protein) throws Exception {
+		dao.delete(protein);
 	}
 
 }
