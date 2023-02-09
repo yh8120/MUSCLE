@@ -14,11 +14,16 @@
             <input class="trainingLogLogitude" type="hidden" name="logitude" th:value="${session.trainingLog.logitude}">
 
             <div class="row mt-4 align-items-center">
-                <div class="col fs-4 mb-2 title-logo text-truncate">
+                <div class="d-flex justify-content-between align-items-center col-md fs-4 mb-2 title-logo text-truncate">
+                <div class="text-truncate">
                 <img style="width: 40px;" class="me-2" th:src="@{/images/icon/setting.png}" alt="編集" />
                 [[${session.trainingLog.training.name}]]
                 </div>
-                <div class="col mb-2">
+                <div class="mb-2 d-md-none">
+                        <img class="delete cursor-hand" style="width: 40px;" th:src="@{/images/icon/delete.png}" alt="削除" />
+                </div>
+                </div>
+                <div class="col col-md-auto mb-2">
                     <input class="form-control bg-dark bg-gradient text-light  border-0" type="datetime-local" name="registered"
                         th:value="${#dates.format(session.trainingLog.registered,'yyyy-MM-dd HH:mm')}">
                 </div>
@@ -28,7 +33,7 @@
                         <button id="removeTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">ー</button>
                     </div>
                 </div>
-                <div class="col-auto mb-2">
+                <div class="col-auto mb-2 d-none d-md-block">
                         <img class="delete cursor-hand" style="width: 40px;" th:src="@{/images/icon/delete.png}" alt="削除" />
                 </div>
 
