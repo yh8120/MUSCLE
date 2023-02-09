@@ -4,7 +4,9 @@
 <body class="bg-dark text-light" style="padding-bottom: 60px;">
     <div class="container">
 
-        <h1 class="h3 title-logo my-4">会員編集</h1>
+        <h1 class="h3 title-logo my-4">
+            <img style="width: 40px;" class="me-2" th:src="@{/images/icon/setting.png}" alt="編集" /> 会員編集
+        </h1>
 
         <div class="row">
             <div class="col">
@@ -79,15 +81,15 @@
     <!-- /.container -->
     <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
     <script th:inline="javascript">
-$(document).ready(function(){
-	let iconPath = "/images/profile/"+/*[[${userForm.iconPath}]]*/
-	$("#iconImage").attr("src",iconPath);
-	
-	$("#iconPath").change(function(){
-		let iconPath = "/images/profile/"+$(this).val();
-		$("#iconImage").attr("src",iconPath);
-	})
-})
-</script>
+					$(document).ready(function() {
+						let iconPath = "/images/profile/" + /*[[${userForm.iconPath}]]*/
+						$("#iconImage").attr("src", iconPath);
+
+						$("#iconPath").change(function() {
+							let iconPath = "/images/profile/" + $(this).val();
+							$("#iconImage").attr("src", iconPath);
+						})
+					})
+				</script>
 </body>
 </html>
