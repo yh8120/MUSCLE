@@ -9,7 +9,7 @@
 
 
     <div class="container mt-4" style="max-width: 960px; min-width: 375px;">
-        <div class="col-auto me-2 mb-4 fs-4 title-logo">
+        <div class="col-auto me-2 mb-4 fs-4 title-logo d-flex align-items-center">
         <img style="width: 40px;" class="me-2" th:src="@{/images/icon/setting.png}" alt="編集" /><span>[[${training.name}]]</span></div>
         <form th:action="@{/training/edit}" class="form" method="post" th:object="${training}">
             <input type="hidden" th:field="*{id}">

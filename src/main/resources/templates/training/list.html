@@ -44,7 +44,7 @@
                 <h5 class="card-header bg-dark bg-gradient text-center title-logo">トレーニング</h5>
                 <div class="card-body">
 
-                    <ul class="nav  nav-tabs nav-fill border-bottom border-secondary border-2">
+                    <ul class="nav  nav-tabs nav-fill border-bottom border-danger border-1">
                         <li th:each="training,status : ${trainingList}" class="nav-item"><a th:href="@{#tabItem__${training.id}__}" class="nav-link link-light"
                                 th:classappend="${status.first}?'active'" data-bs-toggle="tab">[[${training.name}]]</a></li>
                         <li class="nav-item"><a class="nav-link link-light" th:href="@{/training/add}">
@@ -57,7 +57,7 @@
                             <div class="row bg-dark-subtle p-2">
 
                                 <a th:each="item:${training.trainingList}" th:href="@{/training/log/{id}(id=${item.id})}" class="col-6 col-md-4 col-lg-6 col-xl-4 mt-2 text-decoration-none">
-                                    <div class="card shadow border-secondary">
+                                    <div class="card shadow border-0">
                                         <ul class="list-group list-group-flush text-center">
                                             <li class="list-group-item bg-dark bg-gradient">
                                                 <div class="d-flex flex-row justify-content-center">
