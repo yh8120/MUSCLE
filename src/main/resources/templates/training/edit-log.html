@@ -14,7 +14,9 @@
             <input class="trainingLogLogitude" type="hidden" name="logitude" th:value="${session.trainingLog.logitude}">
 
             <div class="row mt-4 align-items-center">
-                <div class="col fs-4 mb-2 title-logo text-truncate">[[${session.trainingLog.training.name}]]
+                <div class="col fs-4 mb-2 title-logo text-truncate">
+                <img style="width: 40px;" class="me-2" th:src="@{/images/icon/setting.png}" alt="編集" />
+                [[${session.trainingLog.training.name}]]
                 </div>
                 <div class="col mb-2">
                     <input class="form-control bg-dark bg-gradient text-light  border-0" type="datetime-local" name="registered"

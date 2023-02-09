@@ -8,11 +8,11 @@
 
 
     <div class="container">
-    <div class="row">
-    <div class="col"><div class="alert alert-danger" th:if="${message}">
-         [[${message}]]
-      </div></div>
-    </div>
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-danger" th:if="${message}">[[${message}]]</div>
+            </div>
+        </div>
         <div class="row">
             <div class="card bg-dark text-light col-lg-5 mt-4 border-0">
                 <h5 class="card-header bg-dark bg-gradient text-center title-logo">通知</h5>
@@ -21,14 +21,7 @@
                         <input type="hidden" th:name="${userId}" th:value="${session.user.id}">
                         <div class="table-responsive" style="height: 200px;">
                             <table id="conversation" class="table table-dark table-sm table-striped table-hover">
-                                <!--  <thead>
-                                <tr class="sticky-top text-center">
-                                    <th class="bg-dark bg-gradient" colspan="2">通知</th>
-                                </tr>
-                            </thead> -->
                                 <tbody id="noticeTable">
-
-
                                     <template id="noticeRow">
                                         <tr>
                                             <td>

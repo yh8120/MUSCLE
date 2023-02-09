@@ -116,7 +116,7 @@ public class CreateAccountController {
 		return "webcreate";
 	}
 
-	@PostMapping("/webcreate/{id}")
+	@PostMapping("/webcreate")
 	public String postWebCreate(RedirectAttributes redirectAttributes,
 			@Valid UserForm userForm,
 			Errors errors,
@@ -127,6 +127,7 @@ public class CreateAccountController {
 			return "webcreate";
 		}
 		if (errors.hasErrors()) {
+			System.out.println(errors.getAllErrors());
 			model.addAttribute("sexList", sexService.getSexList());
 			return "webcreate";
 		}

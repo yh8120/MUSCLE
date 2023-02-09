@@ -14,7 +14,9 @@
             <input class="trainingLogLogitude" type="hidden" name="logitude">
 
             <div class="row mt-4 align-items-center">
-                <div class="col fs-4 mb-2  title-logo">[[${training.name}]]</div>
+                <div class="col fs-4 mb-2  title-logo">
+                    <img style="width: 40px;" class="me-2" th:src="@{/images/icon/muscle.svg}" alt="追加" /> [[${training.name}]]
+                </div>
                 <div class="col-auto mb-2">
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button id="addTrainingSet" type="button" class="btn bg-danger bg-gradient text-light">＋</button>
@@ -50,7 +52,7 @@
     <footer th:replace="~{parts/common :: footer()}"></footer>
     <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
     <script th:src="@{/js/make-training-set.js}"></script>
-<script th:src="@{/js/location.js}"></script>
+    <script th:src="@{/js/location.js}"></script>
 </body>
 <template id="trainingSetTemplate">
     <tr>

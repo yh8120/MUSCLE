@@ -154,7 +154,6 @@ public class TrainingController {
 			RedirectAttributes redirectAttributes,
 			@PathVariable("id") Integer trainingId,
 			Model model) throws Exception {
-
 		Training training = trainingService.getAllTrainingLog(trainingId);
 		MUser user = (MUser) session.getAttribute("user");
 		if (training.getUserId() != user.getId()) {

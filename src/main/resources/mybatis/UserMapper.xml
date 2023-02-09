@@ -9,7 +9,6 @@
 		<result property="loginPass" column="login_pass" />
 		<result property="birthday" column="birthday" />
 		<result property="iconPath" column="icon_path" />
-		<result property="numberProtein" column="number_protein" />
 		<result property="registered" column="registered" />
 		<result property="role" column="role" />
 		<association property="sex"
@@ -22,29 +21,38 @@
 	<select id="selectByEmail" parameterType="string"
 		resultMap="user">
 		SELECT
-		master_users.id, master_users.name, master_users.email,
-		master_users.login_pass, master_users.birthday, master_users.icon_path,
-		master_users.number_protein, master_users.registered,
+		master_users.id,
+		master_users.name,
+		master_users.email,
+		master_users.login_pass,
+		master_users.birthday,
+		master_users.icon_path,
+		master_users.registered,
 		master_users.role,
-		sexes.id AS sex_id, sexes.name AS sex_name
+		sexes.id AS sex_id,
+		sexes.name AS sex_name
 		FROM master_users
 		JOIN sexes ON
 		master_users.sex_id = sexes.id
 		WHERE email = #{email}
 	</select>
 	<insert id="insert" parameterType="com.example.app.domain.MUser">
-		INSERT INTO master_users (name,email,login_pass,birthday,sex_id,icon_path,registered)
-		VALUES (#{name},#{email},#{loginPass},#{birthday},#{sex.id},#{iconPath},NOW())
+		INSERT INTO master_users
+		(name,email,login_pass,birthday,sex_id,icon_path,registered)
+		VALUES
+		(#{name},#{email},#{loginPass},#{birthday},#{sex.id},#{iconPath},NOW())
 	</insert>
 	<update id="update" parameterType="com.example.app.domain.MUser">
 		UPDATE master_users
-		SET name=#{name},
+		SET
+		name=#{name},
 		email=#{email},
 		login_pass=#{loginPass},
 		birthday=#{birthday},
 		sex_id=#{sex.id},
 		icon_path=#{iconPath}
-		WHERE id=#{id}
+		WHERE
+		id=#{id}
 		LIMIT 1
 	</update>
 

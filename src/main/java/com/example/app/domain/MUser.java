@@ -31,9 +31,6 @@ public class MUser {
 	private String role;
 	private Sex sex;
 	private String iconPath;
-	private Integer numberProtein;
-	private Double myGymLatitude;
-	private Double myGymLogitude;
 	private Date registered;
 	
 

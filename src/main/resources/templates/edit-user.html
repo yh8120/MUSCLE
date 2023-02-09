@@ -80,7 +80,7 @@
     <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
     <script th:inline="javascript">
 $(document).ready(function(){
-	let iconPath = "/images/profile/"+/*[[${userForm.iconPath}]]*/;
+	let iconPath = "/images/profile/"+/*[[${userForm.iconPath}]]*/
 	$("#iconImage").attr("src",iconPath);
 	
 	$("#iconPath").change(function(){
