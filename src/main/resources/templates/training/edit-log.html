@@ -54,7 +54,7 @@
                             </thead>
                             <tbody id="trainingSetListBody">
                                 <tr th:each="set,status:${session.trainingLog.trainingSetList}">
-                                    <td class="h3 align-bottom">
+                                    <td class="fs-5 fw-bold align-middle">
                                         <span class="trainingSetOrder">[[${set.order}]]</span>
                                         <input class="trainingSetOrderForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].order'" th:value="${set.order}">
                                         <input class="trainingSetIdForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].id'" th:value="${set.id}">
@@ -63,7 +63,7 @@
                                         <div class="input-group">
                                             <input class="trainingSetWeight form-control bg-dark bg-gradient text-light  border-0" type="number" th:name="'trainingSetList['+${status.index}+'].weight'"
                                                 step="0.1" min="0" max="1000" th:value="${set.weight}" required>
-                                            <span class="input-group-text bg-dark bg-gradient text-light  border-0">KG</span>
+                                            <span class="input-group-text bg-dark bg-gradient text-light  border-0">kg</span>
                                         </div>
                                     </td>
                                     <td>
@@ -73,7 +73,7 @@
                                             <span class="input-group-text bg-dark bg-gradient text-light  border-0">回</span>
                                         </div>
                                     </td>
-                                    <td class="h3 align-bottom">
+                                    <td class="align-middle">
                                         <span class="trainingSetOneRepMax">[[${set.oneRepMax}]]</span>
                                         <input class="trainingSetOneRepMaxForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].oneRepMax'" th:value=${set.oneRepMax}>
                                     </td>
@@ -107,7 +107,7 @@
 </body>
 <template id="trainingSetTemplate">
     <tr>
-        <td class="h3 align-bottom">
+        <td class="fs-5 fw-bold align-middle">
             <span class="trainingSetOrder"></span>
             <input class="trainingSetOrderForm" type="hidden">
         </td>
@@ -123,7 +123,7 @@
                 <span class="input-group-text bg-dark bg-gradient text-light border-0">回</span>
             </div>
         </td>
-        <td class="h3 align-bottom">
+        <td class="align-middle">
             <span class="trainingSetOneRepMax"></span>
             <input class="trainingSetOneRepMaxForm" type="hidden">
         </td>

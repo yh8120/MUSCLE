@@ -19,10 +19,10 @@ function connect() {
 		setConnected(true);
 		console.log('Connected: ' + frame);
 		stompClient.subscribe('/topic/greetings', function(payload) {
-			showGreeting(JSON.parse(payload.body));
+			showMessage(JSON.parse(payload.body));
 		});
 		stompClient.subscribe(`/user/${ounId}/private`, function(payload) {
-			showGreeting(JSON.parse(payload.body));
+			showMessage(JSON.parse(payload.body));
 		});
 	});
 }
@@ -68,7 +68,7 @@ function delProtein(trainingLogId) {
 	}).fail(function() { console.log("fail") })
 }
 
-function showGreeting(payload) {
+function showMessage(payload) {
 	if (payload.userId != ounId) {
 		const cloneRow = $($('#noticeRow').html());
 
@@ -80,7 +80,7 @@ function showGreeting(payload) {
 		const trainingSetList = payload.trainingSetList;
 		for (let i = 0; i < trainingSetList.length; i++) {
 			let set = trainingSetList[i];
-			message += set.weight + "kg×" + set.rep + "rep"
+			message += set.weight + "kg×" + set.rep
 			if (i != trainingSetList.length - 1) {
 				message += ",";
 			}

@@ -58,11 +58,11 @@
 
                     <div class="row mb-3">
                         <label for="sex.id" class="col-md-2 col-form-label">
-                            アイコン <img id="iconImage" class="me-1" th:src="@{/images/profile/1.png}" style="width: 30px;" alt="アイコン">
+                            アイコン <img id="iconImage" class="ms-2" th:src="@{/images/profile/1.png}" style="width: 30px;" alt="アイコン">
                         </label>
                         <div class="col-md-10">
                             <select th:field="*{iconPath}" class="form-control bg-dark bg-gradient text-light border-0">
-                                <option th:each="seq : ${#numbers.sequence(1,6)}" th:value="${seq}+'.png'">[[${seq}]].png</option>
+                                <option th:each="seq : ${#numbers.sequence(1,6)}" th:value="${seq}+'.png'">アイコン[[${seq}]]</option>
                             </select>
                         </div>
                     </div>
