@@ -5,6 +5,10 @@ body {
 	font-family: "メイリオ", sans-serif;
 }
 
+.main-container{
+	display: none ;
+}
+
 .error-message {
 	color: #f00;
 }

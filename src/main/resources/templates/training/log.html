@@ -9,24 +9,28 @@
     <header th:replace="~{parts/common :: header()}"></header>
 
 
-    <div class="container" style="max-width: 960px; min-width: 375px;">
+    <div class="container main-container" style="max-width: 960px; min-width: 375px;">
 
         <div class="row mt-4">
             <div class="d-flex align-items-center">
                 <div class="col me-2 fs-4 title-logo text-truncate d-flex align-items-center">
-                    <a th:href="@{/training/log/add/{id}(id=${training.id})}">
-                        <img style="width: 50px;" class="me-2" th:src="@{/images/icon/add.png}" alt="トレーニングする" />
-                    </a>
                     [[${training.name}]]
                 </div>
-                <div class="col-suto me-3">
+                <div class="col-auto me-2">
+                    <a th:href="@{/training/log/add/{id}(id=${training.id})}">
+                        <img style="width: 50px;" th:src="@{/images/icon/add.png}" alt="トレーニングする" />
+                    </a>
+                </div>
+                <div class="col-auto me-2">
                     <a th:href="@{/training/edit/{id}(id=${training.id})}">
                         <img style="width: 40px;" th:src="@{/images/icon/setting.png}" alt="編集" />
                     </a>
                 </div>
-                <form th:action="@{/training/delete/{id}(id=${training.id})}" method="post">
-                    <input class="delete" type="image" th:src="@{/images/icon/delete.png}" style="width: 40px;" alt="削除" name="delete">
-                </form>
+                <div class="col-auto">
+                    <form th:action="@{/training/delete/{id}(id=${training.id})}" method="post">
+                        <input class="delete" type="image" th:src="@{/images/icon/delete.png}" style="width: 40px;" alt="削除" name="delete">
+                    </form>
+                </div>
             </div>
         </div>
         <div class="row  mt-2">
@@ -41,7 +45,7 @@
                                 </th>
                                 <th class="bg-dark bg-gradient">最大重量<br>(kg)
                                 </th>
-                                <th class="bg-dark bg-gradient">トレーニング日<br>
+                                <th class="bg-dark bg-gradient">トレーニング日<br>(―)
                                 </th>
                                 <th class="bg-dark bg-gradient"></th>
                             </tr>

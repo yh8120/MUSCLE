@@ -17,7 +17,7 @@ function connect() {
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function(frame) {
 		setConnected(true);
-		console.log('Connected: ' + frame);
+		// console.log('Connected: ' + frame);
 		stompClient.subscribe('/topic/greetings', function(payload) {
 			showMessage(JSON.parse(payload.body));
 		});
@@ -42,7 +42,7 @@ function addProtein(trainingLogId) {
 		if (status.status == "succses") {
 			$(`.trl${trainingLogId}`).off();
 			$(`.trl${trainingLogId}`).on("click", function() { delProtein(trainingLogId) });
-			$(`.trl${trainingLogId}`).attr("src", "/images/icon/proteinAdded.png");
+			$(`.trl${trainingLogId}`).attr("src", "/images/icon/proteinAdded.png").hide().fadeIn(300);
 		}
 	}).fail(function() { console.log("fail") });
 }
@@ -63,7 +63,7 @@ function delProtein(trainingLogId) {
 		if (status.status == "succses") {
 			$(`.trl${trainingLogId}`).off();
 			$(`.trl${trainingLogId}`).on("click", function() { addProtein(trainingLogId) });
-			$(`.trl${trainingLogId}`).attr("src", "/images/icon/protein.png");
+			$(`.trl${trainingLogId}`).attr("src", "/images/icon/protein.png").hide().fadeIn(300);
 		}
 	}).fail(function() { console.log("fail") })
 }

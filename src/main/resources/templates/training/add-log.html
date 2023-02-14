@@ -8,7 +8,7 @@
     <header th:replace="~{parts/common :: header()}"></header>
 
 
-    <div class="container" style="max-width: 960px; min-width: 375px;">
+    <div class="container main-container" style="max-width: 960px; min-width: 375px;">
         <form th:action="@{/training/log/add/__${training.id}__}" method="post">
             <input class="trainingLogLatitude" type="hidden" name="latitude">
             <input class="trainingLogLogitude" type="hidden" name="logitude">
