@@ -57,7 +57,7 @@
                         <div th:id="tabItem__${training.id}__" th:classappend="${status.first}?'active'" class="tab-pane container">
                             <div class="row bg-dark-subtle p-2">
 
-                                <a th:each="item:${training.trainingList}" th:href="@{/training/log/{id}(id=${item.id})}" class="col-6 col-md-4 col-lg-6 col-xl-4 mt-2 text-decoration-none">
+                                <a th:each="item:${training.trainingList}" th:href="@{/training/log/{id}(id=${item.id})}" class="col-6 col-md-4 col-lg-6 col-xl-4 mt-3 text-decoration-none">
                                     <div class="card shadow border-0">
                                         <ul class="list-group list-group-flush text-center">
                                             <li class="list-group-item bg-dark bg-gradient">

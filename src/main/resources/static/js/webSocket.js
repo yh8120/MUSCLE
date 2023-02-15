@@ -1,31 +1,6 @@
 var stompClient = null;
 let ounId = parseInt($("#userId").val());
 
-function setConnected(connected) {
-	$("#connect").prop("disabled", connected);
-	$("#disconnect").prop("disabled", !connected);
-	if (connected) {
-		$("#conversation").show();
-	}
-	else {
-		$("#conversation").hide();
-	}
-}
-
-function connect() {
-	var socket = new SockJS('/endpoint');
-	stompClient = Stomp.over(socket);
-	stompClient.connect({}, function(frame) {
-		setConnected(true);
-		// console.log('Connected: ' + frame);
-		stompClient.subscribe('/topic/greetings', function(payload) {
-			showMessage(JSON.parse(payload.body));
-		});
-		stompClient.subscribe(`/user/${ounId}/private`, function(payload) {
-			showMessage(JSON.parse(payload.body));
-		});
-	});
-}
 function addProtein(trainingLogId) {
 	const data = {
 		tid: trainingLogId,
@@ -88,7 +63,6 @@ function showMessage(payload) {
 
 
 		cloneRow.find(".noticeMessage").text(message);
-		//make .noticeButton
 		cloneRow.find(".noticeButton").addClass("trl" + payload.trainingLogId);
 		let conlist = payload.contributorList;
 		if (conlist.includes(ounId)) {
@@ -110,4 +84,17 @@ function showMessage(payload) {
 	}
 }
 
-setTimeout("connect()", 300);
+$(function(){
+	var socket = new SockJS('/endpoint');
+	stompClient = Stomp.over(socket);
+	stompClient.connect({}, function(frame) {
+		console.log('Connected: ' + frame);
+		stompClient.subscribe('/topic/notice', function(payload) {
+			showMessage(JSON.parse(payload.body));
+		});
+		stompClient.subscribe(`/user/${frame.headers['user-name']}/private`, function(payload) {
+			showMessage(JSON.parse(payload.body));
+		});
+	});
+	
+});

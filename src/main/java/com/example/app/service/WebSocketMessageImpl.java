@@ -22,18 +22,18 @@ public class WebSocketMessageImpl implements WebSocketMessage {
 	public void send(Integer trainingLogId) throws Exception {
 		MessagePayload payload = dao.findLogAsMessagePayloadById(trainingLogId);
 
-		template.convertAndSend("/topic/greetings", payload);
+		template.convertAndSend("/topic/notice", payload);
 	}
 
 	@Override
 	@Async
-	public void sendToUser(Integer userId) throws Exception {
-		Thread.sleep(1500);
+	public void sendToUser(String userName) throws Exception {
+		Thread.sleep(1000);
 		List <MessagePayload> payloadList = dao.findLogListAsMessagePayloadNewer();
 
 		for(MessagePayload payload:payloadList) {
 			
-			template.convertAndSendToUser(String.valueOf(userId),"/private", payload);
+			template.convertAndSendToUser(userName,"/private", payload);
 		}
 	}
 }

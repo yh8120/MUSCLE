@@ -9,6 +9,11 @@ body {
 	display: none ;
 }
 
+.table-frame{
+	height: 70vh;
+	overflow: auto;
+}
+
 .error-message {
 	color: #f00;
 }

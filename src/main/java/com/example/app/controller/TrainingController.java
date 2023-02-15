@@ -55,7 +55,7 @@ public class TrainingController {
 		session.setAttribute("user", user);
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(user.getId());
 		model.addAttribute("trainingList", trainingPartList);
-		webSocketMessage.sendToUser(user.getId());
+		webSocketMessage.sendToUser(loginUser.getUsername());
 		return "training/list";
 	}
 
