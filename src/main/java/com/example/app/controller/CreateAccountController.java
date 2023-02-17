@@ -68,12 +68,11 @@ public class CreateAccountController {
 		userRegisterService.setUserRegister(userRegister);
 
 		//emailの表題と本文
-		String subject = "【DARK MUSCLE】本登録のご案内";
+		String subject = "【DARK MUSCLE】仮登録のご案内";
 		String message = String.format(
-				"ご登録ありがとうございマッスル。"
+				"ご登録ありがとうございます。"
 						+ "下記URLにアクセスして本登録を完了してください。"
-						+ "localhost:8080/accounts/webcreate/%s",
-				uuid);
+						+ "localhost:8080/accounts/webcreate/%s",uuid);
 
 		//email送信
 		sendMessageService.sendMessage(userRegister.getEmail(), subject, message);

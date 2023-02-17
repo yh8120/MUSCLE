@@ -55,7 +55,7 @@ public class TrainingController {
 		session.setAttribute("user", user);
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(user.getId());
 		model.addAttribute("trainingList", trainingPartList);
-		webSocketMessage.sendToUser(loginUser.getUsername());
+		webSocketMessage.sendTrainingLogToUser(loginUser.getUsername());
 		return "training/list";
 	}
 
@@ -203,8 +203,7 @@ public class TrainingController {
 		trainingLog.setUser(user);
 		trainingLog.setTraining(training);
 
-		Integer trainingLogId = trainingService.addTrainingLog(trainingLog);
-		webSocketMessage.send(trainingLogId);
+		webSocketMessage.sendTrainingLog(trainingService.addTrainingLog(trainingLog));
 
 		return "redirect:/training/log/" + trainingId;
 	}

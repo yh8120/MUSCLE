@@ -27,17 +27,30 @@
 			<result property="oneRepMax" column="one_rep_max" />
 		</collection>
 	</resultMap>
-	<resultMap id="messagePayload"
-		type="com.example.app.domain.MessagePayload">
-		<id property="trainingLogId" column="training_log_id" />
-		<result property="userId" column="user_id" />
-		<result property="iconPath" column="icon_path" />
-		<result property="trainingName" column="training_name" />
+	<resultMap id="trainingLogProtein"
+		type="com.example.app.domain.TrainingLog">
+		<id property="id" column="id" />
+		<result property="registered" column="registered" />
+		<result property="latitude" column="latitude" />
+		<result property="logitude" column="logitude" />
+		<association property="user"
+			javaType="com.example.app.domain.MUser">
+			<id property="id" column="user_id" />
+			<result property="name" column="user_name" />
+			<result property="iconPath" column="icon_path" />
+		</association>
+		<association property="training"
+			javaType="com.example.app.domain.Training">
+			<id property="id" column="training_id" />
+			<result property="name" column="training_name" />
+		</association>
 		<collection property="trainingSetList"
 			ofType="com.example.app.domain.TrainingSet">
 			<id property="id" column="training_set_id" />
 			<result property="weight" column="weight" />
 			<result property="rep" column="rep" />
+			<result property="order" column="set_order" />
+			<result property="oneRepMax" column="one_rep_max" />
 		</collection>
 		<collection property="contributorList" ofType="int">
 			<result property="contributor" column="protein_user_id" />
@@ -110,10 +123,10 @@
 		ORDER BY
 		training_sets.set_order
 	</select>
-	<select id="findLogListAsMessagePayloadNewer"
-		resultMap="messagePayload">
+	<select id="findLogListNewer"
+		resultMap="trainingLogProtein">
 		SELECT
-		training_logs.id AS training_log_id,
+		training_logs.id,
 		master_users.id AS
 		user_id,
 		master_users.icon_path,
@@ -140,32 +153,6 @@
 		ON training_logs.id=proteins.training_log_id
 		ORDER BY training_logs.registered
 	</select>
-	<select id="findLogAsMessagePayloadById" parameterType="int"
-		resultMap="messagePayload">
-		SELECT
-		training_logs.id AS training_log_id,
-		master_users.id AS
-		user_id,
-		master_users.icon_path,
-		master_trainings.name AS training_name,
-		training_sets.weight,
-		training_sets.rep,
-		proteins.user_id AS protein_user_id
-		FROM
-		training_logs
-		JOIN training_sets
-		ON
-		training_logs.id = training_sets.training_log_id
-		JOIN master_trainings
-		ON training_logs.training_id=master_trainings.id
-		JOIN master_users
-		ON
-		training_logs.user_id=master_users.id
-		LEFT OUTER JOIN proteins
-		ON training_logs.id=proteins.training_log_id
-		WHERE training_logs.id=#{id}
-	</select>
-
 
 	<insert id="insert"
 		parameterType="com.example.app.domain.TrainingLog"

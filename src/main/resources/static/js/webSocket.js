@@ -3,8 +3,8 @@ let ounId = parseInt($("#userId").val());
 
 function addProtein(trainingLogId) {
 	const data = {
-		tid: trainingLogId,
-		uid: ounId
+		trainingLogId: trainingLogId,
+		userId: ounId
 	}
 	$.ajax({
 		url: "http://localhost:8080/rest/add", // 通信先のURL
@@ -18,14 +18,15 @@ function addProtein(trainingLogId) {
 			$(`.trl${trainingLogId}`).off();
 			$(`.trl${trainingLogId}`).on("click", function() { delProtein(trainingLogId) });
 			$(`.trl${trainingLogId}`).attr("src", "/images/icon/proteinAdded.png").hide().fadeIn(300);
+			console.log(status);
 		}
 	}).fail(function() { console.log("fail") });
 }
 
 function delProtein(trainingLogId) {
 	const data = {
-		tid: trainingLogId,
-		uid: ounId
+		trainingLogId: trainingLogId,
+		userId: ounId
 	}
 	$.ajax({
 		url: "http://localhost:8080/rest/del", // 通信先のURL
@@ -39,42 +40,38 @@ function delProtein(trainingLogId) {
 			$(`.trl${trainingLogId}`).off();
 			$(`.trl${trainingLogId}`).on("click", function() { addProtein(trainingLogId) });
 			$(`.trl${trainingLogId}`).attr("src", "/images/icon/protein.png").hide().fadeIn(300);
+			console.log(status);
 		}
 	}).fail(function() { console.log("fail") })
 }
 
-function showMessage(payload) {
-	if (payload.userId != ounId) {
+function showMessage(notice) {
+
+	if (notice.userId != ounId) {
 		const cloneRow = $($('#noticeRow').html());
 
 		//make .notice icon
-		cloneRow.find(".noticeIcon").attr("src", "/images/profile/" + payload.iconPath);
+		cloneRow.find(".noticeIcon").attr("src", "/images/profile/" + notice.iconPath);
 
 		//make .noticeMsessage
-		let message = payload.trainingName + ":";
-		const trainingSetList = payload.trainingSetList;
-		for (let i = 0; i < trainingSetList.length; i++) {
-			let set = trainingSetList[i];
-			message += set.weight + "kg×" + set.rep
-			if (i != trainingSetList.length - 1) {
-				message += ",";
-			}
-		}
-
-
+		let message = notice.body;
 		cloneRow.find(".noticeMessage").text(message);
-		cloneRow.find(".noticeButton").addClass("trl" + payload.trainingLogId);
-		let conlist = payload.contributorList;
-		if (conlist.includes(ounId)) {
-			cloneRow.find(".noticeButton").on("click", function() {
-				delProtein(payload.trainingLogId)
-			});
-			cloneRow.find(".noticeButton").attr("src", "/images/icon/proteinAdded.png");
-		} else {
-			cloneRow.find(".noticeButton").on("click", function() {
-				addProtein(payload.trainingLogId)
-			});
-			cloneRow.find(".noticeButton").attr("src", "/images/icon/protein.png");
+
+		if (notice.trainingLogId) {
+			cloneRow.find(".noticeButton").addClass("trl" + notice.trainingLogId);
+			let conlist = notice.contributorList;
+			if (conlist.includes(ounId)) {
+				cloneRow.find(".noticeButton").on("click", function() {
+					delProtein(notice.trainingLogId)
+				});
+				cloneRow.find(".noticeButton").attr("src", "/images/icon/proteinAdded.png");
+			} else {
+				cloneRow.find(".noticeButton").on("click", function() {
+					addProtein(notice.trainingLogId)
+				});
+				cloneRow.find(".noticeButton").attr("src", "/images/icon/protein.png");
+			}
+
 		}
 
 		$("#noticeTable")
@@ -82,19 +79,21 @@ function showMessage(payload) {
 			.hide()
 			.fadeIn(500);
 	}
+
 }
 
-$(function(){
+$(function() {
 	var socket = new SockJS('/endpoint');
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function(frame) {
 		console.log('Connected: ' + frame);
-		stompClient.subscribe('/topic/notice', function(payload) {
-			showMessage(JSON.parse(payload.body));
+		console.log(frame);
+		stompClient.subscribe('/topic/notice', function(notice) {
+			showMessage(JSON.parse(notice.body));
 		});
-		stompClient.subscribe(`/user/${frame.headers['user-name']}/private`, function(payload) {
-			showMessage(JSON.parse(payload.body));
+		stompClient.subscribe(`/user/${frame.headers['user-name']}/private`, function(notice) {
+			showMessage(JSON.parse(notice.body));
 		});
 	});
-	
+
 });

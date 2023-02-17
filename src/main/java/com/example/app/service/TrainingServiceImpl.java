@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.app.dao.TrainingDao;
 import com.example.app.dao.TrainingLogDao;
 import com.example.app.dao.TrainingSetDao;
-import com.example.app.domain.MessagePayload;
 import com.example.app.domain.Training;
 import com.example.app.domain.TrainingLog;
 import com.example.app.domain.TrainingPart;
@@ -26,12 +25,6 @@ public class TrainingServiceImpl implements TrainingService {
 	TrainingLogDao logDao; 
 	@Autowired
 	TrainingSetDao setDao;
-
-
-	@Override
-	public List<MessagePayload> getTrainingLogByMessagePayloads() throws Exception {
-		return logDao.findLogListAsMessagePayloadNewer();
-	}
 	
 	@Override
 	public List<TrainingPart> getTrainingListOrderByPart(Integer userId) throws Exception {
@@ -44,7 +37,7 @@ public class TrainingServiceImpl implements TrainingService {
 	}
 
 	@Override
-	public Integer addTrainingLog(TrainingLog trainingLog) throws Exception {
+	public TrainingLog addTrainingLog(TrainingLog trainingLog) throws Exception {
 		Double totalWeight = 0.0;
 		Double oneRepMax = 0.0;
 		Double maxWeight = 0.0;
@@ -65,7 +58,7 @@ public class TrainingServiceImpl implements TrainingService {
 		
 		dao.updateLastTrainingDay((trainingLog.getTraining()).getId());
 		
-		return trainingLog.getId();
+		return trainingLog;
 
 	}
 

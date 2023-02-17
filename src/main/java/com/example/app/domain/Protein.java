@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Protein {
-  private Integer tid;
-  private Integer uid;
+  private Integer trainingLogId;
+  private Integer userId;
 }

@@ -22,6 +22,7 @@ public class TrainingLog {
 	private Double logitude;
 	@Valid
 	private List<TrainingSet> trainingSetList;
+	private List<Integer> contributorList;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date registered;
 }

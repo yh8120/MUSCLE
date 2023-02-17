@@ -5,12 +5,12 @@
 	<insert id="insert" parameterType="com.example.app.domain.Protein">
 		INSERT INTO proteins
 		(user_id, training_log_id,registered)
-		VALUES (#{uid},#{tid},NOW())
+		VALUES (#{userId},#{trainingLogId},NOW())
 	</insert>
 	<delete id="delete" parameterType="com.example.app.domain.Protein">
 	DELETE FROM proteins
-		WHERE user_id=#{uid} 
-		AND training_log_id=#{tid}
+		WHERE user_id=#{userId} 
+		AND training_log_id=#{trainingLogId}
 	</delete>
 
 </mapper>
