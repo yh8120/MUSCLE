@@ -36,6 +36,24 @@
 		master_users.sex_id = sexes.id
 		WHERE email = #{email}
 	</select>
+	<select id="selectById" parameterType="int"
+		resultMap="user">
+		SELECT
+		master_users.id,
+		master_users.name,
+		master_users.email,
+		master_users.login_pass,
+		master_users.birthday,
+		master_users.icon_path,
+		master_users.registered,
+		master_users.role,
+		sexes.id AS sex_id,
+		sexes.name AS sex_name
+		FROM master_users
+		JOIN sexes ON
+		master_users.sex_id = sexes.id
+		WHERE master_users.id = #{id}
+	</select>
 	<insert id="insert" parameterType="com.example.app.domain.MUser">
 		INSERT INTO master_users
 		(name,email,login_pass,birthday,sex_id,icon_path,registered)

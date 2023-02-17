@@ -64,8 +64,8 @@ public class WebSocketMessageImpl implements WebSocketMessage {
 	public void sendProteinToUser(Integer trainingLogId) throws Exception {
 		TrainingLog trainingLog=trainingLogDao.findById(trainingLogId);
 		MUser user = userDao.selectById(trainingLog.getUser().getId());
-		String body= trainingLog.getTraining().getName()+"に対してプロテインが送られました♪";
-		String iconPath = "create.svg";
+		String body= "あなたの"+trainingLog.getTraining().getName()+"に対してプロテインが送られました♪";
+		String iconPath = "notice.svg";
 		
 		template.convertAndSendToUser(user.getEmail(), "/private", new Notice(null,null, body, iconPath,null));
 	}
