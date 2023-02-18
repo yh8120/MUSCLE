@@ -52,6 +52,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/accounts/**").permitAll() //直リンクOK
 				.anyRequest().authenticated(); // それ以外は直リンクNG
 
+		http
+				.requiresChannel()
+				.antMatchers("/login")
+				.requiresSecure()
+				.antMatchers("/accounts/**")
+				.requiresSecure();
+
 		// ログイン処理
 		http
 				.formLogin()
@@ -69,8 +76,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutUrl("/logout")//PostReqest時の遷移先
 				.logoutSuccessUrl("/login?logout");
 
-//		 CSRF対策を無効に設定（一時的）
-//				http.csrf().disable();
+		//		 CSRF対策を無効に設定（一時的）
+		//				http.csrf().disable();
 	}
 
 	/** 認証の設定 */
