@@ -10,9 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.example.app.service.UserDetailsServiceImpl;
+import com.example.app.login.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -72,32 +71,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// ログアウト処理
 		http
 				.logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))//GetReqest時の遷移先
 				.logoutUrl("/logout")//PostReqest時の遷移先
 				.logoutSuccessUrl("/login?logout");
+		
+		http.requiresChannel().anyRequest().requiresSecure();
 
-		//		 CSRF対策を無効に設定（一時的）
-		//				http.csrf().disable();
 	}
-
-	/** 認証の設定 */
+	
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
 		PasswordEncoder encoder = passwordEncoder();
-		// インメモリ認証
-		/*
-		auth
-		    .inMemoryAuthentication()
-		        .withUser("user") // userを追加
-		            .password(encoder.encode("user"))
-		            .roles("GENERAL")
-		        .and()
-		        .withUser("admin") // adminを追加
-		            .password(encoder.encode("admin"))
-		            .roles("ADMIN");
-		*/
-
+		
 		// ユーザーデータ認証
 		auth
 				.userDetailsService(userDetailsService)

@@ -1,5 +1,6 @@
 package com.example.app.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -49,7 +50,7 @@ public class TrainingController {
 	WebSocketMessage webSocketMessage;
 
 	@GetMapping
-	public String getTraining(HttpSession session,
+	public String getTraining(HttpSession session,Principal principal,
 			@AuthenticationPrincipal UserDetails loginUser, Model model) throws Exception {
 		MUser user = userService.getUserbyLogin(loginUser.getUsername());
 		session.setAttribute("user", user);

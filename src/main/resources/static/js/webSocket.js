@@ -7,7 +7,7 @@ function addProtein(trainingLogId) {
 		userId: ounId
 	}
 	$.ajax({
-		url: "http://localhost:8080/rest/add", // 通信先のURL
+		url: "https://localhost:8443/rest/add", // 通信先のURL
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
 		contentType: 'application/json',
@@ -29,7 +29,7 @@ function delProtein(trainingLogId) {
 		userId: ounId
 	}
 	$.ajax({
-		url: "http://localhost:8080/rest/del", // 通信先のURL
+		url: "https://localhost:8443/rest/del", // 通信先のURL
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
 		contentType: 'application/json',
