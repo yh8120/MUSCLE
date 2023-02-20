@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,39 +136,5 @@ public class CreateAccountController {
 		redirectAttributes.addFlashAttribute("email", userForm.getEmail());
 		redirectAttributes.addFlashAttribute("loginPass", userForm.getLoginPass());
 		return "redirect:/login";
-	}
-
-	@GetMapping("/edit")
-	public String getEditUser(HttpSession session, Model model) throws Exception {
-		MUser user = (MUser) session.getAttribute("user");
-		model.addAttribute("sexList", sexService.getSexList());
-		model.addAttribute("userForm", new UserForm(user));
-		return "edit-user";
-	}
-
-	@PostMapping("/edit")
-	public String postEditUser(HttpSession session,
-			RedirectAttributes redirectAttributes,
-			Model model,
-			@Valid UserForm userForm,
-			Errors errors) throws Exception {
-		MUser user = (MUser) session.getAttribute("user");
-		if (user.getId() != userForm.getId()) {
-			redirectAttributes.addFlashAttribute("message", "不正な参照です");
-			return "redirect:/training";
-		}
-		if (!userForm.getLoginPass().equals(userForm.getLoginPassCopy())) {
-			errors.rejectValue("loginPass", "error.differ_password");
-			model.addAttribute("sexList", sexService.getSexList());
-			return "edit-user";
-		}
-		if (errors.hasErrors()) {
-			model.addAttribute("sexList", sexService.getSexList());
-			return "edit-user";
-		}
-
-		userFormService.updateAccount(userForm);
-		redirectAttributes.addFlashAttribute("message", "ユーザー情報を変更しました。");
-		return "redirect:/training";
 	}
 }

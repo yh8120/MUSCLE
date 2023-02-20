@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,8 +51,8 @@ public class TrainingController {
 	WebSocketMessage webSocketMessage;
 
 	@GetMapping
-	public String getTraining(HttpSession session,Principal principal,
-			@AuthenticationPrincipal LoginUserDetails loginUserDetails, Model model) throws Exception {
+	public String getTraining(Authentication authentication,Principal principal,
+			@AuthenticationPrincipal LoginUserDetails loginUserDetails,Model model) throws Exception {
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(loginUserDetails.getLoginUser().getId());
 		model.addAttribute("trainingList", trainingPartList);
 		webSocketMessage.sendTrainingLogToUser(loginUserDetails.getUsername());
@@ -70,7 +71,7 @@ public class TrainingController {
 	}
 
 	@PostMapping("/add")
-	public String postAddTraining(HttpSession session,
+	public String postAddTraining(@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			@Valid Training training,
 			Errors errors,
 			Model model) throws Exception {
@@ -79,12 +80,10 @@ public class TrainingController {
 			model.addAttribute("trainingTypeList", trainingTypeService.getTrainingTypeList());
 			model.addAttribute("priorityList", priorityService.getPriorityList());
 			model.addAttribute("weekdayList", weekdayService.getWeekdayList());
-			model.addAttribute("training", new Training());
 			return "training/add-training";
 		}
 		
-		MUser user = (MUser)session.getAttribute("user");
-		training.setUserId(user.getId());
+		training.setUserId(loginUserDetails.getLoginUser().getId());
 		
 		trainingService.addTraining(training);
 		
@@ -92,7 +91,7 @@ public class TrainingController {
 	}
 	
 	@GetMapping("/edit/{trainingId}")
-	public String getEditTraining(HttpSession session,Model model,@PathVariable("trainingId")Integer trainingId) throws Exception {
+	public String getEditTraining(@AuthenticationPrincipal LoginUserDetails loginUserDetails,Model model,@PathVariable("trainingId")Integer trainingId) throws Exception {
 		
 		Training training =trainingService.getTraining(trainingId);
 		
@@ -105,24 +104,24 @@ public class TrainingController {
 	}
 	
 	@PostMapping("/edit")
-	public String postEditTraining(HttpSession session,
+	public String postEditTraining(
+			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			Model model,
 			@Valid Training training,
 			Errors errors) throws Exception {
 		
 		Training oldTraining =trainingService.getTraining(training.getId());
-		MUser user = (MUser)session.getAttribute("user");
-		if (oldTraining.getUserId() != user.getId()) {
+		if (oldTraining.getUserId() != loginUserDetails.getLoginUser().getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");
 			return "redirect:/training";
 		}
 		if(errors.hasErrors()) {
-			model.addAttribute("training",training);
 			model.addAttribute("trainingPartList", trainingPartService.getTrainingPartList());
 			model.addAttribute("trainingTypeList", trainingTypeService.getTrainingTypeList());
 			model.addAttribute("priorityList", priorityService.getPriorityList());
 			model.addAttribute("weekdayList", weekdayService.getWeekdayList());
+			return "training/edit-training";
 		}
 		
 		trainingService.editTraining(training);
@@ -131,14 +130,13 @@ public class TrainingController {
 	}
 	
 	@PostMapping("/delete/{trainingId}")
-	public String postDeleteTraining(HttpSession session,
+	public String postDeleteTraining(@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			@PathVariable("trainingId")Integer trainingId
 			) throws Exception {
 		
 		Training training =trainingService.getTraining(trainingId);
-		MUser user = (MUser)session.getAttribute("user");
-		if (training.getUserId() != user.getId()) {
+		if (training.getUserId() != loginUserDetails.getLoginUser().getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");
 			return "redirect:/training";
 		}
@@ -149,13 +147,12 @@ public class TrainingController {
 	}
 
 	@GetMapping("/log/{id}")
-	public String getLog(HttpSession session,
+	public String getLog(@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			@PathVariable("id") Integer trainingId,
 			Model model) throws Exception {
 		Training training = trainingService.getAllTrainingLog(trainingId);
-		MUser user = (MUser) session.getAttribute("user");
-		if (training.getUserId() != user.getId()) {
+		if (training.getUserId() != loginUserDetails.getLoginUser().getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");
 			return "redirect:/training";
 		}
@@ -166,106 +163,93 @@ public class TrainingController {
 	}
 
 	@GetMapping("/log/add/{id}")
-	public String getAddLog(HttpSession session,
+	public String getAddLog(@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			@PathVariable("id") Integer trainingId,
 			Model model) throws Exception {
 
 		Training training = trainingService.getTraining(trainingId);
-		MUser user = (MUser) session.getAttribute("user");
-		if (training.getUserId() != user.getId()) {
+		if (training.getUserId() != loginUserDetails.getLoginUser().getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");
 			return "redirect:/training";
 		}
-
-		model.addAttribute("training", training);
+		TrainingLog trainingLog = new TrainingLog();
+		trainingLog.setTraining(training);
+		model.addAttribute("trainingLog", trainingLog);
 
 		return "training/add-log";
 	}
 
-	@PostMapping("/log/add/{trainingId}")
+	@PostMapping("/log/add")
 	public String postAddLog(
-			HttpSession session,
-			@PathVariable("trainingId") Integer trainingId,
+			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			@Valid TrainingLog trainingLog,
 			Errors errors,
 			Model model) throws Exception {
-		Training training = trainingService.getTraining(trainingId);
+		Training training = trainingService.getTraining(trainingLog.getTraining().getId());
+		
 		if (errors.hasErrors()) {
 			model.addAttribute("training", training);
 			return "training/add-log";
 		}
 
-		MUser user = (MUser) session.getAttribute("user");
-		training.setId(trainingId);
+		MUser user = loginUserDetails.getLoginUser();
 
 		trainingLog.setUser(user);
 		trainingLog.setTraining(training);
 
 		webSocketMessage.sendTrainingLog(trainingService.addTrainingLog(trainingLog));
 
-		return "redirect:/training/log/" + trainingId;
+		return "redirect:/training/log/" + trainingLog.getTraining().getId();
 	}
 
 	@GetMapping("/log/edit/{trainingLogId}")
-	public String getEditLog(
-			HttpSession session,
+	public String getEditLog(HttpSession session,
+			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			@PathVariable("trainingLogId") Integer trainingLogId,
 			Model model) throws Exception {
 		TrainingLog trainingLog = trainingService.getTrainingLog(trainingLogId);
-		MUser user = trainingLog.getUser();
-		MUser sessionUser = (MUser) session.getAttribute("user");
-		if (user.getId() != sessionUser.getId()) {
+		if (trainingLog.getUser().getId() != loginUserDetails.getLoginUser().getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");
 			return "redirect:/training";
 		}
 
-		session.setAttribute("trainingLog", trainingLog);
+		model.addAttribute("trainingLog", trainingLog);
 		return "training/edit-log";
 	}
 
-	@PostMapping("/log/edit/{id}")
-	public String postEditLog(
-			HttpSession session,
+	@PostMapping("/log/edit")
+	public String postEditLog(HttpSession session,
+			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
-			@PathVariable("id") Integer id,
 			@Valid TrainingLog trainingLog,
 			Errors errors) throws Exception {
-		TrainingLog sessionTrainingLog = (TrainingLog) session.getAttribute("trainingLog");
-		TrainingLog checkLog = trainingService.getTrainingLog(id);
+		TrainingLog checkLog = trainingService.getTrainingLog(trainingLog.getId());
 
-		MUser user = sessionTrainingLog.getUser();
-		MUser checkUser = checkLog.getUser();
-
-		if (user.getId() != checkUser.getId()) {
+		if (loginUserDetails.getLoginUser().getId() != checkLog.getUser().getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");
 			return "redirect:/training";
 		}
 		if (errors.hasErrors()) {
-			return "training/edit-log/" + id;
+			return "training/edit-log/" + trainingLog.getId();
 		}
-		trainingLog.setUser(user);
-		trainingLog.setTraining(sessionTrainingLog.getTraining());
 
 		trainingService.editTrainingLog(trainingLog);
-
-		Integer trainingId = (sessionTrainingLog.getTraining()).getId();
 		session.removeAttribute("trainingLog");
 
-		return "redirect:/training/log/" + trainingId;
+		return "redirect:/training/log/" + trainingLog.getTraining().getId();
 	}
 
 	@PostMapping("/log/delete/{trainingLogId}")
-	public String postDeleteLog(
+	public String postDeleteLog(HttpSession session,
 			@PathVariable("trainingLogId")Integer trainingLogId,
-			HttpSession session,
+			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			Model model) throws Exception {
 		TrainingLog trainingLog = trainingService.getTrainingLog(trainingLogId);
 		MUser user = trainingLog.getUser();
-		MUser sessionUser = (MUser) session.getAttribute("user");
-		if (user.getId() != sessionUser.getId()) {
+		if (loginUserDetails.getLoginUser().getId() != trainingLog.getUser().getId()) {
 			redirectAttributes.addFlashAttribute("message", "不正な参照です");
 			return "redirect:/training";
 		}

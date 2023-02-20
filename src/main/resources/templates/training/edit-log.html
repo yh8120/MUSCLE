@@ -9,15 +9,17 @@
 
 
     <div class="container main-container">
-        <form th:action="@{/training/log/edit/{id}(id=${id})}" method="post">
-            <input class="trainingLogLatitude" type="hidden" name="latitude" th:value="${session.trainingLog.latitude}">
-            <input class="trainingLogLogitude" type="hidden" name="logitude" th:value="${session.trainingLog.logitude}">
+        <form th:action="@{/training/log/edit}" method="post">
+            <input type="hidden" name="id" th:value="${trainingLog.id}">
+            <input type="hidden" name="training.id" th:value="${trainingLog.training.id}">
+            <input class="trainingLogLatitude" type="hidden" name="latitude" th:value="${trainingLog.latitude}">
+            <input class="trainingLogLogitude" type="hidden" name="logitude" th:value="${trainingLog.logitude}">
 
             <div class="row mt-4 align-items-center">
                 <div class="d-flex justify-content-between align-items-center col-md fs-4 mb-2 title-logo text-truncate">
                 <div class="text-truncate">
                 <img style="width: 40px;" class="me-2" th:src="@{/images/icon/setting.png}" alt="編集" />
-                [[${session.trainingLog.training.name}]]
+                [[${trainingLog.training.name}]]
                 </div>
                 <div class="mb-2 d-md-none">
                         <img class="delete cursor-hand" style="width: 40px;" th:src="@{/images/icon/delete.png}" alt="削除" />
@@ -25,7 +27,7 @@
                 </div>
                 <div class="col col-md-auto mb-2">
                     <input class="form-control bg-dark bg-gradient text-light  border-0" type="datetime-local" name="registered"
-                        th:value="${#dates.format(session.trainingLog.registered,'yyyy-MM-dd HH:mm')}">
+                        th:value="${#dates.format(trainingLog.registered,'yyyy-MM-dd HH:mm')}">
                 </div>
                 <div class="col-auto mb-2">
                     <div class="btn-group" role="group" aria-label="Basic example">
@@ -53,7 +55,7 @@
                                 </tr>
                             </thead>
                             <tbody id="trainingSetListBody">
-                                <tr th:each="set,status:${session.trainingLog.trainingSetList}">
+                                <tr th:each="set,status:${trainingLog.trainingSetList}">
                                     <td class="fs-5 fw-bold align-middle">
                                         <span class="trainingSetOrder">[[${set.order}]]</span>
                                         <input class="trainingSetOrderForm" type="hidden" th:name="'trainingSetList['+${status.index}+'].order'" th:value="${set.order}">
@@ -82,13 +84,13 @@
                         </table>
                         <input class="btn btn-danger" type="submit" value="保存">
 
-                        <a class="btn btn-secondary" th:href="@{/training/log/{id}(id=${session.trainingLog.training.id})}">キャンセル</a>
+                        <a class="btn btn-secondary" th:href="@{/training/log/{id}(id=${trainingLog.training.id})}">キャンセル</a>
 
                     </div>
                 </div>
             </div>
         </form>
-        <form id="form-delete" th:action="@{/training/log/delete/{id}(id=${session.trainingLog.id})}" method="post"></form>
+        <form id="form-delete" th:action="@{/training/log/delete/{id}(id=${trainingLog.id})}" method="post"></form>
     </div>
     <footer th:replace="~{parts/common :: footer()}"></footer>
     <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
