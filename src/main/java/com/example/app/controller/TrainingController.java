@@ -8,7 +8,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -22,6 +21,7 @@ import com.example.app.domain.MUser;
 import com.example.app.domain.Training;
 import com.example.app.domain.TrainingLog;
 import com.example.app.domain.TrainingPart;
+import com.example.app.login.LoginUserDetails;
 import com.example.app.service.PriorityService;
 import com.example.app.service.TrainingPartService;
 import com.example.app.service.TrainingService;
@@ -51,12 +51,10 @@ public class TrainingController {
 
 	@GetMapping
 	public String getTraining(HttpSession session,Principal principal,
-			@AuthenticationPrincipal UserDetails loginUser, Model model) throws Exception {
-		MUser user = userService.getUserbyLogin(loginUser.getUsername());
-		session.setAttribute("user", user);
-		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(user.getId());
+			@AuthenticationPrincipal LoginUserDetails loginUserDetails, Model model) throws Exception {
+		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(loginUserDetails.getLoginUser().getId());
 		model.addAttribute("trainingList", trainingPartList);
-		webSocketMessage.sendTrainingLogToUser(loginUser.getUsername());
+		webSocketMessage.sendTrainingLogToUser(loginUserDetails.getUsername());
 		return "training/list";
 	}
 

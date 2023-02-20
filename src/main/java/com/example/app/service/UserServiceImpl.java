@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
 	UserDao dao;
 
 	@Override
-	public MUser getUserbyLogin(String email) throws Exception {
+	public MUser getUser(String email) throws Exception {
 		return dao.selectByEmail(email);
 	}
 

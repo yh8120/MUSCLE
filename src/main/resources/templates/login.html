@@ -14,14 +14,23 @@
 
                         <div class="alert alert-success" th:if="${message}">[[${message}]]</div>
 
-                        <div class="alert alert-danger" th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></div>
+                        <div class="alert alert-danger" 
+                        th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null"
+                        th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+                        </div>
 
-                        <form th:action="@{/login}" method="post" th:object="${login}" class="form-login">
+                        <form th:action="@{/login}" method="post"class="form-login">
                             <div class="mb-3">
-                                <input type="email" placeholder="メールアドレス" class="form-control bg-dark bg-gradient text-light border-0" th:field="*{email}">
+                                <input type="email" 
+                                placeholder="メールアドレス" 
+                                class="form-control bg-dark bg-gradient text-light border-0" 
+                                name="email">
                             </div>
                             <div class="mb-3">
-                                <input type="password" placeholder="パスワード" class="form-control bg-dark bg-gradient text-light border-0" th:field="*{loginPass}">
+                                <input type="password" 
+                                placeholder="パスワード" 
+                                class="form-control bg-dark bg-gradient text-light border-0" 
+                                name="loginPass">
                             </div>
                             <div class="mb-3">
                                 <input type="submit" class="btn btn-danger w-100 title-logo" value="login">

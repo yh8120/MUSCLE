@@ -1,6 +1,7 @@
 package com.example.app.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +29,7 @@ public class MUser {
 	@NotNull
 	@DateTimeFormat(pattern="yyy-MM-dd")
 	private Date birthday;
-	private String role;
+	private List<String> roleList;
 	private Sex sex;
 	private String iconPath;
 	private Date registered;

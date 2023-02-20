@@ -1,92 +1,71 @@
 package com.example.app.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.example.app.login.UserDetailsServiceImpl;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
+@EnableMethodSecurity
+public class SecurityConfig {
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
-	/** セキュリティの対象外を設定 */
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		// セキュリティを適用しない
-		web
-				.ignoring()
-				.antMatchers("/webjars/**")
-				.antMatchers("/topic")
-				.antMatchers("/app")
-				.antMatchers("/css/**")
-				.antMatchers("/js/**")
-				.antMatchers("/images/**")
-				.antMatchers("/rest/**");
-	}
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-	/** セキュリティの各種設定 */
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-
-		// ログイン不要ページの設定
-		http
-				.authorizeRequests()
-				.antMatchers("/login").permitAll() //直リンクOK
-				.antMatchers("/accounts/**").permitAll() //直リンクOK
-				.anyRequest().authenticated(); // それ以外は直リンクNG
-
-		http
-				.requiresChannel()
-				.antMatchers("/login")
-				.requiresSecure()
-				.antMatchers("/accounts/**")
-				.requiresSecure();
-
-		// ログイン処理
-		http
-				.formLogin()
-				.loginProcessingUrl("/login") // ログイン処理のパス
-				.loginPage("/login") // ログインページの指定
-				.failureUrl("/login?error") // ログイン失敗時の遷移先
-				.usernameParameter("email") // ログインページのユーザーID
-				.passwordParameter("loginPass") // ログインページのパスワード
-				.defaultSuccessUrl("/training", true); // 成功後の遷移先
-
-		// ログアウト処理
-		http
-				.logout()
-				.logoutUrl("/logout")//PostReqest時の遷移先
-				.logoutSuccessUrl("/login?logout");
+		http.formLogin().loginProcessingUrl("/login")
+				.usernameParameter("email")
+				.passwordParameter("loginPass")
+				.loginPage("/login")
+				.defaultSuccessUrl("/training",true)
+				.failureUrl("/login")
+				.permitAll();
 		
-		http.requiresChannel().anyRequest().requiresSecure();
+		http.logout()
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/login?logout")
+				.invalidateHttpSession(true);
 
+		http.authorizeHttpRequests()
+				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+				.anyRequest().authenticated();
+
+		return http.build();
 	}
 	
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//	@Bean
+//	ServletWebServerFactory servletContainer() {
+//		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {@Override
+//			protected void postProcessContext(Context context) {
+//				SecurityConstraint securityConstraint = new SecurityConstraint();
+//				securityConstraint.setUserConstraint("CONFIDENTIAL");
+//				SecurityCollection collection = new SecurityCollection();
+//				collection.addPattern("/*");
+//				securityConstraint.addCollection(collection);
+//				context.addConstraint(securityConstraint);
+//			}
+//		};
+//		tomcat.addAdditionalTomcatConnectors(redirectConnector());
+//		return tomcat;
+//	}
+//	
+//	private Connector redirectConnector() {
+//		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+//		connector.setScheme("http");
+//		connector.setPort(8080);
+//		connector.setSecure(false);
+//		connector.setRedirectPort(8443);
+//		return connector;
+//	}
 
-		PasswordEncoder encoder = passwordEncoder();
-		
-		// ユーザーデータ認証
-		auth
-				.userDetailsService(userDetailsService)
-				.passwordEncoder(encoder);
-	}
 }
