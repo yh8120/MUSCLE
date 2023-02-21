@@ -92,8 +92,10 @@ function showMessage(notice) {
 
 $(function() {
 	var socket = new SockJS('/endpoint');
+	var headers = {};
+	headers[header] = token;
 	stompClient = Stomp.over(socket);
-	stompClient.connect({}, function(frame) {
+	stompClient.connect(headers, function(frame) {
 		console.log('Connected: ' + frame);
 		console.log(frame);
 		stompClient.subscribe('/topic/notice', function(notice) {

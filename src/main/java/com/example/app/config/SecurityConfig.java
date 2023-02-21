@@ -26,27 +26,33 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		http.formLogin().loginProcessingUrl("/login")
-				.usernameParameter("email")
-				.passwordParameter("loginPass")
-				.loginPage("/login")
-				.defaultSuccessUrl("/training", false)
-				.failureUrl("/login")
-				.permitAll();
+		http
+				.formLogin(login -> login
+						.loginProcessingUrl("/login")
+						.usernameParameter("email")
+						.passwordParameter("loginPass")
+						.loginPage("/login")
+						.defaultSuccessUrl("/training", false)
+						.failureUrl("/login")
+						.permitAll())
 
-		http.logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))
-				.addLogoutHandler(new CustomLogoutHandler())
-				.invalidateHttpSession(true);
+				.logout(logout -> logout
+						.logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))
+						.addLogoutHandler(new CustomLogoutHandler())
+						.invalidateHttpSession(true))
 
-		http.authorizeHttpRequests()
-				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-				.mvcMatchers("/login*", "/accounts/**").permitAll()
-				.anyRequest().authenticated();
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+						.mvcMatchers("/login*", "/accounts/**").permitAll()
+						.anyRequest().authenticated())
+
+				.headers(headers -> headers
+						.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+
+				.csrf(csrf -> csrf
+						.ignoringAntMatchers("/user/**", "/topic/notice/*"));
+
 		
-//		http
-//		.csrf(csrf -> csrf.disable());
-
 		return http.build();
 	}
 
