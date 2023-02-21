@@ -17,11 +17,10 @@ public class LoginController {
 	@GetMapping("/login")
 	public String getLogin(@RequestParam(name="e",required =false)Integer e,Model model) {
 		if(e != null) {
-			
-			if(e==1) {
-				model.addAttribute("message","メールアドレスは変更されませんでした。");
-			}else if(e==2) {
-				model.addAttribute("message","メールアドレスが変更されました。再ログインしてください。");
+			switch(e){
+				case 0:model.addAttribute("message","ログアウトしました。");break;
+				case 1:model.addAttribute("message","メールアドレスは変更されませんでした。");break;
+				case 2:model.addAttribute("message","メールアドレスが変更されました。再ログインしてください。");break;
 			}
 		}
 		

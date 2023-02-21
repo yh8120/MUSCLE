@@ -18,7 +18,7 @@ public class CustomLogoutHandler implements LogoutHandler {
 	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 		try {
             // add whole query parameters to url 
-            String queryParams = request.getQueryString() == null ? "?logout" : "?" + request.getQueryString();
+            String queryParams = request.getQueryString() == null ? "?e=0" : "?" + request.getQueryString();
 
             RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
             redirectStrategy.sendRedirect(request, response, "/login" + queryParams );

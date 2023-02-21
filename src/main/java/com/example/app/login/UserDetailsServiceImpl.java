@@ -22,13 +22,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		try {
 			loginUser = service.getUser(username);
-			System.out.println(loginUser);
-			if (loginUser == null) {
-				throw new UsernameNotFoundException("user not found");
-			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new UsernameNotFoundException("user not found",e);
+		}
+		
+		if(loginUser == null){
+			throw new UsernameNotFoundException("User not found for login email: " + username);
 		}
 
 		return new LoginUserDetails(loginUser);
