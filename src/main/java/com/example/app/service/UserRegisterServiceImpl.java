@@ -14,10 +14,10 @@ import com.example.app.domain.UserRegister;
 public class UserRegisterServiceImpl implements UserRegisterService {
 
 	@Autowired
-	UserRegisterDao dao;
-	@Autowired
 	UserDao userDao;
-	
+	@Autowired
+	UserRegisterDao dao;
+
 	@Override
 	public UserRegister findByRegistrationCode(String registrationCode) throws Exception {
 		return dao.findByRegistrationCode(registrationCode);
@@ -41,7 +41,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 
 	@Override
 	public MUser checkUserbyEmail(String email) throws Exception {
-		MUser user =userDao.selectByEmail(email);
+		MUser user = userDao.selectByEmail(email);
 		return user;
 	}
 

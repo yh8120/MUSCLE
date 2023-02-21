@@ -1,13 +1,11 @@
 package com.example.app.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,9 +49,12 @@ public class TrainingController {
 	WebSocketMessage webSocketMessage;
 
 	@GetMapping
-	public String getTraining(Authentication authentication,Principal principal,
+	public String getTraining(HttpSession session,
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,Model model) throws Exception {
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(loginUserDetails.getLoginUser().getId());
+		MUser user = userService.getUser(loginUserDetails.getLoginUser().getEmail());
+		session.setAttribute("userName", user.getName());
+		session.setAttribute("iconPath", user.getIconPath());
 		model.addAttribute("trainingList", trainingPartList);
 		webSocketMessage.sendTrainingLogToUser(loginUserDetails.getUsername());
 		return "training/list";

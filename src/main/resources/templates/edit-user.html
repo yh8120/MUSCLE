@@ -24,6 +24,7 @@
                         <label for="email" class="col-md-2 col-form-label">メールアドレス</label>
                         <div class="col-md-10">
                             <input type="email" th:field="*{email}" class="form-control bg-dark bg-gradient text-light border-0">
+                            <small class="error-message" th:errors="*{email}"></small>
                         </div>
                     </div>
                     <div class="row mb-3">

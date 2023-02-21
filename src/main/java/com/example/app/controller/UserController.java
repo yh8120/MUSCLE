@@ -3,7 +3,6 @@ package com.example.app.controller;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +22,14 @@ import com.example.app.service.MessageSenderService;
 import com.example.app.service.SexService;
 import com.example.app.service.UserFormService;
 import com.example.app.service.UserRegisterService;
+import com.example.app.service.UserService;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
+	@Autowired
+	UserService userService;
 	@Autowired
 	UserRegisterService userRegisterService;
 	@Autowired
@@ -37,13 +39,11 @@ public class UserController {
 	@Autowired
 	MessageSenderService sendMessageService;
 
-	private final Long EFFECTIVE_TIME = 1800000L;
-
 	@GetMapping("/edit")
 	public String getEditUser(
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			Model model) throws Exception {
-		
+
 		model.addAttribute("sexList", sexService.getSexList());
 		model.addAttribute("userForm", new UserForm(loginUserDetails.getLoginUser()));
 		return "edit-user";
@@ -55,64 +55,50 @@ public class UserController {
 			Model model,
 			@Valid UserForm userForm,
 			Errors errors) throws Exception {
+		
 		if (!userForm.getLoginPass().equals(userForm.getLoginPassCopy())) {
 			errors.rejectValue("loginPass", "error.differ_password");
 			model.addAttribute("sexList", sexService.getSexList());
 			return "edit-user";
 		}
-		if (errors.hasErrors()) {
-			model.addAttribute("sexList", sexService.getSexList());
-			return "edit-user";
-		}
-		MUser user =userRegisterService.checkUserbyEmail(userForm.getEmail());
-		if(user.getEmail()!=loginUserDetails.getLoginUser().getEmail()
-				&& Objects.nonNull(user)) {
-			errors.rejectValue("email", "error.already_registered");
-			model.addAttribute("sexList", sexService.getSexList());
-			return "edit-user";
-		}
-		
-		
-		
-		String uuid = UUID.randomUUID().toString();
-		userFormService.setTempUser(userForm,uuid);
-		
-		String subject = "【DARK MUSCLE】会員情報更新のご案内";
-		String message = String.format(
-				"会員情報はまだ変更されていません。30分以内に"
-						+ "下記URLにアクセスして更新を承認してください。"
-						+ "localhost:8080/accounts/user/esit-submit/%s",uuid);
-		sendMessageService.sendMessage(userForm.getEmail(), subject, message);
-		
-		redirectAttributes.addFlashAttribute("message", "会員情報更新用メールを送信しました。30分以内にメールリンクより変更を承認してください。");
-		return "redirect:/training";
-	}
-	
-	
-	
-	@PostMapping("/edit-submit/{id}")
-	public String postEditUser(HttpSession session,
-			RedirectAttributes redirectAttributes,
-			Model model,
-			@Valid UserForm userForm,
-			Errors errors) throws Exception {
-		MUser user = (MUser) session.getAttribute("user");
-		if (user.getId() != userForm.getId()) {
-			redirectAttributes.addFlashAttribute("message", "不正な参照です");
-			return "redirect:/training";
-		}
-		if (!userForm.getLoginPass().equals(userForm.getLoginPassCopy())) {
-			errors.rejectValue("loginPass", "error.differ_password");
-			model.addAttribute("sexList", sexService.getSexList());
-			return "edit-user";
-		}
+
 		if (errors.hasErrors()) {
 			model.addAttribute("sexList", sexService.getSexList());
 			return "edit-user";
 		}
 
+		//メアド変更時メール送信処理
+		MUser user = userRegisterService.checkUserbyEmail(userForm.getEmail());
+		if (!userForm.getEmail().equals(loginUserDetails.getLoginUser().getEmail())) {
+			if (Objects.nonNull(user)) {
+				errors.rejectValue("email", "error.already_registered");
+				model.addAttribute("sexList", sexService.getSexList());
+				return "edit-user";
+			}
+			
+			String uuid = UUID.randomUUID().toString();
+			
+			userFormService.reservationEmail(userForm,loginUserDetails.getLoginUser().getEmail(), uuid);
+
+			String subject = "【DARK MUSCLE】会員情報更新のご案内";
+			String message = String.format(
+					"会員情報はまだ変更されていません。30分以内に"
+							+ "下記URLにアクセスして更新を承認してください。"
+							+ "localhost:8080/accounts/user/edit-submit/%s",uuid);
+			sendMessageService.sendMessage(userForm.getEmail(), subject, message);
+
+			redirectAttributes.addFlashAttribute("message", "メールアドレスが変更されたため、確認用メールを送信しました。30分以内にメールリンクより変更を承認してください。");
+			userForm.setEmail(loginUserDetails.getLoginUser().getEmail());
+			userFormService.updateAccount(userForm);
+			return "redirect:/training";
+		}
+
 		userFormService.updateAccount(userForm);
-		redirectAttributes.addFlashAttribute("message", "ユーザー情報を変更しました。");
+		redirectAttributes.addFlashAttribute("message", "会員情報を更新しました。");
 		return "redirect:/training";
+		
 	}
+	
+	
+
 }

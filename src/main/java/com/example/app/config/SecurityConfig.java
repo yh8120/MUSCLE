@@ -9,6 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.example.app.config.handler.CustomLogoutHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -27,45 +30,46 @@ public class SecurityConfig {
 				.usernameParameter("email")
 				.passwordParameter("loginPass")
 				.loginPage("/login")
-				.defaultSuccessUrl("/training",true)
+				.defaultSuccessUrl("/training", false)
 				.failureUrl("/login")
 				.permitAll();
-		
+
 		http.logout()
-				.logoutUrl("/logout")
-				.logoutSuccessUrl("/login?logout")
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))
+				.addLogoutHandler(new CustomLogoutHandler())
 				.invalidateHttpSession(true);
 
 		http.authorizeHttpRequests()
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+				.mvcMatchers("/login*", "/accounts/**").permitAll()
 				.anyRequest().authenticated();
 
 		return http.build();
 	}
-	
-//	@Bean
-//	ServletWebServerFactory servletContainer() {
-//		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {@Override
-//			protected void postProcessContext(Context context) {
-//				SecurityConstraint securityConstraint = new SecurityConstraint();
-//				securityConstraint.setUserConstraint("CONFIDENTIAL");
-//				SecurityCollection collection = new SecurityCollection();
-//				collection.addPattern("/*");
-//				securityConstraint.addCollection(collection);
-//				context.addConstraint(securityConstraint);
-//			}
-//		};
-//		tomcat.addAdditionalTomcatConnectors(redirectConnector());
-//		return tomcat;
-//	}
-//	
-//	private Connector redirectConnector() {
-//		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-//		connector.setScheme("http");
-//		connector.setPort(8080);
-//		connector.setSecure(false);
-//		connector.setRedirectPort(8443);
-//		return connector;
-//	}
+
+	//	@Bean
+	//	ServletWebServerFactory servletContainer() {
+	//		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {@Override
+	//			protected void postProcessContext(Context context) {
+	//				SecurityConstraint securityConstraint = new SecurityConstraint();
+	//				securityConstraint.setUserConstraint("CONFIDENTIAL");
+	//				SecurityCollection collection = new SecurityCollection();
+	//				collection.addPattern("/*");
+	//				securityConstraint.addCollection(collection);
+	//				context.addConstraint(securityConstraint);
+	//			}
+	//		};
+	//		tomcat.addAdditionalTomcatConnectors(redirectConnector());
+	//		return tomcat;
+	//	}
+	//	
+	//	private Connector redirectConnector() {
+	//		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+	//		connector.setScheme("http");
+	//		connector.setPort(8080);
+	//		connector.setSecure(false);
+	//		connector.setRedirectPort(8443);
+	//		return connector;
+	//	}
 
 }
