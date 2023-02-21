@@ -43,6 +43,9 @@ public class SecurityConfig {
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 				.mvcMatchers("/login*", "/accounts/**").permitAll()
 				.anyRequest().authenticated();
+		
+//		http
+//		.csrf(csrf -> csrf.disable());
 
 		return http.build();
 	}
