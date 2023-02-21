@@ -1,5 +1,7 @@
 var stompClient = null;
 let ounId = parseInt($("#userId").val());
+let token = $("meta[name='_csrf']").attr("content");
+let header = $("meta[name='_csrf_header']").attr("content");
 
 function addProtein(trainingLogId) {
 	const data = {
@@ -8,6 +10,9 @@ function addProtein(trainingLogId) {
 	}
 	$.ajax({
 		url: "http://localhost:8080/rest/add", // 通信先のURL
+		headers: {
+			'X-CSRF-TOKEN': `${token}`
+		},
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
 		contentType: 'application/json',
@@ -30,6 +35,9 @@ function delProtein(trainingLogId) {
 	}
 	$.ajax({
 		url: "http://localhost:8080/rest/del", // 通信先のURL
+		headers: {
+			'X-CSRF-TOKEN': `${token}`
+		},
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
 		contentType: 'application/json',
