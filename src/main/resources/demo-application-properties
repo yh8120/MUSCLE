@@ -1,0 +1,42 @@
+# ログ
+#logging.level.root=INFO
+#logging.level.org.springframework=TRACE
+
+# データベース接続
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+# MyBatis
+mybatis.mapper-locations=classpath*:/mybatis/**/*.xml
+mybatis.configuration.map-underscore-to-camel-case=true
+#logging.level.org.springframework=WARN
+#logging.level.com.example.app.dao.UserDao=DEBUG
+
+# Gmail
+spring.mail.host=
+spring.mail.port=
+spring.mail.username=
+spring.mail.password=
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+#ポート番号
+server.port=
+#プロトコル
+server.ssl.protocol=
+#キーストア・タイプ
+server.ssl.key-store-type=
+#鍵の格納先
+server.ssl.key-store=
+#鍵のパスワード
+server.ssl.key-store-password=
+#keystore内部におけるkeypairの名称
+server.ssl.key-alias=
+
+# Http Only属性
+# JavaScriptからCookieにアクセスできなくする
+server.servlet.session.cookie.http-only=true
+# Secure属性
+# HTTPS通信の時だけCookieをサーバーに送信する
+server.servlet.session.cookie.secure=true
