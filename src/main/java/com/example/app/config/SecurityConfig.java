@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.example.app.config.handler.CustomLogoutHandler;
@@ -28,29 +29,40 @@ public class SecurityConfig {
 
 		http
 				.formLogin(login -> login
-						.loginProcessingUrl("/login")
-						.usernameParameter("email")
-						.passwordParameter("loginPass")
-						.loginPage("/login")
-						.defaultSuccessUrl("/training", false)
-						.failureUrl("/login")
-						.permitAll())
+						.loginProcessingUrl("/login")//ログインURL
+						.usernameParameter("email")//username用formのname属性
+						.passwordParameter("loginPass")//password用formのname属性
+						.loginPage("/login")//ログインURL
+						.defaultSuccessUrl("/training", false)//デフォルトのログイン遷移先。第二引数がfalseの場合直前に開こうとしていたページへの遷移が優先される
+						.failureUrl("/login")//ログイン失敗時の遷移先
+						.permitAll()
+						)
 
 				.logout(logout -> logout
-						.logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))
-						.addLogoutHandler(new CustomLogoutHandler())
-						.invalidateHttpSession(true))
+						.logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))//ログアウトリクエストのURL
+						.deleteCookies("remember-me")//cookie削除
+						.addLogoutHandler(new CustomLogoutHandler())//ログアウト時にクエリパラメータをリダイレクトに受け渡すハンドラー
+						.invalidateHttpSession(true)//セッション破棄
+						)
 
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-						.mvcMatchers("/login*", "/accounts/**").permitAll()
-						.anyRequest().authenticated())
-
+						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()//staticディレクトリは許可
+						.mvcMatchers("/login*", "/accounts/**").permitAll()//マッチするリクエストの許可
+						.anyRequest().authenticated())//上記以外のリクエストは要認証
+				
 				.headers(headers -> headers
-						.frameOptions(frameOptions -> frameOptions.sameOrigin()))
-
-				.csrf(csrf -> csrf
-						.ignoringAntMatchers("/user/**", "/topic/notice/*"));
+						.frameOptions(frameOptions -> frameOptions.sameOrigin())
+						)// 同一性元ポリシー
+				
+				.rememberMe(rem -> rem
+						.key("uniqueKeyAndSecret")
+						.rememberMeParameter("remember-me")//rememberMe-formのname
+						.rememberMeCookieName("remember-me")//cookie名
+						.tokenValiditySeconds(86400)
+						.tokenRepository(new InMemoryTokenRepositoryImpl())//アクセスごとにcookieのシリーズを更新
+						.useSecureCookie(false)//https専用
+						)
+				;
 
 		
 		return http.build();

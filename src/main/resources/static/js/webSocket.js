@@ -68,7 +68,7 @@ function showMessage(notice) {
 		if (notice.trainingLogId) {
 			cloneRow.find(".noticeButton").addClass("trl" + notice.trainingLogId);
 			let conlist = notice.contributorList;
-			if (conlist.includes(ounId)) {
+			if (conlist?.includes(ounId)) {
 				cloneRow.find(".noticeButton").on("click", function() {
 					delProtein(notice.trainingLogId)
 				});
