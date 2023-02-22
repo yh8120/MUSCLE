@@ -18,7 +18,7 @@ public class WebSocketSecurityConfig
 						SimpMessageType.DISCONNECT,
 						SimpMessageType.OTHER)
 				.authenticated()//指定したmessageタイプは認証が必要
-				.simpSubscribeDestMatchers("/user/**", "/topic/notice/**").authenticated()//指定したサブスクは認証が必要
+				.simpSubscribeDestMatchers("/user/**", "/topic/notice/**").hasRole("USER")//指定したサブスクはROLE_USERが必要
 				.anyMessage().denyAll();//上記以外のメッセージはすべて拒否
 	}
 }

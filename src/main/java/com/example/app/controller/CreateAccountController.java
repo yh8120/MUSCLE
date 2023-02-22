@@ -77,7 +77,7 @@ public class CreateAccountController {
 		String message = String.format(
 				"ご登録ありがとうございます。"
 						+ "下記URLにアクセスして本登録を完了してください。"
-						+ "localhost:8080/accounts/webcreate/%s",
+						+ "https://localhost:8443/accounts/webcreate/%s",
 				uuid);
 
 		//email送信
