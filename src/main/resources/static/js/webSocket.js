@@ -2,17 +2,17 @@ var stompClient = null;
 let ounId = parseInt($("#userId").val());
 let token = $("meta[name='_csrf']").attr("content");
 let header = $("meta[name='_csrf_header']").attr("content");
+let headerSetting = {};
 
+headerSetting[header]=token;
 function addProtein(trainingLogId) {
 	const data = {
 		trainingLogId: trainingLogId,
 		userId: ounId
 	}
 	$.ajax({
-		url: "http://localhost:8080/rest/add", // 通信先のURL
-		headers: {
-			'X-CSRF-TOKEN': `${token}`
-		},
+		url: "/rest/add", // 通信先のURL
+		headers: headerSetting,
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
 		contentType: 'application/json',
@@ -34,10 +34,8 @@ function delProtein(trainingLogId) {
 		userId: ounId
 	}
 	$.ajax({
-		url: "http://localhost:8080/rest/del", // 通信先のURL
-		headers: {
-			'X-CSRF-TOKEN': `${token}`
-		},
+		url: "/rest/del", // 通信先のURL
+		headers: headerSetting,
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
 		contentType: 'application/json',
@@ -92,10 +90,8 @@ function showMessage(notice) {
 
 $(function() {
 	var socket = new SockJS('/endpoint');
-	var headers = {};
-	headers[header] = token;
 	stompClient = Stomp.over(socket);
-	stompClient.connect(headers, function(frame) {
+	stompClient.connect(headerSetting, function(frame) {
 		console.log('Connected: ' + frame);
 		console.log(frame);
 		stompClient.subscribe('/topic/notice', function(notice) {

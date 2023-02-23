@@ -6,72 +6,79 @@
 <body class="bg-dark text-light" style="padding-bottom: 60px;">
 
 
-    <header th:replace="~{parts/common :: header()}"></header>
+	<header th:replace="~{parts/common :: header()}"></header>
 
 
-    <div class="container main-container">
+	<div class="container main-container">
+		<div class="row">
+			<div class="col">
+				<div class="alert alert-danger" th:if="${message}">[[${message}]]</div>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="d-flex align-items-center">
+				<div class="col me-2 fs-4 title-logo text-truncate d-flex align-items-center">
+					[[${training.name}]]
+				</div>
+				<div class="col-auto me-2">
+					<a th:href="@{/training/log/add/{id}(id=${training.id})}">
+						<img style="width: 50px;" th:src="@{/images/icon/add.png}" alt="トレーニングする" />
+					</a>
+				</div>
+				<div class="col-auto me-2">
+					<a th:href="@{/training/edit/{id}(id=${training.id})}">
+						<img style="width: 40px;" th:src="@{/images/icon/setting.png}" alt="編集" />
+					</a>
+				</div>
+				<div class="col-auto">
+					<form th:action="@{/training/delete/{id}(id=${training.id})}" method="post">
+						<input class="delete" type="image" th:src="@{/images/icon/delete.png}" style="width: 40px;"
+							alt="削除" name="delete">
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="row  mt-2">
+			<div class="col">
+				<div class="table-frame">
+					<table class="table table-dark table-striped text-center text-nowrap table-hover align-bottom">
+						<thead class="sticky-top">
+							<tr>
+								<th class="bg-dark bg-gradient">合計重量<br>(kg)
+								</th>
+								<th class="bg-dark bg-gradient">1RM<br>(MAX)
+								</th>
+								<th class="bg-dark bg-gradient">最大重量<br>(kg)
+								</th>
+								<th class="bg-dark bg-gradient">トレーニング日<br>(―)
+								</th>
+								<th class="bg-dark bg-gradient"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="log:${training.trainingLogList}" class="cursor-hand trainingLog"
+								th:data-id="${log.id}">
+								<td>[[${log.totalWeight}]]</td>
+								<td>[[${log.oneRepMax}]]</td>
+								<td>[[${log.maxWeight}]]</td>
+								<td>[[${#dates.format(log.registered,"yyyy-MM-dd")}]]</td>
+								<td>
+									<img th:src="@{/images/icon/right.png}" alt="編集" style="width: 25px;">
+								</td>
+							</tr>
+						</tbody>
+					</table>
 
-        <div class="row mt-4">
-            <div class="d-flex align-items-center">
-                <div class="col me-2 fs-4 title-logo text-truncate d-flex align-items-center">
-                    [[${training.name}]]
-                </div>
-                <div class="col-auto me-2">
-                    <a th:href="@{/training/log/add/{id}(id=${training.id})}">
-                        <img style="width: 50px;" th:src="@{/images/icon/add.png}" alt="トレーニングする" />
-                    </a>
-                </div>
-                <div class="col-auto me-2">
-                    <a th:href="@{/training/edit/{id}(id=${training.id})}">
-                        <img style="width: 40px;" th:src="@{/images/icon/setting.png}" alt="編集" />
-                    </a>
-                </div>
-                <div class="col-auto">
-                    <form th:action="@{/training/delete/{id}(id=${training.id})}" method="post">
-                        <input class="delete" type="image" th:src="@{/images/icon/delete.png}" style="width: 40px;" alt="削除" name="delete">
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="row  mt-2">
-            <div class="col">
-                <div class="table-frame">
-                    <table class="table table-dark table-striped text-center text-nowrap table-hover align-bottom">
-                        <thead class="sticky-top">
-                            <tr>
-                                <th class="bg-dark bg-gradient">合計重量<br>(kg)
-                                </th>
-                                <th class="bg-dark bg-gradient">1RM<br>(MAX)
-                                </th>
-                                <th class="bg-dark bg-gradient">最大重量<br>(kg)
-                                </th>
-                                <th class="bg-dark bg-gradient">トレーニング日<br>(―)
-                                </th>
-                                <th class="bg-dark bg-gradient"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="log:${training.trainingLogList}" th:with="url=@{/training/log/edit/__${log.id}__}" class="cursor-hand" th:attr="onClick='location.href=\''+${url}+'\''">
-                                <td>[[${log.totalWeight}]]</td>
-                                <td>[[${log.oneRepMax}]]</td>
-                                <td>[[${log.maxWeight}]]</td>
-                                <td>[[${#dates.format(log.registered,"yyyy-MM-dd")}]]</td>
-                                <td>
-                                    <img th:src="@{/images/icon/right.png}" alt="編集" style="width: 25px;">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
 
+				</div>
+			</div>
+		</div>
 
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <footer th:replace="~{parts/common :: footer()}"></footer>
-    <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
-    <script th:src="@{/js/button-action.js}"></script>
+	</div>
+	<footer th:replace="~{parts/common :: footer()}"></footer>
+	<th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+	<script th:src="@{/js/button-action.js}"></script>
+	<script th:src="@{/js/trainingLogButton.js}"></script>
 </body>
 
 </html>

@@ -44,6 +44,15 @@ public class SecurityConfig {
 						.permitAll()
 						)
 
+				.rememberMe(rem -> rem
+						.key("uniqueKeyAndSecret")
+						.rememberMeParameter("remember-me")//rememberMe-formのname属性
+						.rememberMeCookieName("remember-me")//cookie名
+						.tokenValiditySeconds(86400)//rememmber-me有効秒数
+						.tokenRepository(new InMemoryTokenRepositoryImpl())//アクセスごとにcookieのシリーズを更新
+						.useSecureCookie(true)//https専用cookie
+						)
+				
 				.logout(logout -> logout
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))//ログアウトリクエストのURL
 						.deleteCookies("remember-me")//cookie削除
@@ -58,20 +67,11 @@ public class SecurityConfig {
 				
 				.headers(headers -> headers
 						.frameOptions(frameOptions -> frameOptions.sameOrigin())//X-Frame-Options: SAMEORIGIN クリックジャッキング対策
-						.contentSecurityPolicy(csp -> csp.policyDirectives("script-src 'self'"))//scriptを自ドメインに限定
-						)
-				
-				.rememberMe(rem -> rem
-						.key("uniqueKeyAndSecret")
-						.rememberMeParameter("remember-me")//rememberMe-formのname
-						.rememberMeCookieName("remember-me")//cookie名
-						.tokenValiditySeconds(86400)//rememmber-me有効秒数
-						.tokenRepository(new InMemoryTokenRepositoryImpl())//アクセスごとにcookieのシリーズを更新
-						.useSecureCookie(true)//https専用cookie
+						.contentSecurityPolicy(csp -> csp.policyDirectives("script-src 'self'"))//Content-Security-Policy 同一オリジンからのJSのみ許可(XSS対策)
 						)
 				
 				.requiresChannel(req -> req
-						.anyRequest().requiresSecure()
+						.anyRequest().requiresSecure()//httpスキームのセキュアリダイレクト
 						)
 				
 				;
