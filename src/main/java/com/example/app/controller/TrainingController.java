@@ -1,5 +1,6 @@
 package com.example.app.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -7,6 +8,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -49,9 +52,10 @@ public class TrainingController {
 	WebSocketMessage webSocketMessage;
 
 	@GetMapping
-	public String getTraining(HttpSession session,
+	public String getTraining(HttpSession session,SecurityContextHolder sch,Principal principal,
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,Model model) throws Exception {
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(loginUserDetails.getLoginUser().getId());
+		SecurityContext con =sch.getContext();
 		MUser user = userService.getUser(loginUserDetails.getLoginUser().getEmail());
 		session.setAttribute("userName", user.getName());
 		session.setAttribute("iconPath", user.getIconPath());

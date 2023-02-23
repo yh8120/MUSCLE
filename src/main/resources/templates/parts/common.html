@@ -29,7 +29,7 @@
                     <ul class="navbar-nav">
                         <li class="nav-item text-end">
                         <a class="nav-link text-decoration-none" th:href="@{/user/edit}">
-                                <img th:src="@{/images/profile/__${session.iconPath}__}" style="width: 20px;" alt="アイコン"> <span >[[${session.userName}]]</span>
+                                <img th:src="@{/images/profile/__${authentication.principal.loginUser.iconPath}__}" style="width: 20px;" alt="アイコン"> <span >[[${authentication.principal.loginUser.name}]]</span>
                             </a>
                             </li>
                         <li class="nav-item text-end"></li>

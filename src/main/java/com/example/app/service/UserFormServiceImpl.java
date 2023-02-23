@@ -24,7 +24,9 @@ public class UserFormServiceImpl implements UserFormService {
 	UserRegisterDao userRegisterDao;
 	@Autowired
 	PasswordEncoder encoder;
-	
+	@Autowired
+	UpdateSecurityContext updateSecurityContext;
+
 	@Override
 	public void createAccount(UserForm userForm) throws Exception {
 		MUser user = new MUser(userForm);
@@ -32,13 +34,13 @@ public class UserFormServiceImpl implements UserFormService {
 		userDao.insert(user);
 		userRegisterDao.deleteByEmail(userForm.getEmail());
 	}
-	
+
 	@Override
 	public void updateAccount(UserForm userForm) throws Exception {
 		MUser user = new MUser(userForm);
 		user.setLoginPass(encoder.encode(user.getLoginPass()));
 		userDao.update(user);
-		
+		updateSecurityContext.update();
 	}
 
 	@Override
@@ -50,5 +52,4 @@ public class UserFormServiceImpl implements UserFormService {
 		reservedEmailDao.insert(reservedEmail);
 	}
 
-	
 }

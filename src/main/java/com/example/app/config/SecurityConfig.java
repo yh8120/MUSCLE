@@ -1,6 +1,12 @@
 package com.example.app.config;
 
+import org.apache.catalina.Context;
+import org.apache.catalina.connector.Connector;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -64,9 +70,9 @@ public class SecurityConfig {
 						.useSecureCookie(true)//https専用cookie
 						)
 				
-//				.requiresChannel(req -> req
-//						.antMatchers("/login*").requiresSecure()
-//						)
+				.requiresChannel(req -> req
+						.anyRequest().requiresSecure()
+						)
 				
 				;
 
@@ -75,31 +81,32 @@ public class SecurityConfig {
 	}
 
 	
-//		@Bean
-//		ServletWebServerFactory servletContainer() {
-//			TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
-//				
-//				@Override
-//				protected void postProcessContext(Context context) {
-//					SecurityConstraint securityConstraint = new SecurityConstraint();
-//					securityConstraint.setUserConstraint("CONFIDENTIAL");
-//					SecurityCollection collection = new SecurityCollection();
-//					collection.addPattern("/*");
-//					securityConstraint.addCollection(collection);
-//					context.addConstraint(securityConstraint);
-//				}
-//			};
-//			tomcat.addAdditionalTomcatConnectors(redirectConnector());
-//			return tomcat;
-//		}
-//		
-//		private Connector redirectConnector() {
-//			Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-//			connector.setScheme("http");
-//			connector.setPort(8080);
-//			connector.setSecure(false);
-//			connector.setRedirectPort(8443);
-//			return connector;
-//		}
+		@Bean
+		ServletWebServerFactory servletContainer() {
+			TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+				
+				@Override
+				protected void postProcessContext(Context context) {
+					SecurityConstraint securityConstraint = new SecurityConstraint();
+					securityConstraint.setUserConstraint("CONFIDENTIAL");
+					SecurityCollection collection = new SecurityCollection();
+					collection.addPattern("/*");
+					securityConstraint.addCollection(collection);
+					context.addConstraint(securityConstraint);
+				}
+			};
+			tomcat.addAdditionalTomcatConnectors(redirectConnector());
+			return tomcat;
+		}
+		
+		//Connector設定
+		private Connector redirectConnector() {
+			Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+			connector.setScheme("http");//スキーム指定
+			connector.setPort(8080);//受信ポート
+			connector.setSecure(false);//上記接続のセキュア接続フラグ false->セキュアに転送
+			connector.setRedirectPort(8443);//リダイレクトポート
+			return connector;
+		}
 
 }
