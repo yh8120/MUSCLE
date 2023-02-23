@@ -88,16 +88,6 @@
     </div>
     <!-- /.container -->
     <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
-     <script th:inline="javascript">
-$(document).ready(function(){
-	let iconPath = "/images/profile/"+/*[[${userForm.iconPath==unll?'1.png':userForm.iconPath}]]*/
-	$("#iconImage").attr("src",iconPath);
-	
-	$("#iconPath").change(function(){
-		let iconPath = "/images/profile/"+$(this).val();
-		$("#iconImage").attr("src",iconPath);
-	})
-})
-</script>
+     <script th:src="@{/js/iconChange.js}"></script>
 </body>
 </html>
