@@ -1,15 +1,11 @@
 package com.example.app.controller;
 
-import java.security.Principal;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -52,13 +48,9 @@ public class TrainingController {
 	WebSocketMessage webSocketMessage;
 
 	@GetMapping
-	public String getTraining(HttpSession session,SecurityContextHolder sch,Principal principal,
+	public String getTraining(
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,Model model) throws Exception {
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(loginUserDetails.getLoginUser().getId());
-		SecurityContext con =sch.getContext();
-		MUser user = userService.getUser(loginUserDetails.getLoginUser().getEmail());
-		session.setAttribute("userName", user.getName());
-		session.setAttribute("iconPath", user.getIconPath());
 		model.addAttribute("trainingList", trainingPartList);
 		webSocketMessage.sendTrainingLogToUser(loginUserDetails.getUsername());
 		return "training/list";
@@ -77,6 +69,7 @@ public class TrainingController {
 
 	@PostMapping("/add")
 	public String postAddTraining(@AuthenticationPrincipal LoginUserDetails loginUserDetails,
+			RedirectAttributes redirectAttributes,
 			@Valid Training training,
 			Errors errors,
 			Model model) throws Exception {
@@ -91,6 +84,7 @@ public class TrainingController {
 		training.setUserId(loginUserDetails.getLoginUser().getId());
 		
 		trainingService.addTraining(training);
+		redirectAttributes.addFlashAttribute("message", "種目を追加しました。");
 		
 		return "redirect:/training";
 	}
@@ -130,6 +124,7 @@ public class TrainingController {
 		}
 		
 		trainingService.editTraining(training);
+		redirectAttributes.addFlashAttribute("message", "種目を編集しました。");
 		
 		return "redirect:/training/log/"+training.getId();
 	}
@@ -147,6 +142,7 @@ public class TrainingController {
 		}
 		
 		trainingService.deleteTraining(trainingId);
+		redirectAttributes.addFlashAttribute("message", "種目を削除しました。");
 		
 		return "redirect:/training";
 	}
@@ -187,6 +183,7 @@ public class TrainingController {
 
 	@PostMapping("/log/add")
 	public String postAddLog(
+			RedirectAttributes redirectAttributes,
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			@Valid TrainingLog trainingLog,
 			Errors errors,
@@ -204,12 +201,13 @@ public class TrainingController {
 		trainingLog.setTraining(training);
 
 		webSocketMessage.sendTrainingLog(trainingService.addTrainingLog(trainingLog));
-
+		redirectAttributes.addFlashAttribute("message", "記録を送信しました。");
+		
 		return "redirect:/training/log/" + trainingLog.getTraining().getId();
 	}
 
 	@GetMapping("/log/edit/{trainingLogId}")
-	public String getEditLog(HttpSession session,
+	public String getEditLog(
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			@PathVariable("trainingLogId") Integer trainingLogId,
@@ -225,7 +223,7 @@ public class TrainingController {
 	}
 
 	@PostMapping("/log/edit")
-	public String postEditLog(HttpSession session,
+	public String postEditLog(
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			@Valid TrainingLog trainingLog,
@@ -241,13 +239,13 @@ public class TrainingController {
 		}
 
 		trainingService.editTrainingLog(trainingLog);
-		session.removeAttribute("trainingLog");
+		redirectAttributes.addFlashAttribute("message", "記録を編集しました。");
 
 		return "redirect:/training/log/" + trainingLog.getTraining().getId();
 	}
 
 	@PostMapping("/log/delete/{trainingLogId}")
-	public String postDeleteLog(HttpSession session,
+	public String postDeleteLog(
 			@PathVariable("trainingLogId")Integer trainingLogId,
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
@@ -260,7 +258,7 @@ public class TrainingController {
 		}
 
 		trainingService.deleteTrainingLog(trainingLog);
-		session.removeAttribute("trainingLog");
+		redirectAttributes.addFlashAttribute("message", "記録を削除しました。");
 		return "redirect:/training/log/" + trainingLog.getTraining().getId();
 	}
 

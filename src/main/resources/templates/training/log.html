@@ -68,8 +68,6 @@
 							</tr>
 						</tbody>
 					</table>
-
-
 				</div>
 			</div>
 		</div>
@@ -77,6 +75,7 @@
 	</div>
 	<footer th:replace="~{parts/common :: footer()}"></footer>
 	<th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+    <script th:src="@{/webjars/chartjs/4.1.2/dist/chart.umd.js}"></script>
 	<script th:src="@{/js/button-action.js}"></script>
 	<script th:src="@{/js/trainingLogButton.js}"></script>
 </body>

@@ -95,17 +95,7 @@
     <footer th:replace="~{parts/common :: footer()}"></footer>
     <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
     <script th:src="@{/js/make-training-set.js}"></script>
-    <script>
-					$(document).ready(function() {
-						$(".delete").on("click", function(e) {
-							e.preventDefault();
-							if (confirm('本当に削除してよろしいですか？')) {
-								$("#form-delete").submit();
-							}
-						})
-
-					});
-				</script>
+    <script th:src="@{/js/delete-action.js}"></script>
 </body>
 <template id="trainingSetTemplate">
     <tr>

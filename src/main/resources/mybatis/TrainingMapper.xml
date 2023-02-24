@@ -116,10 +116,13 @@
 		FROM
 		training_logs
 		WHERE training_id=#{id}
+        AND training_logs.status = "ACT"
 		) AS p2
 		SET p1.last_training_day =
 		p2.max
 		WHERE p1.id=#{id}
+		
+		
 	</update>
 
 </mapper>
