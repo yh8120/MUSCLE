@@ -1,84 +1,97 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head th:replace="~{parts/common :: html_head()}"></head>
+
 <body class="bg-dark text-light" style="padding-bottom: 60px;">
-    <header th:replace="~{parts/common :: header()}"></header>
-    <div class="container main-container">
+	<header th:replace="~{parts/common :: header()}"></header>
+	<div class="container main-container">
 
-        <h1 class="fs-4 title-logo my-4">
-            <img style="width: 40px;" class="me-2" th:src="@{/images/icon/setting.png}" alt="編集" /> 会員編集
-        </h1>
+		<div class="row">
+			<div class="col d-flex fs-4 title-logo my-4">
+				<img style="width: 25px;" class="me-1" th:src="@{/images/icon/setting.svg}" alt="編集" />
+				<span>会員編集</span>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col">
+		<div class="row">
+			<div class="col">
 
-                <form class="form" th:action="@{/user/edit}" method="post" th:object="${userForm}">
-                    <div class="row mb-3">
-                        <label for="name" class="col-md-2 col-form-label">名前</label>
-                        <div class="col-md-10">
-                            <input type="text" th:field="*{name}" class="form-control bg-dark bg-gradient text-light border-0">
-                            <small class="error-message" th:errors="*{name}"></small>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="email" class="col-md-2 col-form-label">メールアドレス</label>
-                        <div class="col-md-10">
-                            <input type="email" th:field="*{email}" class="form-control bg-dark bg-gradient text-light border-0">
-                            <small class="error-message" th:errors="*{email}"></small>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="loginPass" class="col-md-2 col-form-label">パスワード</label>
-                        <div class="col-md-10">
-                            <input type="password" th:field="*{loginPass}" class="form-control bg-dark bg-gradient text-light border-0">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="loginPass" class="col-md-2 col-form-label">もう一度パスワードを入力してください</label>
-                        <div class="col-md-10">
-                            <input type="password" th:field="*{loginPassCopy}" class="form-control bg-dark bg-gradient text-light border-0">
-                            <small class="error-message" th:errors="*{loginPass}"></small>
-                        </div>
-                    </div>
+				<form class="form" th:action="@{/user/edit}" method="post" th:object="${userForm}">
+					<div class="row mb-3">
+						<label for="name" class="col-md-2 col-form-label">名前</label>
+						<div class="col-md-10">
+							<input type="text" th:field="*{name}"
+								class="form-control bg-dark bg-gradient text-light border-0">
+							<small class="error-message" th:errors="*{name}"></small>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<label for="email" class="col-md-2 col-form-label">メールアドレス</label>
+						<div class="col-md-10">
+							<input type="email" th:field="*{email}"
+								class="form-control bg-dark bg-gradient text-light border-0">
+							<small class="error-message" th:errors="*{email}"></small>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<label for="loginPass" class="col-md-2 col-form-label">パスワード</label>
+						<div class="col-md-10">
+							<input type="password" th:field="*{loginPass}"
+								class="form-control bg-dark bg-gradient text-light border-0">
+						</div>
+					</div>
+					<div class="row mb-3">
+						<label for="loginPass" class="col-md-2 col-form-label">もう一度パスワードを入力してください</label>
+						<div class="col-md-10">
+							<input type="password" th:field="*{loginPassCopy}"
+								class="form-control bg-dark bg-gradient text-light border-0">
+							<small class="error-message" th:errors="*{loginPass}"></small>
+						</div>
+					</div>
 
-                    <div class="row mb-3">
-                        <label for="birthday" class="col-md-2 col-form-label">誕生日</label>
-                        <div class="col-md-10">
-                            <input type="date" th:field="*{birthday}" class="form-control bg-dark bg-gradient text-light border-0">
-                            <small class="error-message" th:errors="*{birthday}"></small>
-                        </div>
-                    </div>
+					<div class="row mb-3">
+						<label for="birthday" class="col-md-2 col-form-label">誕生日</label>
+						<div class="col-md-10">
+							<input type="date" th:field="*{birthday}"
+								class="form-control bg-dark bg-gradient text-light border-0">
+							<small class="error-message" th:errors="*{birthday}"></small>
+						</div>
+					</div>
 
-                    <div class="row mb-3">
-                        <label for="sex.id" class="col-md-2 col-form-label">性別</label>
-                        <div class="col-md-10">
-                            <select th:field="*{sex.id}" class="form-control bg-dark bg-gradient text-light border-0">
-                                <option th:each="sex : ${sexList}" th:value="${sex.id}">[[${sex.name}]]</option>
-                            </select>
-                        </div>
-                    </div>
+					<div class="row mb-3">
+						<label for="sex.id" class="col-md-2 col-form-label">性別</label>
+						<div class="col-md-10">
+							<select th:field="*{sex.id}" class="form-control bg-dark bg-gradient text-light border-0">
+								<option th:each="sex : ${sexList}" th:value="${sex.id}">[[${sex.name}]]</option>
+							</select>
+						</div>
+					</div>
 
-                    <div class="row mb-3">
-                        <label for="sex.id" class="col-md-2 col-form-label">
-                            アイコン <img id="iconImage" class="ms-2" th:src="@{/images/profile/1.png}" style="width: 30px;" alt="アイコン">
-                        </label>
-                        <div class="col-md-10">
-                            <select th:field="*{iconPath}" class="form-control bg-dark bg-gradient text-light border-0">
-                                <option th:each="seq : ${#numbers.sequence(1,6)}" th:value="${seq}+'.png'">アイコン[[${seq}]]</option>
-                            </select>
-                        </div>
-                    </div>
-                    <input type="hidden" th:field="*{id}">
-                    <input class="btn btn-danger" type="submit" value="保存する">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <a th:href="@{/training}" class="btn btn-secondary">キャンセル</a>
-                </form>
+					<div class="row mb-3">
+						<label for="sex.id" class="col-md-2 col-form-label">
+							アイコン <img id="iconImage" class="ms-2" th:src="@{/images/profile/1.png}" style="width: 30px;"
+								alt="アイコン">
+						</label>
+						<div class="col-md-10">
+							<select th:field="*{iconPath}" class="form-control bg-dark bg-gradient text-light border-0">
+								<option th:each="seq : ${#numbers.sequence(1,6)}" th:value="${seq}+'.png'">
+									アイコン[[${seq}]]</option>
+							</select>
+						</div>
+					</div>
+					<input type="hidden" th:field="*{id}">
+					<input class="btn btn-danger" type="submit" value="保存する">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<a th:href="@{/training}" class="btn btn-secondary">キャンセル</a>
+				</form>
 
-            </div>
-        </div>
-    </div>
-    <footer th:replace="~{parts/common :: footer()}"></footer>
-    <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
-    <script th:src="@{/js/iconChange.js}"></script>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="~{parts/common :: footer()}"></footer>
+	<th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+	<script th:src="@{/js/iconChange.js}"></script>
 </body>
+
 </html>

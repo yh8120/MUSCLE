@@ -4,111 +4,144 @@
 <head th:replace="~{parts/common :: html_head()}"></head>
 
 <body class="bg-dark text-light" style="padding-bottom: 60px;">
-    <header th:replace="~{parts/common :: header()}"></header>
+	<header th:replace="~{parts/common :: header()}"></header>
 
 
-    <div class="container main-container">
-        <div class="row">
-            <div class="col">
-                <div class="alert alert-danger" th:if="${message}">[[${message}]]</div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-xl-8">
-                <div class="row">
-                    <div class="col mt-4">
-                        <div class="card bg-dark text-light border-0 ">
-                            <h5 class="card-header bg-dark bg-gradient text-center title-logo fs-6">通知</h5>
-                            <div class="card-body">
-                                <form th:action="@{/training/addProtein}" method="post">
-                                    <input type="hidden" th:name="${userId}" th:value="${#authentication.principal.loginUser.id}">
-                                    <div class="table-responsive" style="max-height: 200px;">
-                                        <table id="conversation" class="table table-dark table-sm table-striped table-hover">
-                                            <tbody id="noticeTable">
-                                                <template id="noticeRow">
-                                                    <tr>
-                                                        <th><img class="noticeIcon me-2" style="width: 20px;"></th>
-                                                        <td class="text-break">
-                                                            <span class="noticeMessage"></span>
-                                                        </td>
-                                                        <td>
-                                                            <img class="noticeButton ms-1 cursor-hand" style="width: 20px;">
-                                                        </td>
-                                                    </tr>
-                                                </template>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col mt-4">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div id="lineChartContainer" class="ratio ratio-4x3">
-                                    <canvas id="lineChart"></canvas>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div id="barChartContainer" class="ratio ratio-4x3">
-                                    <canvas id="barChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-xl-4 mt-4">
-                <div class="card bg-dark text-light justify-content-center border-0">
-                    <h5 class="card-header bg-dark bg-gradient text-center title-logo fs-6">トレーニング</h5>
-                    <div class="card-body">
+	<div class=" btn btn-dark rounded-circle p-0 chart-button chart-button-position">
+		<img th:src="@{/images/icon/chart.svg}" alt="グラフ" style="width:25px;" />
+	</div>
 
-                        <ul class="nav  nav-tabs nav-fill border-bottom border-danger border-1">
-                            <li th:each="training,status : ${trainingList}" class="nav-item"><a th:href="@{#tabItem__${training.id}__}" class="nav-link link-light"
-                                    th:classappend="${status.first}?'active'" data-bs-toggle="tab">[[${training.name}]]</a></li>
-                            <li class="nav-item"><a class="nav-link link-light" th:href="@{/training/add}">
-                                    <span th:if="${#lists.isEmpty(trainingList)}" class="title-logo me-2">トレーニングを追加</span><img style="width: 30px;" th:src="@{/images/icon/add.png}" alt="追加" />
-                                </a></li>
-                        </ul>
+	<div class="container main-container">
+		<div class="row">
+			<div class="col content-header">
+				<div class="alert alert-danger" th:if="${message}" th:text="${message}"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-8 col-xl-9">
+				<div class="row">
+					<div class="col-lg mt-2 content-header">
+						<div class="card bg-dark text-light border-0 ">
+							<h5 class="card-header bg-dark bg-gradient text-center title-logo fs-6">通知</h5>
+							<div class="card-body ps-0 pe-0">
+								<form th:action="@{/training/addProtein}" method="post">
+									<input type="hidden" th:name="${userId}"
+										th:value="${#authentication.principal.loginUser.id}">
+									<div class="table-responsive" style="max-height: 20vh;">
+										<table id="conversation"
+											class="table table-dark table-sm table-striped table-hover">
+											<tbody id="noticeTable">
+												<template id="noticeRow">
+													<tr>
+														<th><img class="noticeIcon me-2" style="width: 20px;"></th>
+														<td class="text-break">
+															<span class="noticeMessage"></span>
+														</td>
+														<td>
+															<img class="noticeButton ms-1 me-1 cursor-hand"
+																style="width: 20px;">
+														</td>
+													</tr>
+												</template>
+											</tbody>
+										</table>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div id="g-nav" class="col mt-2 content-header">
+						<div class="card bg-dark text-light justify-content-center border-0">
+							<h5 class="card-header bg-dark bg-gradient text-center title-logo fs-6">グラフ</h5>
+							<div class="card-body ms-2 me-2">
+								<div class="row">
+									<div class="col-lg-6">
+										<div id="lineChartContainer" class="ratio ratio-4x3 ps-2 pe-2">
+											<canvas id="lineChart"></canvas>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div id="barChartContainer" class="ratio ratio-4x3 ps-2 pe-2">
+											<canvas id="barChart"></canvas>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-xl-3 mt-2 content-header">
+				<div class="card bg-dark text-light justify-content-center border-0">
+					<h5 class="card-header bg-dark bg-gradient text-center title-logo fs-6">トレーニング</h5>
+					<div class="card-body pt-1 ps-0 pe-0">
+						<div class="tab-area">
+							<ul class="nav nav-tabs nav-fill border-bottom border-danger border-1 flex-nowrap">
+								<li th:each="training,status : ${trainingList}" class="nav-item">
+									<a th:href="@{#tabItem__${training.id}__}" class="nav-link link-light ps-1 pe-1"
+										th:classappend="${status.first}?'active'" data-bs-toggle="tab"
+										th:text="${training.name}">
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link link-light  ps-1 pe-1" th:href="@{/training/add}">
+										<span th:if="${#lists.isEmpty(trainingList)}" class="title-logo me-2"
+											th:text="トレーニングを追加">
+										</span>
+										<img style="width: 20px;" th:src="@{/images/icon/add.svg}" alt="追加" />
+									</a>
+								</li>
+							</ul>
+						</div>
 
-                        <div th:each="training,status : ${trainingList}" class="tab-content">
-                            <div th:id="tabItem__${training.id}__" th:classappend="${status.first}?'active'" class="tab-pane container">
-                                <div class="row bg-dark-subtle p-2">
+						<div th:each="training,status : ${trainingList}" class="tab-content">
+							<div th:id="tabItem__${training.id}__" th:classappend="${status.first}?'active'"
+								class="tab-pane container">
+								<div class="row bg-dark-subtle ">
 
-                                    <a th:each="item:${training.trainingList}" th:href="@{/training/log/{id}(id=${item.id})}" class="col-6 mt-3 text-decoration-none">
-                                        <div class="card shadow border-0">
-                                            <ul class="list-group list-group-flush text-center">
-                                                <li class="list-group-item bg-dark bg-gradient">
-                                                    <div class="d-flex flex-row justify-content-center">
-                                                        <img style="width: 23px;" th:each="i:${#numbers.sequence(1,item.priority.id)}" th:src="@{/images/icon/hot.svg}" alt="★" />
-                                                    </div>
-                                                </li>
-                                                <li class="list-group-item text-truncate bg-dark bg-gradient text-light">[[${item.name}]]</li>
-                                                <li class="list-group-item bg-dark bg-gradient text-light " th:text="${item.lastTrainingDay==null?'-':#dates.format(item.lastTrainingDay,'yyyy-MM-dd')}">[[]]</li>
-                                            </ul>
-                                        </div>
-                                    </a>
+									<a th:each="item:${training.trainingList}"
+										th:href="@{/training/log/{id}(id=${item.id})}"
+										class="col-4 col-lg-6 mt-2 ps-1 pe-1 text-decoration-none">
+										<div class="card shadow border-0">
+											<ul class="list-group list-group-flush text-center">
+												<li class="list-group-item bg-dark bg-gradient ps-1 pe-1">
+													<div class="d-flex flex-row justify-content-center">
+														<img style="width:16px;"
+															th:each="i:${#numbers.sequence(1,item.priority.id)}"
+															th:src="@{/images/icon/hot.svg}" alt="★" />
+													</div>
+												</li>
+												<li class="list-group-item text-truncate bg-dark bg-gradient text-light ps-1 pe-1"
+													th:text="${item.name}">
+												</li>
+												<li class="list-group-item bg-dark bg-gradient text-light ps-1 pe-1"
+													th:text="${item.lastTrainingDay==null?'-':#dates.format(item.lastTrainingDay,'yyyy-MM-dd')}">
+												</li>
+											</ul>
+										</div>
+									</a>
 
-                                </div>
+								</div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
-    </div>
-    <footer th:replace="~{parts/common :: footer()}"></footer>
-    <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
-    <script th:src="@{/webjars/chartjs/4.1.2/dist/chart.umd.js}"></script>
-    <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-    <script th:src="@{/js/exampleChart.js}"></script>
-    <script th:src="@{/js/webSocket.js}"></script>
+	</div>
+	<footer th:replace="~{parts/common :: footer()}"></footer>
+	<th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+	<script th:src="@{/webjars/chartjs/4.1.2/dist/chart.umd.js}"></script>
+	<script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+	<script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+	<script th:src="@{/js/webSocket.js}"></script>
+	<script th:src="@{/js/exampleChart.js}"></script>
+	<script th:src="@{/js/chart-button.js}"></script>
 </body>
+
 </html>

@@ -11,7 +11,7 @@ import com.example.app.domain.ApiStatus;
 import com.example.app.domain.Protein;
 import com.example.app.login.LoginUserDetails;
 import com.example.app.service.ProteinService;
-import com.example.app.service.WebSocketMessage;
+import com.example.app.service.WebSocketMessageService;
 
 @RestController
 @RequestMapping("/rest")
@@ -19,7 +19,7 @@ public class RESTController {
 	@Autowired
 	ProteinService service;
 	@Autowired
-	WebSocketMessage message;
+	WebSocketMessageService message;
 
 	@PostMapping("/add")
 	public ApiStatus add(@AuthenticationPrincipal LoginUserDetails loginUserDetails, @RequestBody Protein protein) throws Exception {

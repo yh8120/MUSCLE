@@ -15,8 +15,9 @@
             <input class="trainingLogLogitude" type="hidden" name="logitude">
 
             <div class="row mt-4 align-items-center">
-                <div class="col fs-4 mb-2  title-logo  text-truncate d-flex align-items-center">
-                    <img style="width: 40px;" class="me-2" th:src="@{/images/icon/muscle.svg}" alt="追加" /> [[${trainingLog.training.name}]]
+                <div class="col d-flex fs-4 mb-2  title-logo  text-truncate">
+                    <img style="width: 30px;" class="me-1" th:src="@{/images/icon/muscle.svg}" alt="追加" />
+                    <span th:text="${trainingLog.training.name}"></span>
                 </div>
                 <div class="col-auto mb-2">
                     <div class="btn-group" role="group" aria-label="Basic example">

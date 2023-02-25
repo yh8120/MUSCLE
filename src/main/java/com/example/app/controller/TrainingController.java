@@ -25,7 +25,7 @@ import com.example.app.service.TrainingPartService;
 import com.example.app.service.TrainingService;
 import com.example.app.service.TrainingTypeService;
 import com.example.app.service.UserService;
-import com.example.app.service.WebSocketMessage;
+import com.example.app.service.WebSocketMessageService;
 import com.example.app.service.WeekdayService;
 
 @Controller
@@ -45,7 +45,7 @@ public class TrainingController {
 	@Autowired
 	WeekdayService weekdayService;
 	@Autowired
-	WebSocketMessage webSocketMessage;
+	WebSocketMessageService webSocketMessage;
 
 	@GetMapping
 	public String getTraining(
