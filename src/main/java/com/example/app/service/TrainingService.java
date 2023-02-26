@@ -2,6 +2,8 @@ package com.example.app.service;
 
 import java.util.List;
 
+import com.example.app.domain.ListChartData;
+import com.example.app.domain.LogChartData;
 import com.example.app.domain.Training;
 import com.example.app.domain.TrainingLog;
 import com.example.app.domain.TrainingPart;
@@ -27,4 +29,8 @@ public interface TrainingService {
 	void editTrainingLog(TrainingLog trainingLog) throws Exception;
 
 	void deleteTrainingLog(TrainingLog trainingLog) throws Exception;
+
+	List<ListChartData> getListChartData(Integer userId)throws Exception;
+	
+	List<LogChartData> getLogChartData(Integer id)throws Exception;
 }

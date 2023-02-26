@@ -70,7 +70,44 @@
 			<result property="maxWeight" column="max_weight" />
 		</collection>
 	</resultMap>
+	<resultMap id="listChartData"
+		type="com.example.app.domain.ListChartData">
+		<result property="registered" column="date" />
+		<collection property="trainingPartList"
+			ofType="com.example.app.domain.TrainingPart">
+			<id property="id" column="part_id" />
+			<result property="name" column="part_name" />
+			<result property="totalWeight" column="total_weight" />
+		</collection>
+	</resultMap>
 
+	<select id="getLogChartData" parameterType="int"
+		resultType="com.example.app.domain.LogChartData">
+		SELECT DATE(registered) AS registered,
+		MAX(max_weight) AS max_weight,
+		MAX(one_rep_max) AS one_rep_max
+		FROM training_logs
+		WHERE registered >= DATE(NOW()) - INTERVAL 30 DAY
+		AND training_id = ${id}
+		GROUP BY DATE(registered)
+	</select>
+	<select id="getListChartData" parameterType="int"
+		resultMap="listChartData">
+		SELECT DATE(training_logs.registered) AS date,
+		training_parts.id AS part_id,
+		training_parts.name AS part_name,
+		SUM(total_weight) AS total_weight
+		FROM training_logs
+		JOIN
+		master_trainings ON master_trainings.id=training_logs.training_id
+		JOIN
+		training_parts ON master_trainings.part_id=training_parts.id
+		WHERE
+		training_logs.registered >= DATE(NOW()) - INTERVAL 7 DAY
+		AND
+		training_logs.user_id = #{id}
+		GROUP BY DATE(registered),part_name
+	</select>
 	<select id="findAllbyTrainingId" parameterType="int"
 		resultMap="training">
 		SELECT
@@ -123,15 +160,15 @@
 		ORDER BY
 		training_sets.set_order
 	</select>
-	<select id="findLogListNewer"
-		resultMap="trainingLogProtein">
+	<select id="findLogListNewer" resultMap="trainingLogProtein">
 		SELECT
 		training_logs.id,
 		master_users.id AS
 		user_id,
 		master_users.icon_path,
 		master_trainings.name AS training_name,
-		training_sets.id AS training_set_id,
+		training_sets.id AS
+		training_set_id,
 		training_sets.weight,
 		training_sets.rep,
 		proteins.user_id AS protein_user_id
@@ -139,7 +176,8 @@
 		(SELECT * FROM training_logs
 		WHERE training_logs.status="ACT"
 		ORDER BY registered DESC
-		LIMIT 100)AS training_logs
+		LIMIT 100)AS
+		training_logs
 		JOIN training_sets
 		ON training_logs.id =
 		training_sets.training_log_id
@@ -150,9 +188,13 @@
 		ON
 		training_logs.user_id=master_users.id
 		LEFT OUTER JOIN proteins
-		ON training_logs.id=proteins.training_log_id
-		ORDER BY training_logs.registered
+		ON
+		training_logs.id=proteins.training_log_id
+		ORDER BY
+		training_logs.registered
 	</select>
+
+
 
 	<insert id="insert"
 		parameterType="com.example.app.domain.TrainingLog"

@@ -55,19 +55,8 @@
 					<div id="g-nav" class="col mt-2 content-header">
 						<div class="card bg-dark text-light justify-content-center border-0">
 							<h5 class="card-header bg-dark bg-gradient text-center title-logo fs-6">グラフ</h5>
-							<div class="card-body ms-2 me-2">
-								<div class="row">
-									<div class="col-lg-6">
-										<div id="lineChartContainer" class="ratio ratio-4x3 ps-2 pe-2">
-											<canvas id="lineChart"></canvas>
-										</div>
-									</div>
-									<div class="col-lg-6">
-										<div id="barChartContainer" class="ratio ratio-4x3 ps-2 pe-2">
-											<canvas id="barChart"></canvas>
-										</div>
-									</div>
-								</div>
+							<div id="barChartContainer" class="card-body ms-2 me-2" style="height:50vh;">
+								<canvas id="barChart"></canvas>
 							</div>
 						</div>
 					</div>
@@ -131,16 +120,16 @@
 				</div>
 			</div>
 		</div>
-
-
 	</div>
 	<footer th:replace="~{parts/common :: footer()}"></footer>
 	<th:block th:replace="~{parts/common :: javascripts()}"></th:block>
 	<script th:src="@{/webjars/chartjs/4.1.2/dist/chart.umd.js}"></script>
+	<script th:src="@{/webjars/momentjs/2.29.4/moment.js}"></script>
+	<script th:src="@{/webjars/chartjs-adapter-moment/1.0.0/dist/chartjs-adapter-moment.min.js}"></script>
 	<script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
 	<script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
 	<script th:src="@{/js/webSocket.js}"></script>
-	<script th:src="@{/js/exampleChart.js}"></script>
+	<script th:src="@{/js/trainingListChart.js}"></script>
 	<script th:src="@{/js/chart-button.js}"></script>
 </body>
 

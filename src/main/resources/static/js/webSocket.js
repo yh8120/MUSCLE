@@ -3,8 +3,8 @@ let ounId = parseInt($("#userId").val());
 let token = $("meta[name='_csrf']").attr("content");
 let header = $("meta[name='_csrf_header']").attr("content");
 let headerSetting = {};
-
 headerSetting[header]=token;
+
 function addProtein(trainingLogId) {
 	const data = {
 		trainingLogId: trainingLogId,
@@ -89,7 +89,7 @@ function showMessage(notice) {
 }
 
 $(function() {
-	var socket = new SockJS('/endpoint');
+	var socket = new SockJS('/ws');
 	stompClient = Stomp.over(socket);
 	stompClient.connect(headerSetting, function(frame) {
 		console.log('Connected: ' + frame);

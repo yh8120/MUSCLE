@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.app.domain.ListChartData;
+import com.example.app.domain.LogChartData;
 import com.example.app.domain.Training;
 import com.example.app.domain.TrainingLog;
 
@@ -21,5 +23,9 @@ public interface TrainingLogDao {
 	void update(TrainingLog trainingLog) throws Exception;
 
 	void delete(Integer trainingLogId) throws Exception;
+	
+	List<ListChartData> getListChartData(Integer UserId) throws Exception;
+	
+	List<LogChartData> getLogChartData(Integer id) throws Exception;
 
 }

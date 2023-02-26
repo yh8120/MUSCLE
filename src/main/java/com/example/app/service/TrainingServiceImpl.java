@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.example.app.dao.TrainingDao;
 import com.example.app.dao.TrainingLogDao;
 import com.example.app.dao.TrainingSetDao;
+import com.example.app.domain.ListChartData;
+import com.example.app.domain.LogChartData;
 import com.example.app.domain.Training;
 import com.example.app.domain.TrainingLog;
 import com.example.app.domain.TrainingPart;
@@ -120,6 +122,18 @@ public class TrainingServiceImpl implements TrainingService {
 	public void deleteTraining(Integer trainingId) throws Exception {
 		dao.delete(trainingId);
 		
+	}
+
+	@Override
+	public List<ListChartData> getListChartData(Integer userId) throws Exception {
+		List<ListChartData> dataList = logDao.getListChartData(userId);
+		return dataList;
+	}
+
+	@Override
+	public List<LogChartData> getLogChartData(Integer id) throws Exception {
+		List<LogChartData> dataList = logDao.getLogChartData(id);
+		return dataList;
 	}
 
 
