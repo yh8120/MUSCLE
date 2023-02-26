@@ -37,19 +37,16 @@
 			<div id="g-nav" class="col-lg-6 mt-2 content-header">
 				<div class="card bg-dark text-light justify-content-center border-0">
 					<h5 class="card-header bg-dark bg-gradient text-center title-logo fs-6">グラフ</h5>
-					<div class="card-body ms-2 me-2">
+					<div class="card-body ms-2 me-2" style="height:70vh;">
 						<div class="row justify-content-end">
 							<div class="col-auto btn btn-dark rounded-circle p-0 me-2 chart-button">
 								<img th:src="@{/images/icon/chart.svg}" alt="グラフ" style="width:25px;" />
 							</div>
 						</div>
 						<div class="row">
-							<div class="col d-flex flex-column">
-								<div id="lineChartContainer" class="ratio ratio-16x9 mt-3 ps-2 pe-2">
-									<canvas id="lineChart"></canvas>
-								</div>
-								<div id="barChartContainer" class="ratio ratio-16x9 mt-3 ps-2 pe-2">
-									<canvas id="barChart"></canvas>
+							<div class="col">
+								<div id="barChartContainer" style="height:70vh;">
+									<canvas id="barChart" th:data-id="${training.id}"></canvas>
 								</div>
 							</div>
 						</div>
@@ -93,9 +90,11 @@
 	<footer th:replace="~{parts/common :: footer()}"></footer>
 	<th:block th:replace="~{parts/common :: javascripts()}"></th:block>
 	<script th:src="@{/webjars/chartjs/4.1.2/dist/chart.umd.js}"></script>
+	<script th:src="@{/webjars/momentjs/2.29.4/moment.js}"></script>
+	<script th:src="@{/webjars/chartjs-adapter-moment/1.0.0/dist/chartjs-adapter-moment.min.js}"></script>
 	<script th:src="@{/js/button-action.js}"></script>
 	<script th:src="@{/js/trainingLogButton.js}"></script>
-	<script th:src="@{/js/trainingListChart.js}"></script>
+	<script th:src="@{/js/trainingLogChart.js}"></script>
 	<script th:src="@{/js/chart-button.js}"></script>
 </body>
 

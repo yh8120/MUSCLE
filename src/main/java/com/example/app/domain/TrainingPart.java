@@ -10,4 +10,5 @@ public class TrainingPart {
 	private Integer id;
 	private String name;
 	private List<Training> trainingList;
+	private Double totalWeight;
 }

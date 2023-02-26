@@ -52,7 +52,7 @@ public class TrainingController {
 			@AuthenticationPrincipal LoginUserDetails loginUserDetails,Model model) throws Exception {
 		List<TrainingPart> trainingPartList = trainingService.getTrainingListOrderByPart(loginUserDetails.getLoginUser().getId());
 		model.addAttribute("trainingList", trainingPartList);
-		//webSocketMessage.sendTrainingLogToUser(loginUserDetails.getUsername());
+		webSocketMessage.sendTrainingLogToUser(loginUserDetails.getUsername());
 		return "training/list";
 	}
 
