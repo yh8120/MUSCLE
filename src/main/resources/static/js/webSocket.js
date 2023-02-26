@@ -89,7 +89,7 @@ function showMessage(notice) {
 }
 
 $(function() {
-	var socket = new SockJS('/endpoint');
+	var socket = new SockJS('/ws');
 	stompClient = Stomp.over(socket);
 	stompClient.connect(headerSetting, function(frame) {
 		console.log('Connected: ' + frame);
