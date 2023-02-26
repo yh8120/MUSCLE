@@ -6,7 +6,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.example.app.dao.TrainingLogDao;
@@ -18,7 +17,6 @@ import com.example.app.domain.TrainingSet;
 
 @Service
 @Transactional
-@Async
 public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 
 	@Autowired
@@ -46,7 +44,6 @@ public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 
 	@Override
 	public void sendTrainingLogToUser(String userName) throws Exception {
-		Thread.sleep(1000);
 		List<TrainingLog> trainingLogList = trainingLogDao.findLogListNewer();
 
 		for (TrainingLog trainingLog : trainingLogList) {
@@ -71,5 +68,12 @@ public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 		String iconPath = "notice.svg";
 		
 		template.convertAndSendToUser(user.getEmail(), "/private", new Notice(null,null, body, iconPath,null));
+	}
+
+	@Override
+	public void sendConnection(String userName) throws Exception {
+		String iconPath = "notice.svg";
+		template.convertAndSendToUser(userName, "/private", new Notice(null,null, "接続が完了しました。", iconPath,null));
+		
 	}
 }

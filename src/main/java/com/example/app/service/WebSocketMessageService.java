@@ -9,4 +9,6 @@ public interface WebSocketMessageService {
 	public void sendTrainingLogToUser(String UserName)throws Exception;
 	
 	public void sendProteinToUser(Integer trainingLogId)throws Exception;
+	
+	public void sendConnection(String userName)throws Exception;
 }
