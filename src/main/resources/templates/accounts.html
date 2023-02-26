@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{parts/common :: html_head()}"></head>
 <body id="loginPage" class="bg-dark text-light" style="padding-bottom: 60px;">
     <div class="container">
@@ -9,7 +9,7 @@
                     <h1 class="fs-4 title-logo mb-4">仮登録メール送信</h1>
                     <div class="panel-body">
 
-                        <div class="alert alert-success" th:if="${message}">[[${message}]]</div>
+                        <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
 
                         <div class="alert alert-danger" th:errors="${userRegister.email}"></div>
 

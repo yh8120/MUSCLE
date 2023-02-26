@@ -3,7 +3,7 @@
 #logging.level.org.springframework=TRACE
 
 # データベース接続
-spring.datasource.url=
+spring.datasource.url=jdbc:
 spring.datasource.username=
 spring.datasource.password=
 
@@ -22,7 +22,7 @@ spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
 #ポート番号
-server.port=
+server.port=8443
 #プロトコル
 server.ssl.protocol=
 #キーストア・タイプ

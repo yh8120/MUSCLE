@@ -2,6 +2,8 @@ package com.example.app.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -15,8 +17,9 @@ import com.example.app.domain.TrainingLog;
 import com.example.app.domain.TrainingSet;
 
 @Service
+@Transactional
 @Async
-public class WebSocketMessageImpl implements WebSocketMessage {
+public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 
 	@Autowired
 	private SimpMessagingTemplate template;

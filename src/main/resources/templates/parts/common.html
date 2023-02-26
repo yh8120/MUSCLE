@@ -4,6 +4,8 @@
 <head th:fragment="html_head()">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 <link th:href="@{/css/style.css}" rel="stylesheet">
 <title>DARK MUSCLE</title>
@@ -12,8 +14,8 @@
 <body>
 
     <header th:fragment="header()">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient">
-            <div class="container">
+        <nav class="fixed-top navbar navbar-expand-lg navbar-dark bg-dark bg-gradient">
+            <div class="container" th:object="${#authentication.principal.loginUser}">
                 <a class="d-flex navbar-brand title-logo align-baseline" th:href="@{/training}">
                     <img src="/images/logo.svg" alt="" width="30" height="24">DARK MUSCLE
                 </a>
@@ -25,13 +27,15 @@
                 </p>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item text-end"><a class="nav-link text-decoration-none" th:href="@{/accounts/edit}">
-                                <img th:src="@{/images/profile/__${session.user.iconPath}__}" style="width: 20px;" alt="アイコン"> [[${session.user.name}]]
-                            </a></li>
+                        <li class="nav-item text-end">
+                        <a class="nav-link text-decoration-none" th:href="@{/user/edit}">
+                                <img th:src="@{/images/profile/__*{iconPath}__}" style="width: 20px;" alt="アイコン"> <span >[[*{name}]]</span>
+                            </a>
+                            </li>
                         <li class="nav-item text-end"></li>
                         <li class="nav-item">
                             <form th:action="@{/logout}" method="post" class="d-flex justify-content-end">
-                                <input type="hidden" id="userId" th:value="${session.user.id}">
+                                <input type="hidden" id="userId" th:value="${#authentication.principal.loginUser.id}">
                                 <input type='submit' class="nav-link logout" style="background: transparent; border: none;" value="ログアウト">
                             </form>
                         </li>

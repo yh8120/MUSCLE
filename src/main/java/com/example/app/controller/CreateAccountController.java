@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,17 +18,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app.domain.MUser;
+import com.example.app.domain.ReservedEmail;
 import com.example.app.domain.UserForm;
 import com.example.app.domain.UserRegister;
+import com.example.app.login.LoginUserDetails;
 import com.example.app.service.MessageSenderService;
 import com.example.app.service.SexService;
 import com.example.app.service.UserFormService;
 import com.example.app.service.UserRegisterService;
+import com.example.app.service.UserService;
 
 @Controller
 @RequestMapping("/accounts")
 public class CreateAccountController {
 
+	@Autowired
+	UserService userService;
 	@Autowired
 	UserRegisterService userRegisterService;
 	@Autowired
@@ -51,17 +56,17 @@ public class CreateAccountController {
 			RedirectAttributes redirectAttributes,
 			@Valid UserRegister userRegister,
 			Errors errors) throws Exception {
-		
+
 		MUser user = userRegisterService.checkUserbyEmail(userRegister.getEmail());
-		if(Objects.nonNull(user)) {
+		if (Objects.nonNull(user)) {
 			errors.rejectValue("email", "error.already_registered");
 			return "accounts";
 		}
-		
+
 		if (errors.hasErrors()) {
 			return "accounts";
 		}
-		
+
 		//userRegisterに仮登録
 		String uuid = UUID.randomUUID().toString();
 		userRegister.setUuid(uuid);
@@ -72,7 +77,8 @@ public class CreateAccountController {
 		String message = String.format(
 				"ご登録ありがとうございます。"
 						+ "下記URLにアクセスして本登録を完了してください。"
-						+ "localhost:8080/accounts/webcreate/%s",uuid);
+						+ "https://localhost:8443/accounts/webcreate/%s",
+				uuid);
 
 		//email送信
 		sendMessageService.sendMessage(userRegister.getEmail(), subject, message);
@@ -139,37 +145,38 @@ public class CreateAccountController {
 		return "redirect:/login";
 	}
 
-	@GetMapping("/edit")
-	public String getEditUser(HttpSession session, Model model) throws Exception {
-		MUser user = (MUser) session.getAttribute("user");
-		model.addAttribute("sexList", sexService.getSexList());
-		model.addAttribute("userForm", new UserForm(user));
-		return "edit-user";
-	}
-
-	@PostMapping("/edit")
-	public String postEditUser(HttpSession session,
+	@GetMapping("/user/edit-submit/{uuid}")
+	public String getEditSubmit(
+			@AuthenticationPrincipal LoginUserDetails loginUserDetails,
 			RedirectAttributes redirectAttributes,
 			Model model,
+			@PathVariable("uuid") String uuid,
 			@Valid UserForm userForm,
 			Errors errors) throws Exception {
-		MUser user = (MUser) session.getAttribute("user");
-		if (user.getId() != userForm.getId()) {
-			redirectAttributes.addFlashAttribute("message", "不正な参照です");
-			return "redirect:/training";
-		}
-		if (!userForm.getLoginPass().equals(userForm.getLoginPassCopy())) {
-			errors.rejectValue("loginPass", "error.differ_password");
-			model.addAttribute("sexList", sexService.getSexList());
-			return "edit-user";
-		}
-		if (errors.hasErrors()) {
-			model.addAttribute("sexList", sexService.getSexList());
-			return "edit-user";
+
+		ReservedEmail reservedEmail = userService.getReservedEmail(uuid);
+		if (Objects.isNull(reservedEmail)) {
+			if (Objects.isNull(loginUserDetails)) {
+				return "redirect:/login?e=1";
+			}
+			return "redirect:/logout?e=1";
 		}
 
-		userFormService.updateAccount(userForm);
-		redirectAttributes.addFlashAttribute("message", "ユーザー情報を変更しました。");
-		return "redirect:/training";
+		Date date = new Date();
+		Long progressTime = date.getTime() - reservedEmail.getRegistered().getTime();
+
+		if (progressTime > EFFECTIVE_TIME) {
+			if (Objects.isNull(loginUserDetails)) {
+				return "redirect:/login?e=1";
+			}
+			return "redirect:/logout?e=1";
+		}
+
+		userService.updateEmail(reservedEmail);
+		if (Objects.isNull(loginUserDetails)) {
+			redirectAttributes.addFlashAttribute("message", "メールアドレスを変更しました。再ログインして下さい。");
+			return "redirect:/login?e=2";
+		}
+		return "redirect:/logout?e=2";
 	}
 }

@@ -1,13 +1,18 @@
 var stompClient = null;
 let ounId = parseInt($("#userId").val());
+let token = $("meta[name='_csrf']").attr("content");
+let header = $("meta[name='_csrf_header']").attr("content");
+let headerSetting = {};
 
+headerSetting[header]=token;
 function addProtein(trainingLogId) {
 	const data = {
 		trainingLogId: trainingLogId,
 		userId: ounId
 	}
 	$.ajax({
-		url: "https://localhost:8443/rest/add", // 通信先のURL
+		url: "/rest/add", // 通信先のURL
+		headers: headerSetting,
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
 		contentType: 'application/json',
@@ -29,7 +34,8 @@ function delProtein(trainingLogId) {
 		userId: ounId
 	}
 	$.ajax({
-		url: "https://localhost:8443/rest/del", // 通信先のURL
+		url: "/rest/del", // 通信先のURL
+		headers: headerSetting,
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify(data),
 		contentType: 'application/json',
@@ -60,7 +66,7 @@ function showMessage(notice) {
 		if (notice.trainingLogId) {
 			cloneRow.find(".noticeButton").addClass("trl" + notice.trainingLogId);
 			let conlist = notice.contributorList;
-			if (conlist.includes(ounId)) {
+			if (conlist?.includes(ounId)) {
 				cloneRow.find(".noticeButton").on("click", function() {
 					delProtein(notice.trainingLogId)
 				});
@@ -85,7 +91,7 @@ function showMessage(notice) {
 $(function() {
 	var socket = new SockJS('/endpoint');
 	stompClient = Stomp.over(socket);
-	stompClient.connect({}, function(frame) {
+	stompClient.connect(headerSetting, function(frame) {
 		console.log('Connected: ' + frame);
 		console.log(frame);
 		stompClient.subscribe('/topic/notice', function(notice) {

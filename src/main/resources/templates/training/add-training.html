@@ -1,63 +1,66 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{parts/common :: html_head()}"></head>
 
 <body class="bg-dark text-light" style="padding-bottom: 60px;">
 
-    <header th:replace="~{parts/common :: header()}"></header>
+	<header th:replace="~{parts/common :: header()}"></header>
 
 
-    <div class="container main-container mt-4">
-        <div class="col-auto me-2 mb-4 fs-4 title-logo d-flex align-items-center">
-        <img style="width: 40px;" class="me-2" th:src="@{/images/icon/muscle.svg}" alt="追加" />
-        トレーニング種目追加</div>
-        <form th:action="@{/training/add}" class="form" action="" method="post" th:object="${training}">
-            <div class="row mb-3">
-                <label for="name" class="col-md-2 col-form-label">トレーニング名</label>
-                <div class="col-md-10">
-                    <input type="text" th:field="*{name}" class="form-control border-0 bg-dark bg-gradient text-light">
-                    <small class="error-message" th:errors="*{name}"></small>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="trainingType.id" class="col-md-2 col-form-label">タイプ</label>
-                <div class="col-md-10">
-                    <select th:field="*{trainingType.id}" class="form-control border-0 bg-dark bg-gradient text-light">
-                        <option th:each="type : ${trainingTypeList}" th:value="${type.id}">[[${type.name}]]</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="trainingPart.id" class="col-md-2 col-form-label">部位</label>
-                <div class="col-md-10">
-                    <select th:field="*{trainingPart.id}" class="form-control border-0 bg-dark bg-gradient text-light">
-                        <option th:each="part : ${trainingPartList}" th:value="${part.id}">[[${part.name}]]</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="priority.id" class="col-md-2 col-form-label">優先度</label>
-                <div class="col-md-10">
-                    <select th:field="*{priority.id}" class="form-control border-0 bg-dark bg-gradient text-light">
-                        <option th:each="priority : ${priorityList}" th:value="${priority.id}">[[${priority.name}]]</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="weekday.id" class="col-md-2 col-form-label">曜日</label>
-                <div class="col-md-10">
-                    <select th:field="*{weekday.id}" class="form-control border-0 bg-dark bg-gradient text-light">
-                        <option th:each="weekday : ${weekdayList}" th:value="${weekday.id}">[[${weekday.name}]]</option>
-                    </select>
-                </div>
-            </div>
+	<div class="container main-container mt-4">
+		<div class="col-auto me-2 mb-4 fs-4 title-logo d-flex">
+			<img style="width: 30px;" class="me-1" th:src="@{/images/icon/muscle.svg}" alt="追加" />
+			<span th:text="トレーニング種目追加"></span>
+		</div>
+		<form th:action="@{/training/add}" class="form" action="" method="post" th:object="${training}">
+			<div class="row mb-3">
+				<label for="name" class="col-md-2 col-form-label">トレーニング名</label>
+				<div class="col-md-10">
+					<input type="text" th:field="*{name}" class="form-control border-0 bg-dark bg-gradient text-light">
+					<small class="error-message" th:errors="*{name}"></small>
+				</div>
+			</div>
+			<div class="row mb-3">
+				<label for="trainingType.id" class="col-md-2 col-form-label">タイプ</label>
+				<div class="col-md-10">
+					<select th:field="*{trainingType.id}" class="form-control border-0 bg-dark bg-gradient text-light">
+						<option th:each="type : ${trainingTypeList}" th:value="${type.id}">[[${type.name}]]</option>
+					</select>
+				</div>
+			</div>
+			<div class="row mb-3">
+				<label for="trainingPart.id" class="col-md-2 col-form-label">部位</label>
+				<div class="col-md-10">
+					<select th:field="*{trainingPart.id}" class="form-control border-0 bg-dark bg-gradient text-light">
+						<option th:each="part : ${trainingPartList}" th:value="${part.id}">[[${part.name}]]</option>
+					</select>
+				</div>
+			</div>
+			<div class="row mb-3">
+				<label for="priority.id" class="col-md-2 col-form-label">優先度</label>
+				<div class="col-md-10">
+					<select th:field="*{priority.id}" class="form-control border-0 bg-dark bg-gradient text-light">
+						<option th:each="priority : ${priorityList}" th:value="${priority.id}">[[${priority.name}]]
+						</option>
+					</select>
+				</div>
+			</div>
+			<div class="row mb-3">
+				<label for="weekday.id" class="col-md-2 col-form-label">曜日</label>
+				<div class="col-md-10">
+					<select th:field="*{weekday.id}" class="form-control border-0 bg-dark bg-gradient text-light">
+						<option th:each="weekday : ${weekdayList}" th:value="${weekday.id}">[[${weekday.name}]]</option>
+					</select>
+				</div>
+			</div>
 
-            <input class="btn btn-danger" type="submit" value="保存する">
-            <a th:href="@{/training}" class="btn btn-secondary">キャンセル</a>
-        </form>
-        <footer th:replace="~{parts/common :: footer()}"></footer>
-        <th:block th:replace="~{parts/common :: javascripts()}"></th:block>
-    </div>
+			<input class="btn btn-danger" type="submit" value="保存する">
+			<a th:href="@{/training}" class="btn btn-secondary">キャンセル</a>
+		</form>
+		<footer th:replace="~{parts/common :: footer()}"></footer>
+		<th:block th:replace="~{parts/common :: javascripts()}"></th:block>
+	</div>
 </body>
+
 </html>

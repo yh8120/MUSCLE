@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.dao.ReservedEmailDao">
+
+ 	<select
+	id="selectByUuid"
+	parameterType="String"
+	resultType="com.example.app.domain.ReservedEmail">
+	SELECT * FROM reserved_emails
+	WHERE uuid=#{uuid}
+	</select>
+	
+	<insert
+	id="insert"
+	parameterType="com.example.app.domain.ReservedEmail">
+		INSERT INTO reserved_emails
+		(email,new_email,registered,uuid)
+		VALUES
+		(#{email},#{newEmail},NOW(),#{uuid})
+	</insert>
+	
+	<delete id="delete" parameterType="String">
+	DELETE FROM reserved_emails 
+	WHERE uuid = #{uuid}
+	LIMIT 1
+	</delete>
+	<delete id="deleteOldRecode">
+		DELETE FROM reserved_emails 
+		WHERE regestered &lt; SUBTIME(NOW(), '00:30:00')
+	</delete>
+
+</mapper>

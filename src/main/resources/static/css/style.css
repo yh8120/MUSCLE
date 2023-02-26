@@ -5,13 +5,29 @@ body {
 	font-family: "メイリオ", sans-serif;
 }
 
-.main-container{
-	display: none ;
+.main-container {
+	padding-top: 4.5rem;
 }
 
-.table-frame{
+.navbar {
+	z-index: 1060;
+}
+
+.chart-button {
+	display: none;
+}
+
+.main-container {
+	display: none;
+}
+
+.table-frame {
 	height: 70vh;
 	overflow: auto;
+}
+
+.tab-area {
+	overflow-x: scroll;
 }
 
 .error-message {
@@ -23,7 +39,8 @@ body {
 	font-weight: bold;
 }
 
-.nav-tabs .nav-link.active, .nav-pills .show>.nav-link {
+.nav-tabs .nav-link.active,
+.nav-pills .show>.nav-link {
 	color: #fff;
 	background-color: rgb(128, 30, 30);
 	border: none;
@@ -31,7 +48,11 @@ body {
 
 .cursor-hand {
 	cursor: pointer;
-	cursor: hand;
+}
+
+canvas {
+	width: 100%;
+	height: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -48,4 +69,60 @@ body {
 	background: rgb(165, 73, 77);
 	border-radius: 20px;
 	width: 20px;
+}
+
+@media screen and (max-width:992px) {
+
+	#g-nav {
+		position: fixed;
+		z-index: 1040;
+		top: 4rem;
+		right: -120%;
+		width: 100%;
+		height: 90vh;
+		transition: all 0.6s;
+	}
+
+	#g-nav.panelactive {
+		right: 0;
+	}
+
+	#g-nav .card {
+		height: 100%;
+	}
+
+	#g-nav .card-body {
+		height: 100%;
+		overflow-y: scroll;
+	}
+
+	.chart-button {
+		display: inline-block;
+	}
+
+	.chart-button-position {
+		position: fixed;
+		z-index: 1050;
+		top: 4.5rem;
+		right: 15px;
+	}
+}
+
+@media (max-width: 768px) {
+
+	body {
+		font-size: 0.7rem;
+	}
+
+	.content-header {
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+}
+
+@media (max-width: 290px) {
+
+	.main-container {
+		padding-top: 5.5rem;
+	}
 }

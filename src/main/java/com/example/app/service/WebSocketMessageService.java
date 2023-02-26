@@ -2,7 +2,7 @@ package com.example.app.service;
 
 import com.example.app.domain.TrainingLog;
 
-public interface WebSocketMessage {
+public interface WebSocketMessageService {
 
 	public void sendTrainingLog(TrainingLog trainingLog)throws Exception;
 

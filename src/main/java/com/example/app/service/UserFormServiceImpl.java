@@ -5,9 +5,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.app.dao.ReservedEmailDao;
 import com.example.app.dao.UserDao;
 import com.example.app.dao.UserRegisterDao;
 import com.example.app.domain.MUser;
+import com.example.app.domain.ReservedEmail;
 import com.example.app.domain.UserForm;
 
 @Service
@@ -17,38 +19,37 @@ public class UserFormServiceImpl implements UserFormService {
 	@Autowired
 	UserDao userDao;
 	@Autowired
+	ReservedEmailDao reservedEmailDao;
+	@Autowired
 	UserRegisterDao userRegisterDao;
 	@Autowired
 	PasswordEncoder encoder;
-	
+	@Autowired
+	UpdateSecurityContext updateSecurityContext;
+
 	@Override
-	public void createAccount(UserForm userform) throws Exception {
-		MUser user = new MUser();
-		user.setName(userform.getName());
-		user.setEmail(userform.getEmail());
-		user.setLoginPass(encoder.encode(userform.getLoginPass()));
-		user.setBirthday(userform.getBirthday());
-		user.setSex(userform.getSex());
-		user.setIconPath(userform.getIconPath());
+	public void createAccount(UserForm userForm) throws Exception {
+		MUser user = new MUser(userForm);
+		user.setLoginPass(encoder.encode(user.getLoginPass()));
 		userDao.insert(user);
-		userRegisterDao.deleteByEmail(userform.getEmail());
+		userRegisterDao.deleteByEmail(userForm.getEmail());
 	}
 
 	@Override
-	public void updateAccount(UserForm userform) throws Exception {
-		MUser user = new MUser();
-		user.setId(userform.getId());
-		user.setName(userform.getName());
-		user.setEmail(userform.getEmail());
-		user.setLoginPass(encoder.encode(userform.getLoginPass()));
-		user.setBirthday(userform.getBirthday());
-		user.setSex(userform.getSex());
-		user.setIconPath(userform.getIconPath());
+	public void updateAccount(UserForm userForm) throws Exception {
+		MUser user = new MUser(userForm);
+		user.setLoginPass(encoder.encode(user.getLoginPass()));
 		userDao.update(user);
-		
+		updateSecurityContext.update();
 	}
-	
-	
 
-	
+	@Override
+	public void reservationEmail(UserForm userForm, String oldEmail, String uuid) throws Exception {
+		ReservedEmail reservedEmail = new ReservedEmail();
+		reservedEmail.setEmail(oldEmail);
+		reservedEmail.setNewEmail(userForm.getEmail());
+		reservedEmail.setUuid(uuid);
+		reservedEmailDao.insert(reservedEmail);
+	}
+
 }
