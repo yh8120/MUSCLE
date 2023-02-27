@@ -6,7 +6,7 @@ let trainingLogId = $("#trainingLogId").val();
 
 $(document).ready(function() {
 	$.ajax({
-		url: "/rest/listchart", // 通信先のURL
+		url: "/rest/editlog", // 通信先のURL
 		headers: headerSetting,
 		type: "POST", // 使用するHTTPメソッド
 		data: JSON.stringify({ id: trainingLogId }),
@@ -14,25 +14,18 @@ $(document).ready(function() {
 		// dataType:"json", // 応答のデータの種類
 		dataType: "json" // 応答のデータの種類(xml/html/script/json/jsonp/text)
 	}).done(function(data) {
-		console.log(data)
+		for (let i = 0; i < data.trainingSetList.length; i++) {
+			let trainingSet = data.trainingSetList[i];
+			if (i!=0) {
+				addTrainingSetRow();
+			}
+			
+			$('#trainingSetListBody tr:last-child').find(".trainingSetWeight").val(trainingSet.weight);
+			$('#trainingSetListBody tr:last-child').find(".trainingSetRep").val(trainingSet.rep);
+			$('#trainingSetListBody tr:last-child').find(".trainingSetOneRepMax").text(trainingSet.oneRepMax);
+			$('#trainingSetListBody tr:last-child').find(".trainingSetOneRepMaxForm").val(trainingSet.oneRepMax);
 
-
-
+		}
 
 	}).fail(function() { console.log("fail") });
-
-
-
-	/*	$('#addTrainingSet').click(addTrainingSetRow);
-		$('#removeTrainingSet').click(removeTrainingSetRow);
-		$('.trainingSetRep').change(function() {
-			const rep = $(this).val();
-			const weight = $('.trainingSetWeight').val();
-			let oneRepMax = Math.round((weight * rep / 40 + Number(weight)) * 10) / 10;
-			$('.trainingSetOneRepMax').text(oneRepMax);
-		});
-	
-		if (!$('#trainingSetListBody tr:last-child .trainingSetOrder').text()) {
-			$('#addTrainingSet').trigger("click");
-		}*/
 });

@@ -153,7 +153,6 @@ $(document).ready(function() {
 		// dataType:"json", // 応答のデータの種類
 		dataType: "json" // 応答のデータの種類(xml/html/script/json/jsonp/text)
 	}).done(function(data) {
-		console.log(data)
 		let label = data.map(log => log.registered);
 		for (i = 0; i < 7; i++) {
 			let hoo = [];
@@ -169,7 +168,6 @@ $(document).ready(function() {
 			datasets[i].data = hoo;
 		}
 
-		console.log(datasets)
 		let barData = {};
 		barData.labels = label;
 		barData.datasets = datasets;
