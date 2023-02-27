@@ -18,7 +18,8 @@
                                 <input type="text" placeholder="メールアドレス" class="form-control bg-dark bg-gradient text-light border-0" th:field="*{email}">
                             </div>
                             <div class="mb-3">
-                                <input type="submit" class="btn btn-danger w-100" value="案内メール送信">
+                                <input type="submit" class="btn btn-danger" value="案内メール送信">
+                                <a th:href="@{/login}" class="btn btn-secondary">キャンセル</a>
                             </div>
                         </form>
                     </div>

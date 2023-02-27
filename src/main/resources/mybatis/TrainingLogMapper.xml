@@ -103,7 +103,7 @@
 		JOIN
 		training_parts ON master_trainings.part_id=training_parts.id
 		WHERE
-		training_logs.registered >= DATE(NOW()) - INTERVAL 7 DAY
+		training_logs.registered >= DATE(NOW()) - INTERVAL 10 DAY
 		AND
 		training_logs.user_id = #{id}
 		GROUP BY DATE(registered),part_name
