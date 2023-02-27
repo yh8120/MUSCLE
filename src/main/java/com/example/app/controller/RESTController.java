@@ -14,6 +14,7 @@ import com.example.app.domain.Id;
 import com.example.app.domain.ListChartData;
 import com.example.app.domain.LogChartData;
 import com.example.app.domain.Protein;
+import com.example.app.domain.TrainingLog;
 import com.example.app.login.LoginUserDetails;
 import com.example.app.service.ProteinService;
 import com.example.app.service.TrainingService;
@@ -54,11 +55,22 @@ public class RESTController {
 		
 		return dataList;
 	}
-	
+
 	@PostMapping("/logchart")
-	public List<LogChartData> postlogChart(@AuthenticationPrincipal LoginUserDetails loginUserDetails,@RequestBody Id id) throws Exception {
+	public List<LogChartData> postLogChart(@AuthenticationPrincipal LoginUserDetails loginUserDetails,@RequestBody Id id) throws Exception {
 		 List<LogChartData> dataList = trainingService.getLogChartData(id.getId());
 		
 		return dataList;
+	}
+	
+	@PostMapping("/editlog")
+	public TrainingLog postEditLog(@AuthenticationPrincipal LoginUserDetails loginUserDetails,@RequestBody Id id) throws Exception {
+		TrainingLog trainingLog = trainingService.getTrainingLog(id.getId());
+		if (trainingLog.getUser().getId() != loginUserDetails.getLoginUser().getId()) {
+			trainingLog =null;
+			return trainingLog;
+		}
+		
+		return trainingLog;
 	}
 }

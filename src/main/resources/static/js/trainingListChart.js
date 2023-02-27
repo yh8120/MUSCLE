@@ -52,6 +52,11 @@ let barOptions = {
 				display: true,
 				text: '総重量(kg)',
 				color: 'white',
+				font: {
+					family: 'serif, sans-serif',
+					size: 18,
+				},
+				padding: { bottom: 10 },
 			},
 			ticks: {
 				color: 'white',
@@ -59,6 +64,7 @@ let barOptions = {
 				crossAlign: 'center',
 				font: {
 					family: 'serif, sans-serif',
+					size: 12,
 				},
 				padding: 10,
 			},
@@ -137,45 +143,45 @@ let datasets = [{
 
 $(document).ready(function() {
 	let exampleData = 1;
-	
-		$.ajax({
-			url: "/rest/listchart", // 通信先のURL
-			headers: headerSetting,
-			type: "POST", // 使用するHTTPメソッド
-			data: JSON.stringify(exampleData),
-			contentType: 'application/json',
-			// dataType:"json", // 応答のデータの種類
-			dataType: "json" // 応答のデータの種類(xml/html/script/json/jsonp/text)
-		}).done(function(data) {
-			console.log(data)
-			let label = data.map(log => log.registered);
-			for (i = 0; i < 7; i++) {
-				let hoo = [];
-				for (let log of data) {
-					let baa = 0;
-					for (let part of log.trainingPartList) {
-						if (part.id == i + 1) {
-							baa = part.totalWeight;
-						}
+
+	$.ajax({
+		url: "/rest/listchart", // 通信先のURL
+		headers: headerSetting,
+		type: "POST", // 使用するHTTPメソッド
+		data: JSON.stringify(exampleData),
+		contentType: 'application/json',
+		// dataType:"json", // 応答のデータの種類
+		dataType: "json" // 応答のデータの種類(xml/html/script/json/jsonp/text)
+	}).done(function(data) {
+		console.log(data)
+		let label = data.map(log => log.registered);
+		for (i = 0; i < 7; i++) {
+			let hoo = [];
+			for (let log of data) {
+				let baa = 0;
+				for (let part of log.trainingPartList) {
+					if (part.id == i + 1) {
+						baa = part.totalWeight;
 					}
-					hoo.push(baa);
 				}
-				datasets[i].data = hoo;
+				hoo.push(baa);
 			}
+			datasets[i].data = hoo;
+		}
 
-			console.log(datasets)
-			let barData = {};
-			barData.labels = label;
-			barData.datasets = datasets;
+		console.log(datasets)
+		let barData = {};
+		barData.labels = label;
+		barData.datasets = datasets;
 
-			let barChart = new Chart(barCtx, {
-				type: barType,
-				data: barData,
-				options: barOptions,
-			});
+		let barChart = new Chart(barCtx, {
+			type: barType,
+			data: barData,
+			options: barOptions,
+		});
 
 
-		}).fail(function() { console.log("fail") });
+	}).fail(function() { console.log("fail") });
 
 
 });

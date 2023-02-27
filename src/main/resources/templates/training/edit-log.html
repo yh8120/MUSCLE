@@ -10,7 +10,7 @@
 
 	<div class="container main-container">
 		<form th:action="@{/training/log/edit}" method="post">
-			<input type="hidden" name="id" th:value="${trainingLog.id}">
+			<input type="hidden" id="trainingLogId" name="id" th:value="${trainingLog.id}">
 			<input type="hidden" name="training.id" th:value="${trainingLog.training.id}">
 			<input class="trainingLogLatitude" type="hidden" name="latitude" th:value="${trainingLog.latitude}">
 			<input class="trainingLogLogitude" type="hidden" name="logitude" th:value="${trainingLog.logitude}">
@@ -110,6 +110,7 @@
 	<footer th:replace="~{parts/common :: footer()}"></footer>
 	<th:block th:replace="~{parts/common :: javascripts()}"></th:block>
 	<script th:src="@{/js/make-training-set.js}"></script>
+    <script th:src="@{/js/make-training-set-edit-log.js}"></script>
 	<script th:src="@{/js/delete-action.js}"></script>
 </body>
 <template id="trainingSetTemplate">

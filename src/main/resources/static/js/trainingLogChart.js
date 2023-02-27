@@ -56,8 +56,13 @@ let barOptions = {
 			min: 0,
 			title: {
 				display: true,
-				text: '総重量(kg)',
+				text: '挙上重量(kg)',
 				color: 'white',
+				font: {
+					family: 'serif, sans-serif',
+					size: 18,
+				},
+				padding: {bottom: 10},
 			},
 			ticks: {
 				color: 'white',
@@ -65,8 +70,9 @@ let barOptions = {
 				crossAlign: 'center',
 				font: {
 					family: 'serif, sans-serif',
+					size: 12,
 				},
-				padding: 10,
+				padding: 14,
 			},
 			grid: {
 				// 目盛線＆グリッド線
@@ -134,7 +140,7 @@ $(document).ready(function() {
 		let barData = {};
 		barData.labels = label;
 		barData.datasets = datasets;
-		
+
 		let barChart = new Chart(barCtx, {
 			type: barType,
 			data: barData,

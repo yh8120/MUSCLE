@@ -43,7 +43,7 @@ public class SecurityConfig {
 						.failureUrl("/login")//ログイン失敗時の遷移先
 						.permitAll()
 						)
-
+				
 				.rememberMe(rem -> rem
 						.key("uniqueKeyAndSecret")
 						.rememberMeParameter("remember-me")//rememberMe-formのname属性
@@ -59,7 +59,7 @@ public class SecurityConfig {
 						.addLogoutHandler(new CustomLogoutHandler())//ログアウト時にクエリパラメータをリダイレクトに受け渡すハンドラー
 						.invalidateHttpSession(true)//セッション破棄
 						)
-
+				
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()//staticディレクトリは許可
 						.mvcMatchers("/login*", "/accounts/**").permitAll()//マッチするリクエストの許可
@@ -73,9 +73,7 @@ public class SecurityConfig {
 				.requiresChannel(req -> req
 						.anyRequest().requiresSecure()//httpスキームのセキュアリダイレクト
 						)
-				
 				;
-
 		
 		return http.build();
 	}
