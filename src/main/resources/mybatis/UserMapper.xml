@@ -43,6 +43,7 @@
 		JOIN master_roles
 		 ON user_roles.role_id = master_roles.id
 		WHERE email = #{email}
+		AND master_users.status = "ACT"
 	</select>
 	<select
 	id="selectById"
@@ -57,6 +58,7 @@
 		master_users.icon_path
 		FROM master_users
 		WHERE master_users.id = #{id}
+		AND master_users.status = "ACT"
 	</select>
 	<insert
 	id="insert"

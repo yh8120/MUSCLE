@@ -89,6 +89,7 @@
 		FROM training_logs
 		WHERE registered >= DATE(NOW()) - INTERVAL 30 DAY
 		AND training_id = ${id}
+		AND training_logs.status = "ACT"
 		GROUP BY DATE(registered)
 	</select>
 	<select id="getListChartData" parameterType="int"
@@ -106,6 +107,7 @@
 		training_logs.registered >= DATE(NOW()) - INTERVAL 10 DAY
 		AND
 		training_logs.user_id = #{id}
+		AND training_logs.status = "ACT"
 		GROUP BY DATE(registered),part_name
 	</select>
 	<select id="findAllbyTrainingId" parameterType="int"
@@ -129,8 +131,7 @@
 		)AS training_logs
 		ON master_trainings.id =
 		training_logs.training_id
-		WHERE
-		master_trainings.id=${id}
+		WHERE master_trainings.id=${id}
 		ORDER BY
 		training_logs.registered DESC
 	</select>
