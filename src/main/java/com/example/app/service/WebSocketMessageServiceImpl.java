@@ -2,12 +2,11 @@ package com.example.app.service;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.app.dao.TrainingLogDao;
 import com.example.app.dao.UserDao;
@@ -47,7 +46,7 @@ public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 
 	@Override
 	public void sendTrainingLogToUser(String userName) throws Exception {
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 		List<TrainingLog> trainingLogList = trainingLogDao.findLogListNewer();
 		for (TrainingLog trainingLog : trainingLogList) {
 			String body = trainingLog.getTraining().getName() + ":";

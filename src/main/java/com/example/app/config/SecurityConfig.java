@@ -67,6 +67,8 @@ public class SecurityConfig {
 				.requiresChannel(req -> req
 						.anyRequest().requiresSecure()//httpスキームのセキュアリダイレクト
 						)
+				 .csrf()
+		            .ignoringAntMatchers("/ws/**","/user/**", "/topic/notice/**")
 				;
 		
 		return http.build();
