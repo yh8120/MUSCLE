@@ -22,6 +22,7 @@ public class CustomWebSocketHandlerDecorator extends WebSocketHandlerDecorator {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		sessions.add(session.getPrincipal().getName());
+		System.out.println(sessions);
 		super.getDelegate().afterConnectionEstablished(session);
 	}
 
@@ -29,11 +30,13 @@ public class CustomWebSocketHandlerDecorator extends WebSocketHandlerDecorator {
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
 		super.getDelegate().handleMessage(session, message);
 	}
+
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
 		sessions = sessions.stream()
-				.filter(userName -> userName.equals(session.getPrincipal().getName()))
+				.filter(userName -> !userName.equals(session.getPrincipal().getName()))
 				.collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+		System.out.println(sessions);
 		super.getDelegate().afterConnectionClosed(session, closeStatus);
 	}
 }

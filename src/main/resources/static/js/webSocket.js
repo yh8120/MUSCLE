@@ -91,6 +91,7 @@ function showMessage(notice) {
 $(function() {
 	var socket = new SockJS('/ws');
 	stompClient = Stomp.over(socket);
+	stompClient.debug = null;
 	stompClient.connect(headerSetting, function(frame) {
 		console.log('Connected: ' + frame);
 		console.log(frame);
