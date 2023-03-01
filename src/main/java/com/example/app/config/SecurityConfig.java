@@ -12,8 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.example.app.config.handler.CustomLogoutHandler;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

@@ -1,4 +1,4 @@
-package com.example.app.config.handler;
+package com.example.app.config.websocket;
 
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;

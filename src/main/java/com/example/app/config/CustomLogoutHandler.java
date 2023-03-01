@@ -1,4 +1,4 @@
-package com.example.app.config.handler;
+package com.example.app.config;
 
 import java.io.IOException;
 

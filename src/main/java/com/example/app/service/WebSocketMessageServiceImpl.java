@@ -3,10 +3,12 @@ package com.example.app.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import com.example.app.dao.TrainingLogDao;
 import com.example.app.dao.UserDao;
@@ -44,9 +46,9 @@ public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 				new Notice(trainingLog.getId(), user.getId(), body, user.getIconPath(), null));
 	}
 
+	@EventListener
 	@Override
-	public void sendTrainingLogToUser(String userName) throws Exception {
-		Thread.sleep(3000);
+	public void handleWebSocketConnectListener(SessionConnectedEvent event) throws Exception {
 		List<TrainingLog> trainingLogList = trainingLogDao.findLogListNewer();
 		for (TrainingLog trainingLog : trainingLogList) {
 			String body = trainingLog.getTraining().getName() + ":";
@@ -58,7 +60,7 @@ public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 					body += ",";
 				}
 			}
-			template.convertAndSendToUser(userName, "/private",
+			template.convertAndSendToUser(event.getUser().getName(), "/private",
 					new Notice(trainingLog.getId(), trainingLog.getUser().getId(), body,
 							trainingLog.getUser().getIconPath(), trainingLog.getContributorList()));
 		}

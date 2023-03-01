@@ -1,4 +1,4 @@
-package com.example.app.config;
+package com.example.app.config.websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessageType;
