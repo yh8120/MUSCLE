@@ -3,6 +3,7 @@ package com.example.app.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 				new Notice(trainingLog.getId(), user.getId(), body, user.getIconPath(), null));
 	}
 
+	@EventListener
 	@Override
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) throws Exception {
 		List<TrainingLog> trainingLogList = trainingLogDao.findLogListNewer();

@@ -115,12 +115,12 @@ let datasets = [{
 	backgroundColor: 'rgb(183, 78, 0)',
 	stack: 'stack-1',
 }, {
-	label: '腕',
+	label: '背中',
 	data: [],
 	backgroundColor: 'rgb(93, 145, 67)',
 	stack: 'stack-1',
 }, {
-	label: '背中',
+	label: '腕',
 	data: [],
 	backgroundColor: 'rgb(93, 145, 187)',
 	stack: 'stack-1',
