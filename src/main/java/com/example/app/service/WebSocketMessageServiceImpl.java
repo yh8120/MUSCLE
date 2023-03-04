@@ -49,6 +49,7 @@ public class WebSocketMessageServiceImpl implements WebSocketMessageService {
 	@EventListener
 	@Override
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) throws Exception {
+		Thread.sleep(1000);
 		List<TrainingLog> trainingLogList = trainingLogDao.findLogListNewer();
 		for (TrainingLog trainingLog : trainingLogList) {
 			String body = trainingLog.getTraining().getName() + ":";
